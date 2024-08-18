@@ -95,16 +95,6 @@ class CancelTab extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.account_circle_outlined,
-                                  color: Color(0xff1a1c43),
-                                  size: 30.0,
-                                ),
-                                const SizedBox(
-                                 width: 10,
-                               ),
                                 Row(
                                   children: [
                                     Text(
@@ -115,8 +105,6 @@ class CancelTab extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
                             Text(
                               "Date: ${testDate[index]['date']} ",
                               textAlign: TextAlign.center,

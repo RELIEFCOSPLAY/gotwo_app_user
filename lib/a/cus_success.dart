@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CusPending extends StatefulWidget {
-  const CusPending({Key? key}) : super(key: key);
+class CusSuccess extends StatefulWidget {
+  const CusSuccess({Key? key}) : super(key: key);
 
   @override
-  State<CusPending> createState() => _CusPendingState();
+  State<CusSuccess> createState() => _CusSuccessState();
 }
 
-class _CusPendingState extends State<CusPending> {
-
+class _CusSuccessState extends State<CusSuccess> {
   final Map<String, String> item = {
-   
-  'name': 'Name Lastname',  
+    'name': 'Name Lastname',
     'to': 'F1',
     'date': '24/03/24',
     'gender': 'Male',
@@ -30,7 +28,7 @@ class _CusPendingState extends State<CusPending> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Pending',
+          'Success',
           style: TextStyle(
             color: Color(0xFF1A1C43),
             fontWeight: FontWeight.bold,
@@ -61,14 +59,14 @@ class _CusPendingState extends State<CusPending> {
                   height: 50,
                 ),
                 const SizedBox(height: 5),
-                 Text(
-                      '${firstItem['name']} ',
-                      style: const TextStyle(
-                        color: Color(0xFF1A1C43),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
-                      ),
-                    ),
+                Text(
+                  '${firstItem['name']} ',
+                  style: const TextStyle(
+                    color: Color(0xFF1A1C43),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 11,
+                  ),
+                ),
                 const SizedBox(height: 5),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -319,34 +317,6 @@ class _CusPendingState extends State<CusPending> {
                 const SizedBox(
                   height: 30,
                 ),
-                Text(
-                  ' ${firstItem['status']}',
-                  style: const TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 10,
-                  ),
-                ),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    minimumSize: const Size(90, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20), // Additional spacing at the bottom
               ],
             ),
           ),

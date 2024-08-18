@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class PendingTab extends StatelessWidget {
    List testDate = [
-     {
+    {
       'from': 'home',
       'to': 'F1',
       'date': '24/03/24',
@@ -60,7 +60,7 @@ class PendingTab extends StatelessWidget {
   }
 
   Widget _PendingTab() {
-   return Padding(
+    return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: SizedBox(
         width: 320,
@@ -94,16 +94,6 @@ class PendingTab extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.account_circle_outlined,
-                                  color: Color(0xff1a1c43),
-                                  size: 30.0,
-                                ),
-                                const SizedBox(
-                                 width: 10,
-                               ),
                                 Row(
                                   children: [
                                     Text(
@@ -114,8 +104,6 @@ class PendingTab extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
                             Text(
                               "Date: ${testDate[index]['date']} ",
                               textAlign: TextAlign.center,
@@ -128,6 +116,13 @@ class PendingTab extends StatelessWidget {
                               style: const TextStyle(
                                   fontSize: 12, color: Color(0xff1a1c43)),
                             ),
+                            Text(
+                              "Status: ${testDate[index]['status']}",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 12, color: Color(0xff1a1c43)),
+                            ),
+
                           ],
                         ),
                         const SizedBox(
@@ -187,3 +182,4 @@ class PendingTab extends StatelessWidget {
     );
   }
 }
+

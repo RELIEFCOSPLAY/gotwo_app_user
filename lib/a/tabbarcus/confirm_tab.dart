@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ConfirmTab extends StatelessWidget {
-List testDate = [
+ List testDate = [
     {
       'from': 'home',
       'to': 'F1',
@@ -94,16 +94,6 @@ List testDate = [
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.account_circle_outlined,
-                                  color: Color(0xff1a1c43),
-                                  size: 30.0,
-                                ),
-                                const SizedBox(
-                                 width: 10,
-                               ),
                                 Row(
                                   children: [
                                     Text(
@@ -114,8 +104,6 @@ List testDate = [
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
                             Text(
                               "Date: ${testDate[index]['date']} ",
                               textAlign: TextAlign.center,

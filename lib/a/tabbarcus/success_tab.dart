@@ -50,7 +50,6 @@ class SuccessTab extends StatelessWidget {
       'status': 'Unpaid',
     },
   ];
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -95,16 +94,6 @@ class SuccessTab extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.account_circle_outlined,
-                                  color: Color(0xff1a1c43),
-                                  size: 30.0,
-                                ),
-                                const SizedBox(
-                                 width: 10,
-                               ),
                                 Row(
                                   children: [
                                     Text(
@@ -115,8 +104,6 @@ class SuccessTab extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
                             Text(
                               "Date: ${testDate[index]['date']} ",
                               textAlign: TextAlign.center,
@@ -125,6 +112,12 @@ class SuccessTab extends StatelessWidget {
                             ),
                             Text(
                               "Time: ${testDate[index]['time']}",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 12, color: Color(0xff1a1c43)),
+                            ),
+                            Text(
+                              "Status: ${testDate[index]['status']}",
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                   fontSize: 12, color: Color(0xff1a1c43)),
@@ -189,3 +182,4 @@ class SuccessTab extends StatelessWidget {
     );
   }
 }
+

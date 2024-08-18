@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/cus_pending.dart';
+import 'package:gotwo_app_user/a/cus_success.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/a/tabbarcus/pending_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/confirm_tab.dart';
@@ -7,6 +8,7 @@ import 'package:gotwo_app_user/m/join.dart';
 import 'package:gotwo_app_user/m/bank.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m/join.dart';
+
 // ignore: unused_import
 import 'package:gotwo_app_user/m/pickup.dart';
 // ignore: unused_import
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: CusPending(),
+      home: CusSuccess(),
     );
   }
 }
