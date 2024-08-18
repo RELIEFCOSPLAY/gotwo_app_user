@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/a/cus_pending.dart';
+import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:gotwo_app_user/a/tabbarcus/pending_tab.dart';
+import 'package:gotwo_app_user/a/tabbarcus/confirm_tab.dart';
+import 'package:gotwo_app_user/m/join.dart';
+import 'package:gotwo_app_user/m/bank.dart';
+// ignore: unused_import
+import 'package:gotwo_app_user/m/join.dart';
+// ignore: unused_import
 import 'package:gotwo_app_user/m/pickup.dart';
-// import 'package:gotwo_app_user/m/bank.dart';
-// // ignore: unused_import
-// import 'package:gotwo_app_user/m/join.dart';
-// // ignore: unused_import
-// import 'package:gotwo_app_user/m/pickup.dart';
-// // ignore: unused_import
-// import 'package:gotwo_app_user/m/register.dart';
-// import 'package:flutter_application_1/m/join.dart';
-// import 'package:flutter_application_1/m/page1.dart';
-// import 'package:flutter_application_1/m/pickup.dart';
-// import 'package:flutter_application_1/m/register.dart';
-// import 'package:flutter_application_1/m/utils.dart';
+// ignore: unused_import
+import 'package:gotwo_app_user/m/register.dart';
+import 'package:gotwo_app_user/m/page1.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Pickup(),
+      home: CusPending(),
     );
   }
 }
