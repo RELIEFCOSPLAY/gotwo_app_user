@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:image_picker/image_picker.dart';
-// ignore: unused_import
-import 'bank.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -14,18 +12,18 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   Uint8List? _image;
 
-  // void selectImage() async {
-  //   List<int>? imageBytes = await pickImage(ImageSource.gallery);
-  //   if (imageBytes != null) {
-  //     setState(() {
-  //       _image = Uint8List.fromList(imageBytes);
-  //     });
-  //   } else {
-  //     print('No image selected');
-  //   }
-  // }
+  void selectImage() async {
+    Uint8List? imageBytes = await pickImage(ImageSource.gallery);
+    if (imageBytes != null) {
+      setState(() {
+        _image = imageBytes;
+      });
+    } else {
+      debugPrint('No image selected');
+    }
+  }
 
-  // dropdown
+  // Dropdown items
   List<String> _items = ['Female', 'Male'];
   String? selectedItem;
 
@@ -63,10 +61,7 @@ class _RegisterState extends State<Register> {
                 ),
               const SizedBox(height: 10),
               ElevatedButton(
-                // onPressed: selectImage,
-                onPressed: () {
-                  
-                },
+                onPressed: selectImage,
                 child: const Text('Select Image'),
               ),
               const SizedBox(height: 10),
@@ -75,8 +70,7 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
@@ -96,8 +90,7 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
@@ -117,15 +110,13 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
-                      keyboardType:
-                          TextInputType.number, // กำหนดให้กรอกได้แค่ตัวเลข
+                      keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       decoration: const InputDecoration(
                         border: InputBorder.none,
@@ -141,14 +132,11 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal:
-                            15.0), // Adjusted padding inside the dropdown
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         isExpanded: true,
@@ -177,8 +165,7 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
@@ -199,8 +186,7 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
@@ -251,15 +237,15 @@ class _RegisterState extends State<Register> {
   }
 }
 
-// Future<List<int>?> pickImage(ImageSource source) async {
-//   final ImagePicker imagePicker = ImagePicker();
-//   try {
-//     XFile? file = await imagePicker.pickImage(source: source);
-//     if (file != null) {
-//       return await file.readAsBytes();
-//     }
-//   } catch (e) {
-//     print('Error picking image: $e');
-//   }
-//   return null;
-// }
+Future<Uint8List?> pickImage(ImageSource source) async {
+  final ImagePicker imagePicker = ImagePicker();
+  try {
+    XFile? file = await imagePicker.pickImage(source: source);
+    if (file != null) {
+      return await file.readAsBytes();
+    }
+  } catch (e) {
+    debugPrint('Error picking image: $e');
+  }
+  return null;
+}
