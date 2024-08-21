@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 
-class CusSuccess extends StatefulWidget {
-  const CusSuccess({Key? key}) : super(key: key);
+class CusConfirm2 extends StatefulWidget {
+  const CusConfirm2({Key? key}) : super(key: key);
 
   @override
-  State<CusSuccess> createState() => _CusSuccessState();
+  State<CusConfirm2> createState() => _CusConfirm2State();
 }
 
-class _CusSuccessState extends State<CusSuccess> {
+class _CusConfirm2State extends State<CusConfirm2> {
+
   final Map<String, String> item = {
-    'name': 'Name Lastname',
+   
+  'name': 'Name Lastname',  
+  'phone': '012345678', 
     'to': 'F1',
     'date': '24/03/24',
-    'gender': 'Male',
+    'gender': 'female',
     'price': '50 THB',
     'comment': 'comment',
     'image': 'assets/images/profile.png',
@@ -28,7 +31,7 @@ class _CusSuccessState extends State<CusSuccess> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Success',
+          'Confirm2',
           style: TextStyle(
             color: Color(0xFF1A1C43),
             fontWeight: FontWeight.bold,
@@ -59,27 +62,45 @@ class _CusSuccessState extends State<CusSuccess> {
                   height: 50,
                 ),
                 const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
                     Text(
-                         '${firstItem['name']} ',
-                              style: const TextStyle(
-                                color: Color(0xFF1A1C43),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11,
-                              ),
-                            ), 
-                      Icon(
+                          '${firstItem['name']} ',
+                          style: const TextStyle(
+                            color: Color(0xFF1A1C43),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                          ),
+                        ),
+                    Icon(
                       firstItem['gender'] == 'Male' ? Icons.male : Icons.female,
                       color: const Color(0xFF1A1C43),
                       size: 15,
                     ),
-                  ],
-                ),
-                   
+                   ],
+                 ),
                 const SizedBox(height: 5),
-
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                    const Icon(
+                      Icons.phone,
+                      color: Color(0xFF1A1C43),
+                      size: 15,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                          '${firstItem['phone']} ',
+                          style: const TextStyle(
+                            color: Color(0xFF1A1C43),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                          ),
+                        ),
+                   ],
+                 ),
+                const SizedBox(height: 5),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -119,7 +140,7 @@ class _CusSuccessState extends State<CusSuccess> {
                     ),
                   ],
                 ),
-               
+                
                 const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -141,6 +162,7 @@ class _CusSuccessState extends State<CusSuccess> {
                   ],
                 ),
                 const SizedBox(height: 5),
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -311,6 +333,37 @@ class _CusSuccessState extends State<CusSuccess> {
                 const SizedBox(
                   height: 30,
                 ),
+                Text(
+                  ' ${firstItem['status']}',
+                  style: const TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  ),
+                ),
+                const SizedBox(height: 30),
+
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    minimumSize: const Size(90, 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+               
+                  
+                
               ],
             ),
           ),

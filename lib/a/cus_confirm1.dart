@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
-class CusSuccess extends StatefulWidget {
-  const CusSuccess({Key? key}) : super(key: key);
+class CusConfirm extends StatefulWidget {
+  const CusConfirm({Key? key}) : super(key: key);
 
   @override
-  State<CusSuccess> createState() => _CusSuccessState();
+  State<CusConfirm> createState() => _CusConfirmState();
 }
 
-class _CusSuccessState extends State<CusSuccess> {
+class _CusConfirmState extends State<CusConfirm> {
+
   final Map<String, String> item = {
-    'name': 'Name Lastname',
+   
+  'name': 'Name Lastname',  
     'to': 'F1',
     'date': '24/03/24',
-    'gender': 'Male',
+    'gender': 'female',
     'price': '50 THB',
     'comment': 'comment',
     'image': 'assets/images/profile.png',
@@ -28,7 +30,7 @@ class _CusSuccessState extends State<CusSuccess> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Success',
+          'Confirm',
           style: TextStyle(
             color: Color(0xFF1A1C43),
             fontWeight: FontWeight.bold,
@@ -59,27 +61,25 @@ class _CusSuccessState extends State<CusSuccess> {
                   height: 50,
                 ),
                 const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                 Row(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
                     Text(
-                         '${firstItem['name']} ',
-                              style: const TextStyle(
-                                color: Color(0xFF1A1C43),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 11,
-                              ),
-                            ), 
-                      Icon(
+                          '${firstItem['name']} ',
+                          style: const TextStyle(
+                            color: Color(0xFF1A1C43),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                          ),
+                        ),
+                    Icon(
                       firstItem['gender'] == 'Male' ? Icons.male : Icons.female,
                       color: const Color(0xFF1A1C43),
                       size: 15,
                     ),
-                  ],
-                ),
-                   
+                   ],
+                 ),
                 const SizedBox(height: 5),
-
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -119,7 +119,7 @@ class _CusSuccessState extends State<CusSuccess> {
                     ),
                   ],
                 ),
-               
+                
                 const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -141,6 +141,7 @@ class _CusSuccessState extends State<CusSuccess> {
                   ],
                 ),
                 const SizedBox(height: 5),
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -310,6 +311,59 @@ class _CusSuccessState extends State<CusSuccess> {
                 ),
                 const SizedBox(
                   height: 30,
+                ),
+                Text(
+                  ' ${firstItem['status']}',
+                  style: const TextStyle(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10,
+                  ),
+                ),
+                const SizedBox(height: 30),
+
+                Row( mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:  Colors.green,
+                        minimumSize: const Size(90, 40),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: const Text(
+                        'Paid',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+
+                    ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    minimumSize: const Size(90, 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+               
+                  ],
                 ),
               ],
             ),

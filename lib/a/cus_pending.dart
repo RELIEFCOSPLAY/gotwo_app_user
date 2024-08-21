@@ -134,6 +134,27 @@ class _CusPendingState extends State<CusPending> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(
+                      Icons.calendar_today,
+                      color: Color(0xFF1A1C43),
+                      size: 15,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '${firstItem['date']}',
+                      style: const TextStyle(
+                        color: Color(0xFF1A1C43),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
                       Icons.payment,
                       color: Color(0xFF1A1C43),
                       size: 15,
@@ -149,26 +170,8 @@ class _CusPendingState extends State<CusPending> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 5),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.calendar_today,
-                      color: Color(0xFF1A1C43),
-                      size: 15,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Date: ${firstItem['date']}',
-                      style: const TextStyle(
-                        color: Color(0xFF1A1C43),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ),
+                
+                
                 const SizedBox(height: 20),
                 Container(
                   width: 270,
