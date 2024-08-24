@@ -185,9 +185,8 @@ class _CusConfirm2State extends State<CusConfirm2> {
                 
                 const SizedBox(height: 20),
                 Container(
-                  width: 270,
-                  height: 215,
-                  padding: const EdgeInsets.all(20),
+                  width: 300,
+                  height: 150,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(
@@ -195,139 +194,142 @@ class _CusConfirm2State extends State<CusConfirm2> {
                       width: 1, // Border width
                     ),
                     borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 1,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Pickup',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.my_location,
-                            color: Colors.green,
-                            size: 15,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            'Pickup',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
                           ),
-                          const SizedBox(width: 10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 5,
-                              horizontal: 10,
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.my_location,
+                              color: Colors.green,
+                              size: 18,
                             ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[100],
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Text(
-                              '${firstItem['from']}',
-                              style: const TextStyle(
-                                color: Color(0xFF1A1C43),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
+                            const SizedBox(width: 10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                '${firstItem['from']}',
+                                style: const TextStyle(
+                                  color: Color(0xFF1A1C43),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 3,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30.0),
-                        child: Text(
-                          '${firstItem['comment']}',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
-                          ),
+                          ],
                         ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 30.0),
-                        child: Divider(
-                          color: Color(0xFF1A1C43),
-                          thickness: 1,
-                          height: 0.5,
+                        const SizedBox(
+                          height: 3,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Text(
-                        'Drop',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.pin_drop,
-                            color: Color(0xFFD3261A),
-                            size: 15,
-                          ),
-                          const SizedBox(width: 10),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 5,
-                              horizontal: 10,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            '${firstItem['comment']}',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
                             ),
-                            decoration: BoxDecoration(
-                              color: Colors.blue[100],
-                              borderRadius: BorderRadius.circular(5),
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 30.0),
+                          child: Divider(
+                            color: Color(0xFF1A1C43),
+                            thickness: 0.5,
+                            height: 1,
+                            indent: 5,
+                            endIndent: 30,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            'Drop',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
-                            child: Text(
-                              '${firstItem['to']}',
-                              style: const TextStyle(
-                                color: Color(0xFF1A1C43),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.pin_drop,
+                              color: Color(0xFFD3261A),
+                              size: 18,
+                            ),
+                            const SizedBox(width: 10),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 5,
+                                horizontal: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                '${firstItem['to']}',
+                                style: const TextStyle(
+                                  color: Color(0xFF1A1C43),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 3,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30.0),
-                        child: Text(
-                          '${firstItem['comment']}',
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 3,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 40.0),
+                          child: Text(
+                            '${firstItem['comment']}',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
                           ),
                         ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 30.0),
-                        child: Divider(
-                          color: Color(0xFF1A1C43),
-                          thickness: 1,
-                          height: 0.5,
+                        const Padding(
+                          padding: EdgeInsets.only(left: 30.0),
+                          child: Divider(
+                            color: Color(0xFF1A1C43),
+                            thickness: 0.5,
+                            height: 1,
+                            indent: 5,
+                            endIndent: 30,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(
