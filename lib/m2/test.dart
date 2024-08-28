@@ -130,7 +130,160 @@ class JoinScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Container(
+
+          _dropdown_p(),
+
+          const Divider(
+            color: Color(0xFF1A1C43),
+            thickness: 1,
+            height: 0.5,
+          ),
+
+          ElevatedButton(
+            onPressed: () {},
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                const Color(0xFF1A1C43),
+              ),
+              minimumSize: MaterialStateProperty.all(const Size(90, 30)),
+            ),
+            child: const Text(
+              'Search',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                width: 80,
+                height: 20,
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF1A1C43)),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      hint: const Text(
+                        "Gender",
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      value: newValue,
+                      items: _items.map((String item) {
+                        return DropdownMenuItem(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: const TextStyle(fontSize: 11),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? value) {
+                        // Handle gender selection
+                      },
+                      icon: const Icon(Icons.arrow_drop_down, size: 12),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: listData.length,
+              itemBuilder: (context, index) {
+                final item = listData[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle button press for each item
+                    },
+                   style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xFF1A1C43),
+                        elevation: 2,
+                        minimumSize: const Size(300, 100),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: const BorderSide(
+                            color: Color(0xFF1A1C43),
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset(
+                              item['image']!,
+                              height: 40,
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${item['from']} - ${item['to']}',
+                                  style: const TextStyle(
+                                    color: Color(0xFF1A1C43),
+                                    fontSize: 13,
+                                  ),
+                                ),
+                                Text(
+                                  '${item['date']} ${item['time']}',
+                                  style: const TextStyle(
+                                    color: Color(0xFF1A1C43),
+                                    fontSize: 11,
+                                  ),
+                                ),
+                                Text(
+                                  item['gender']!,
+                                  style: const TextStyle(
+                                    color: Color(0xFF1A1C43),
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Text(
+                          item['price']!,
+                          style: const TextStyle(
+                            color: Color(0xFF1A1C43),
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget _dropdown_p(){
+  return Container(
             height: 50,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(18, 10, 20, 10),
@@ -229,146 +382,5 @@ class JoinScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          const Divider(
-            color: Color(0xFF1A1C43),
-            thickness: 1,
-            height: 0.5,
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                const Color(0xFF1A1C43),
-              ),
-              minimumSize: MaterialStateProperty.all(const Size(90, 30)),
-            ),
-            child: const Text(
-              'Search',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                width: 80,
-                height: 20,
-                decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF1A1C43)),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      hint: const Text(
-                        "Gender",
-                        style: TextStyle(fontSize: 11),
-                      ),
-                      value: newValue,
-                      items: _items.map((String item) {
-                        return DropdownMenuItem(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(fontSize: 11),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        // Handle gender selection
-                      },
-                      icon: const Icon(Icons.arrow_drop_down, size: 12),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: listData.length,
-              itemBuilder: (context, index) {
-                final item = listData[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Handle button press for each item
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
-                        const Color(0xFF1A1C43),
-                      ),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset(
-                              item['image']!,
-                              height: 40,
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${item['from']} - ${item['to']}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                                Text(
-                                  '${item['date']} ${item['time']}',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                                Text(
-                                  item['gender']!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Text(
-                          item['price']!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          );
 }
