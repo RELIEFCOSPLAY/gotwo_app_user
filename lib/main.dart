@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:gotwo_app_user/a/tabbarcus/pending_tab.dart';
+=======
+import 'package:gotwo_app_user/a/cus_cancel.dart';
+>>>>>>> 7aa57847a3739838d7eb8f814376abf6f85473ba
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/m2/bank.dart';
 import 'package:gotwo_app_user/m2/home.dart';
@@ -40,7 +44,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
+<<<<<<< HEAD
       home: Join(),
+=======
+      home:  TabbarCus(),
+>>>>>>> 7aa57847a3739838d7eb8f814376abf6f85473ba
     );
   }
 }

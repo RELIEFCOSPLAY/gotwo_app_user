@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ConfirmTab extends StatelessWidget {
- List testDate = [
+   List testDate = [
     {
       'from': 'home',
       'to': 'F1',
       'date': '24/03/24',
       'time': '10:30',
-      'price': '50 THB',
+      'price': '50 ',
       'status': 'Unpaid',
     },
     {
@@ -15,7 +15,7 @@ class ConfirmTab extends StatelessWidget {
       'to': 'F2',
       'date': '25/03/24',
       'time': '11:30',
-      'price': '35 THB',
+      'price': '35 ',
       'status': 'Unpaid',
     },
     {
@@ -23,7 +23,7 @@ class ConfirmTab extends StatelessWidget {
       'to': 'F3',
       'date': '25/03/24',
       'time': '18:30',
-      'price': '40 THB',
+      'price': '40 ',
       'status': 'Paid',
     },
     {
@@ -31,7 +31,7 @@ class ConfirmTab extends StatelessWidget {
       'to': 'F4',
       'date': '26/03/24',
       'time': '12:30',
-      'price': '45 THB',
+      'price': '45 ',
       'status': 'Paid',
     },
     {
@@ -39,14 +39,14 @@ class ConfirmTab extends StatelessWidget {
       'to': 'F5',
       'date': '26/03/24',
       'time': '13:30',
-      'price': '55 THB',
+      'price': '55 ',
       'status': 'Paid',
     },
     {
       'from': 'Park',
       'to': 'F6',
       'date': '27/03/24',
-      'price': '60 THB',
+      'price': '60 ',
       'status': 'Unpaid',
     },
   ];

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/a/cus_cancel.dart';
+
 
 // ignore: must_be_immutable
 class CancelTab extends StatelessWidget {
@@ -8,7 +10,7 @@ class CancelTab extends StatelessWidget {
       'to': 'F1',
       'date': '24/03/24',
       'time': '10:30',
-      'price': '50 THB',
+      'price': '50 ',
       'status': 'Unpaid',
     },
     {
@@ -16,7 +18,7 @@ class CancelTab extends StatelessWidget {
       'to': 'F2',
       'date': '25/03/24',
       'time': '11:30',
-      'price': '35 THB',
+      'price': '35 ',
       'status': 'Unpaid',
     },
     {
@@ -24,7 +26,7 @@ class CancelTab extends StatelessWidget {
       'to': 'F3',
       'date': '25/03/24',
       'time': '18:30',
-      'price': '40 THB',
+      'price': '40 ',
       'status': 'Paid',
     },
     {
@@ -32,7 +34,7 @@ class CancelTab extends StatelessWidget {
       'to': 'F4',
       'date': '26/03/24',
       'time': '12:30',
-      'price': '45 THB',
+      'price': '45 ',
       'status': 'Paid',
     },
     {
@@ -40,14 +42,14 @@ class CancelTab extends StatelessWidget {
       'to': 'F5',
       'date': '26/03/24',
       'time': '13:30',
-      'price': '55 THB',
+      'price': '55 ',
       'status': 'Paid',
     },
     {
       'from': 'Park',
       'to': 'F6',
       'date': '27/03/24',
-      'price': '60 THB',
+      'price': '60 ',
       'status': 'Unpaid',
     },
   ];
@@ -75,8 +77,13 @@ class CancelTab extends StatelessWidget {
               child: SizedBox(
                 width: 300,
                 height: 100,
-                child: ElevatedButton(
-                  onPressed: () {
+                child: ElevatedButton(  
+                    onPressed: () {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => (CusCancel())),
+                   );
+                  
                     debugPrint("CardRequest ${testDate[index]['from']}");
                   },
                   style: ButtonStyle(
