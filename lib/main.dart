@@ -8,7 +8,6 @@ import 'package:gotwo_app_user/a/cus_totravel.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/a/tabbarcus/pending_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/confirm_tab.dart';
-import 'package:gotwo_app_user/gotwo_PostInfor.dart';
 import 'package:gotwo_app_user/m/join.dart';
 import 'package:gotwo_app_user/m/bank.dart';
 // ignore: unused_import
@@ -27,14 +26,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
- 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
