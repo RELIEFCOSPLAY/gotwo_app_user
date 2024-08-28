@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/a/tabbarcus/cancel_tab.dart';
 
 class CusCancel extends StatefulWidget {
   const CusCancel({super.key});
@@ -46,8 +47,12 @@ class _CusCancelState extends State<CusCancel> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => (CancelTab())),
+            );
           },
+
         ),
       ),
       body: SafeArea(
