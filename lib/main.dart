@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/cus_cancel.dart';
+import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/m2/bank.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/join.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  CusCancel(),
+      home:  TabbarCus(),
     );
   }
 }
