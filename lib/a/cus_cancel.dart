@@ -339,15 +339,14 @@ class _CusCancelState extends State<CusCancel> {
                   endIndent: 20,
                   color: Colors.grey,
                 ),
-                Column(
-                  
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: EdgeInsets.only(top: 10, left: 40),
                       child: Text(
                         'Overall rating',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Color(0xFF1A1C43),
                           fontSize: 14,
                         ),
@@ -390,7 +389,7 @@ class _CusCancelState extends State<CusCancel> {
                       padding: EdgeInsets.only(top: 2, left: 40),
                       child: Text(
                         'Review',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Color(0xFF1A1C43),
                           fontSize: 14,
                         ),
