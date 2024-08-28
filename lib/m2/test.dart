@@ -93,6 +93,7 @@ class _JoinState extends State<Join> {
   }
 } 
 
+// ignore: must_be_immutable
 class JoinScreen extends StatelessWidget {
     List<String> _items = ['Female', 'Male'];
   String? selectedItem;
