@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:searchfield/searchfield.dart';
 
 class Join extends StatefulWidget {
   const Join({Key? key}) : super(key: key);
@@ -11,7 +12,6 @@ class _JoinState extends State<Join> {
   List<String> _items = ['Female', 'Male'];
   String? selectedItem;
   String? newValue;
-
   int index = 0;
 
   List<Map<String, String>> listData = [
@@ -74,151 +74,238 @@ class _JoinState extends State<Join> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: Container(
+        color: Colors.white,
+        padding: EdgeInsets.all(20),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
+            const SizedBox(height: 20),
+            const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'Join',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 27,
+                      fontSize: 30,
                       color: Color(0xFF1A1C43),
                     ),
                   ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 0.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xFFCCCCCC),
-                            ),
-                            minimumSize: MaterialStateProperty.all(
-                              const Size(90, 30),
-                            ),
-                          ),
-                          child: const Text(
-                            'Pickup',
-                            style: TextStyle(
-                              color: Color(0xFF1A1C43),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 25),
-                        Image.asset(
-                          'assets/images/motorcycle.png',
-                          height: 20,
-                        ),
-                        const SizedBox(width: 25),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                              Color(0xFFCCCCCC),
-                            ),
-                            minimumSize: MaterialStateProperty.all(
-                              const Size(90, 30),
-                            ),
-                          ),
-                          child: const Text(
-                            'Drop',
-                            style: TextStyle(
-                              color: Color(0xFF1A1C43),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Divider(
-                      color: Color(0xFF1A1C43),
-                      thickness: 1,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFF1A1C43),
-                      ),
-                      minimumSize:
-                          MaterialStateProperty.all(const Size(90, 30)),
-                    ),
-                    child: const Text(
-                      'search',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        width: 80,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF1A1C43)),
-                          borderRadius: BorderRadius.circular(5.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              hint: const Text(
-                                "Gender",
-                                style: TextStyle(fontSize: 11),
-                              ),
-                              value: newValue,
-                              items: _items.map((String item) {
-                                return DropdownMenuItem(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(fontSize: 11),
-                                  ),
-                                );
-                              }).toList(),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  newValue = value;
-                                });
-                              },
-                              icon: const Icon(Icons.arrow_drop_down, size: 12),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
                 ],
               ),
             ),
-//////////////////////////////-List-///////////////////////////////////////////////////
+            SizedBox(height: 10),
+            Container(
+              height: 50,
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(30),
+              //   border: Border.all(
+              //     color: Color(0xFF1A1C43),
+              //     width: 1,
+              //   ),
+              // ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(18, 10, 20, 10),
+                child: Row(
+                  children: [
+                    // const Icon(
+                    //   Icons.search,
+                    //   color: Color.fromARGB(255, 116, 119, 118),
+                    //   size: 24,
+                    // ),
+
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 110),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: SearchField(
+                          hint: 'Pickup',
+                          searchInputDecoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 20),
+                          ),
+                          itemHeight: 35,
+                          maxSuggestionsInViewPort: 8,
+                          suggestionsDecoration: SuggestionDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color(0x9FC8DFF0),
+                          ),
+                          onSubmit: (String value) {
+                            setState(() {});
+                          },
+                          suggestions: [
+                            'F1',
+                            'Central',
+                            'Airport',
+                            'Station',
+                            'Mall',
+                            'Park',
+                            'University',
+                            'Downtown',
+                            'Hotel',
+                            'Restaurant',
+                          ].map((e) => SearchFieldListItem<String>(e)).toList(),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Image.asset(
+                      'assets/images/motorcycle.png',
+                      height: 20,
+                    ),
+                    const SizedBox(
+                      width: 15,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 110),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: SearchField(
+                          hint: 'Drop',
+                          searchInputDecoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 20),
+                          ),
+                          itemHeight: 35,
+                          maxSuggestionsInViewPort: 8,
+                          suggestionsDecoration: SuggestionDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                            color: const Color(0x9FC8DFF0),
+                          ),
+                          onSubmit: (String value) {
+                            setState(() {});
+                          },
+                          suggestions: [
+                            'F1',
+                            'Central',
+                            'Airport',
+                            'Station',
+                            'Mall',
+                            'Park',
+                            'University',
+                            'Downtown',
+                            'Hotel',
+                            'Restaurant',
+                          ].map((e) => SearchFieldListItem<String>(e)).toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+           const Divider( color: Color(0xFF1A1C43),
+                thickness: 1,
+                height: 0.5,),
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color(0xFF1A1C43),
+                    ),
+                    minimumSize: MaterialStateProperty.all(const Size(90, 30)),
+                  ),
+                  child: const Text(
+                    'search',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  width: 80,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFF1A1C43)),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        hint: const Text(
+                          "Gender",
+                          style: TextStyle(fontSize: 11),
+                        ),
+                        value: newValue,
+                        items: _items.map((String item) {
+                          return DropdownMenuItem(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: const TextStyle(fontSize: 11),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          setState(() {
+                            newValue = value;
+                          });
+                        },
+                        icon: const Icon(Icons.arrow_drop_down, size: 12),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            ////////////////////////////-List-//////////////////////////
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 20), //ความกว้างของกล่อง
                 children: listData.map((item) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 5), //ระยะห่างแท็ป
                     child: ElevatedButton(
                       onPressed: () {
                         // Handle button press for each item
