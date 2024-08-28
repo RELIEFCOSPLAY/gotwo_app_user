@@ -64,7 +64,7 @@ class ConfirmTab extends StatelessWidget {
       padding: const EdgeInsets.only(top: 8),
       child: SizedBox(
         width: 320,
-        height: 500,
+        height: 444,
         child: ListView.builder(
           itemCount: testDate.length,
           itemBuilder: (context, index) {

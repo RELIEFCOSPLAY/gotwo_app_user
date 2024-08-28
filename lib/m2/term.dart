@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/m2/verifi.dart';
 
 class Term extends StatefulWidget {
   const Term({Key? key}) : super(key: key);
@@ -91,7 +92,12 @@ class _TermState extends State<Term> {
             ),
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Verifi()),
+            );
+          },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
                       const Color(0xFF1A1C43)), // background color

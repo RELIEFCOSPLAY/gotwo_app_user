@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/a/cus_pending.dart';
+import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:searchfield/searchfield.dart';
 
 class Join extends StatefulWidget {
@@ -13,6 +15,12 @@ class _JoinState extends State<Join> {
   String? selectedItem;
   String? newValue;
   int index = 0;
+  final screens = [
+  Join(),
+   TabbarCus(),
+  // Report(),
+  // Profile()
+  ];
 
   List<Map<String, String>> listData = [
     {
@@ -232,9 +240,11 @@ class _JoinState extends State<Join> {
                 ),
               ),
             ),
-           const Divider( color: Color(0xFF1A1C43),
-                thickness: 1,
-                height: 0.5,),
+            const Divider(
+              color: Color(0xFF1A1C43),
+              thickness: 1,
+              height: 0.5,
+            ),
             Column(
               children: [
                 ElevatedButton(
@@ -301,7 +311,8 @@ class _JoinState extends State<Join> {
             ////////////////////////////-List-//////////////////////////
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 20), //ความกว้างของกล่อง
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20), //ความกว้างของกล่อง
                 children: listData.map((item) {
                   return Padding(
                     padding:
@@ -451,18 +462,22 @@ class _JoinState extends State<Join> {
             destinations: const [
               NavigationDestination(
                 icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home),
                 label: 'Dashboard',
               ),
               NavigationDestination(
                 icon: Icon(Icons.checklist_outlined),
+                selectedIcon: Icon(Icons.checklist),
                 label: 'Status',
               ),
               NavigationDestination(
                 icon: Icon(Icons.report_outlined),
+                selectedIcon: Icon(Icons.report),
                 label: 'Report',
               ),
               NavigationDestination(
                 icon: Icon(Icons.account_circle_outlined),
+                selectedIcon: Icon(Icons.account_circle),
                 label: 'Profile',
               ),
             ],

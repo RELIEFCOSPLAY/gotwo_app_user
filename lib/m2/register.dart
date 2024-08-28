@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gotwo_app_user/m2/bank.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Register extends StatefulWidget {
@@ -30,30 +31,30 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent, // กำหนดสีของ AppBar เป็นโปร่งใส
-      //   elevation: 0, // ไม่มีเงาใต้ AppBar
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.arrow_back,
-      //         color: Colors.black), // ใช้ไอคอนแบ็กสีดำ
-      //     onPressed: () {
-      //       // Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้านี้
-      //     },
-      //   ),
-      // ),
+      appBar: AppBar(
+        title: const Text(
+          "Register",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 27,
+            color: Color(0xFF1A1C43),
+          ),
+        ),
+        backgroundColor: Colors.transparent, // กำหนดสีของ AppBar เป็นโปร่งใส
+        elevation: 0, // ไม่มีเงาใต้ AppBar
+          centerTitle: true, 
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back,
+              color: Colors.black), // ใช้ไอคอนแบ็กสีดำ
+          onPressed: () {
+            Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้านี้
+          },
+        ),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const Text(
-                "Register",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 27,
-                  color: Color(0xFF1A1C43),
-                ),
-              ),
-              const SizedBox(height: 10),
               if (_image != null)
                 CircleAvatar(
                   radius: 50,
@@ -70,7 +71,8 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border:
+                        Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
@@ -90,7 +92,8 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border:
+                        Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
@@ -110,7 +113,8 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border:
+                        Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: Padding(
@@ -132,7 +136,8 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border:
+                        Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: Padding(
@@ -165,7 +170,8 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border:
+                        Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
@@ -186,7 +192,8 @@ class _RegisterState extends State<Register> {
                 child: Container(
                   height: 40,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFF1A1C43), width: 1),
+                    border:
+                        Border.all(color: const Color(0xFF1A1C43), width: 1),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
@@ -205,12 +212,12 @@ class _RegisterState extends State<Register> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) =>
-                    //           const BankAccount()), // ให้ NextPage() เป็นหน้าถัดไป
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const BankAccount()), // ให้ NextPage() เป็นหน้าถัดไป
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(

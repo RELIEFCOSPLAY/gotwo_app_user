@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gotwo_app_user/m2/join.dart';
 
 class Verifi extends StatefulWidget {
   const Verifi({Key? key}) : super(key: key);

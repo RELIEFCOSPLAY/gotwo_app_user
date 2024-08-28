@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/m2/join.dart';
 
 class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
@@ -18,7 +19,7 @@ class _LoginpageState extends State<Loginpage> {
         leading: IconButton(
           icon:const Icon(Icons.arrow_back, color: Colors.black), 
           onPressed: () {
-            // Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้านี้
+            Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้านี้
           },
         ),
       ),
@@ -88,7 +89,14 @@ class _LoginpageState extends State<Loginpage> {
 
               Center(
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {  
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) =>
+                    //           const Join()), // ให้ NextPage() เป็นหน้าถัดไป
+                    // );
+                    },
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all<Color>(
                         const Color(0xFF1A1C43)), //  background color

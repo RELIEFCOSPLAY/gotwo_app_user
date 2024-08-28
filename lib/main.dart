@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/a/tabbarcus/pending_tab.dart';
+import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/m2/bank.dart';
+import 'package:gotwo_app_user/m2/home.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/join.dart';
+import 'package:gotwo_app_user/m2/login.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/payment.dart';
+import 'package:gotwo_app_user/m2/test.dart';
 
 // ignore: unused_import
 
@@ -27,18 +32,15 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
- 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-     
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  BankAccount(),
+      home: Join(),
     );
   }
 }
