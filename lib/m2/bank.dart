@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gotwo_app_user/m2/term.dart';
 // import 'package:gotwo_app_user/m/term.dart';
 // import 'package:flutter_application_1/m/term.dart';
 import 'package:image_picker/image_picker.dart';
@@ -146,7 +147,7 @@ class _BankAccountState extends State<BankAccount> {
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly
                             ], // จำกัดให้กรอกเป็นตัวเลขเท่านั้น
-                            decoration: InputDecoration(
+                            decoration:const InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Enter account number',
                             ),
@@ -171,7 +172,7 @@ class _BankAccountState extends State<BankAccount> {
                     const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: selectImage,
-                      child: Text('Add ID Card'),
+                      child:const Text('Add ID Card'),
                     ),
                   ],
                 ),
@@ -181,12 +182,12 @@ class _BankAccountState extends State<BankAccount> {
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) =>
-                    //           const Term()), // ให้ NextPage() เป็นหน้าถัดไป
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const Term()), // ให้ NextPage() เป็นหน้าถัดไป
+                    );
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
