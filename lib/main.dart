@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/cus_cancel.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:gotwo_app_user/a/tabbarcus/totravel_tab.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/bank.dart';
 // ignore: unused_import
@@ -13,6 +14,7 @@ import 'package:gotwo_app_user/m2/join.dart';
 import 'package:gotwo_app_user/m2/login.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/payment.dart';
+import 'package:gotwo_app_user/m2/register.dart';
 import 'package:gotwo_app_user/m2/test.dart';
 
 // ignore: unused_import
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  Join(),
+      home:  Payment(),
     );
   }
 }
