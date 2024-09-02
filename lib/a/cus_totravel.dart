@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 
 class CusTotravel extends StatefulWidget {
   const CusTotravel({Key? key}) : super(key: key);
@@ -44,7 +45,10 @@ class _CusTotravelState extends State<CusTotravel> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous screen
+            Navigator.pop(
+              context,
+              MaterialPageRoute(builder: (context) => (TabbarCus())),
+            );
           },
         ),
       ),

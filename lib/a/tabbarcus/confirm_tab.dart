@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/a/cus_confirm1.dart';
 
 class ConfirmTab extends StatelessWidget {
    List testDate = [
@@ -76,6 +77,11 @@ class ConfirmTab extends StatelessWidget {
                 height: 100,
                 child: ElevatedButton(
                   onPressed: () {
+                    Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => (CusConfirm())),
+                   );
+                  
                     debugPrint("CardRequest ${testDate[index]['from']}");
                   },
                   style: ButtonStyle(
