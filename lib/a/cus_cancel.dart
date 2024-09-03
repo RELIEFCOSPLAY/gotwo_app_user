@@ -330,45 +330,50 @@ class _CusCancelState extends State<CusCancel> {
                   endIndent: 20,
                   color: Colors.grey,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 10, left: 40),
-                      child: Text(
-                        'Overall rating',
-                        style: TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontSize: 14,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text(
+                            'Overall rating',
+                            style: TextStyle(
+                              color: Color(0xFF1A1C43),
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      child: RatingBar.builder(
-                        initialRating: 3,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                        itemBuilder: (context, _) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
+                        Container(
+                          child: RatingBar.builder(
+                            initialRating: 3,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemSize: 20,
+                            itemCount: 5,
+                            itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (rating) {
+                              print(rating);
+                            },
+                          ),
                         ),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2, left: 40),
-                      child: Text(
-                        'Review',
-                        style: TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontSize: 14,
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            'Review',
+                            style: TextStyle(
+                              color: Color(0xFF1A1C43),
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
