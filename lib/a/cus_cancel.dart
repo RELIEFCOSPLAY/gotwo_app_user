@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+
 
 class CusCancel extends StatefulWidget {
   const CusCancel({super.key});
@@ -22,13 +25,13 @@ class _CusCancelState extends State<CusCancel> {
     'image': 'assets/images/profile.png',
     'status': 'There is a helmet for you.',
     'status2': 'Bring your own a helmet.',
-  };
+  };  
    var border = OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
         borderSide: const BorderSide(color: Color(0xff1a1c43)));
   @override
   Widget build(BuildContext context) {
-   
+     var _saveRating ;
     final Map<String, String> firstItem = item;
 
     return Scaffold(
@@ -344,31 +347,22 @@ class _CusCancelState extends State<CusCancel> {
                       child: Row(
                         children: [
                           SizedBox(width: 5),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
+                          //rating bar
+                         RatingBar.builder(
+                         initialRating: 3,
+                         minRating: 1,
+                         direction: Axis.horizontal,
+                         allowHalfRating: true,
+                         itemCount: 5,
+                         itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                         itemBuilder:(context, _) => Icon(
+                           Icons.star,
+                           color: Colors.amber,
+                         ),
+                         onRatingUpdate: (rating) {
+                           print(rating);
+                         },
+                      );
                         ],
                       ),
                     ),
