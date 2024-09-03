@@ -354,7 +354,7 @@ class _CusCancelState extends State<CusCancel> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 10, left: 30),
+                          padding: EdgeInsets.only(top: 10, left: 50),
                           child: Text(
                             'Overall rating',
                             style: TextStyle(
@@ -364,7 +364,7 @@ class _CusCancelState extends State<CusCancel> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top:5,left: 50),
+                          padding: const EdgeInsets.only(top:5,left: 55),
                           child: Container(
                             child: RatingBar.builder(
                               initialRating: 3,
@@ -386,7 +386,7 @@ class _CusCancelState extends State<CusCancel> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 2 ,),
+                          padding: EdgeInsets.only(top: 10,left: 55),
                           child: Text(
                             'Review',
                             style: TextStyle(
