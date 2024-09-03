@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 
 class CusCancel extends StatefulWidget {
@@ -344,7 +345,7 @@ class _CusCancelState extends State<CusCancel> {
                   endIndent: 20,
                   color: Colors.grey,
                 ),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
@@ -357,37 +358,21 @@ class _CusCancelState extends State<CusCancel> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2, left: 40),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 5),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 20,
-                          ),
-                        ],
+                    Container(
+                      child: RatingBar.builder(
+                        initialRating: 3,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
                       ),
                     ),
                     Padding(

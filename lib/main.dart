@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-// ignore: unused_import
 import 'package:gotwo_app_user/a/cus_cancel.dart';
+// ignore: unused_import
 // ignore: unused_import
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/a/tabbarcus/totravel_tab.dart';
@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  Payment(),
+      home: CusCancel(),
     );
   }
 }
