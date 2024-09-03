@@ -3,8 +3,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-
-
 class CusCancel extends StatefulWidget {
   const CusCancel({super.key});
 
@@ -13,7 +11,6 @@ class CusCancel extends StatefulWidget {
 }
 
 class _CusCancelState extends State<CusCancel> {
-  
   final Map<String, String> item = {
     'name': 'Name Lastname',
     'from': 'MFU library ',
@@ -26,13 +23,13 @@ class _CusCancelState extends State<CusCancel> {
     'image': 'assets/images/profile.png',
     'status': 'There is a helmet for you.',
     'status2': 'Bring your own a helmet.',
-  };  
-   var border = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Color(0xff1a1c43)));
+  };
+  var border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(18),
+      borderSide: const BorderSide(color: Color(0xff1a1c43)));
   @override
   Widget build(BuildContext context) {
-     var _saveRating ;
+    var _saveRating;
     final Map<String, String> firstItem = item;
 
     return Scaffold(
@@ -56,7 +53,6 @@ class _CusCancelState extends State<CusCancel> {
               MaterialPageRoute(builder: (context) => (TabbarCus())),
             );
           },
-
         ),
       ),
       body: SafeArea(
@@ -104,14 +100,36 @@ class _CusCancelState extends State<CusCancel> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    //star rating
-                const Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   children: [
-                    
-                ],
-                )
-                ],
+                    Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                      size: 15,
+                    ),
+                    Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                      size: 15,
+                    ),
+                    Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                      size: 15,
+                    ),
+                    Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                      size: 15,
+                    ),
+                    Icon(
+                      Icons.star,
+                      color: Colors.yellow,
+                      size: 15,
+                    ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [],
+                    )
+                  ],
                 ),
                 const SizedBox(height: 5),
                 Row(
@@ -330,67 +348,72 @@ class _CusCancelState extends State<CusCancel> {
                   endIndent: 20,
                   color: Colors.grey,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 10, left: 40),
-                      child: Text(
-                        'Overall rating',
-                        style: TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontSize: 14,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Overall rating',
+                          style: TextStyle(
+                            color: Color(0xFF1A1C43),
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      child: RatingBar.builder(
-                        initialRating: 3,
-                        minRating: 1,
-                        direction: Axis.horizontal,
-                        allowHalfRating: true,
-                        itemCount: 5,
-                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                        itemBuilder: (context, _) => Icon(
-                          Icons.star,
-                          color: Colors.amber,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Container(
+                            child: RatingBar.builder(
+                              initialRating: 3,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemSize: 25,
+                              itemCount: 5,
+                              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {
+                                print(rating);
+                              },
+                            ),
+                          ),
                         ),
-                        onRatingUpdate: (rating) {
-                          print(rating);
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 2, left: 40),
-                      child: Text(
-                        'Review',
-                        style: TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontSize: 14,
+                        Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: Text(
+                            'Review',
+                            style: TextStyle(
+                              color: Color(0xFF1A1C43),
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 5,bottom: 5),
+                  padding: EdgeInsets.only(top: 5, bottom: 10),
                   child: Container(
                     width: 270,
-                    height: 50,
+                    height: 40,
                     child: TextField(
                       decoration: InputDecoration(
-                      enabledBorder: border,
-                      focusedBorder: border,
+                        enabledBorder: border,
+                        focusedBorder: border,
                         border: OutlineInputBorder(),
                         hintText: 'What is your opinion?',
                       ),
                     ),
                   ),
                 ),
-                 ElevatedButton(
+                ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:Color(0xFF1A1C43),
+                    backgroundColor: Color(0xFF1A1C43),
                     minimumSize: const Size(90, 40),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
