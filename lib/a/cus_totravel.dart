@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 
 class CusTotravel extends StatefulWidget {
@@ -9,11 +10,9 @@ class CusTotravel extends StatefulWidget {
 }
 
 class _CusTotravelState extends State<CusTotravel> {
-
   final Map<String, String> item = {
-   
-  'name': 'Name Lastname',
-  'phone': '012345678',  
+    'name': 'Name Lastname',
+    'phone': '012345678',
     'to': 'F1',
     'date': '24/03/24',
     'gender': 'female',
@@ -23,7 +22,9 @@ class _CusTotravelState extends State<CusTotravel> {
     'status': 'There is a helmet for you.',
     'status2': 'Bring your own a helmet.',
   };
-
+  var border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(18),
+      borderSide: const BorderSide(color: Color(0xff1a1c43)));
   @override
   Widget build(BuildContext context) {
     // Selecting the first item from listData
@@ -66,28 +67,28 @@ class _CusTotravelState extends State<CusTotravel> {
                   height: 50,
                 ),
                 const SizedBox(height: 5),
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Text(
-                          '${firstItem['name']} ',
-                          style: const TextStyle(
-                            color: Color(0xFF1A1C43),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 11,
-                          ),
-                        ),
+                      '${firstItem['name']} ',
+                      style: const TextStyle(
+                        color: Color(0xFF1A1C43),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
                     Icon(
                       firstItem['gender'] == 'Male' ? Icons.male : Icons.female,
                       color: const Color(0xFF1A1C43),
                       size: 15,
                     ),
-                   ],
-                 ),
+                  ],
+                ),
                 const SizedBox(height: 5),
                 Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   children: [
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     const Icon(
                       Icons.phone,
                       color: Color(0xFF1A1C43),
@@ -95,15 +96,15 @@ class _CusTotravelState extends State<CusTotravel> {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                          '${firstItem['phone']} ',
-                          style: const TextStyle(
-                            color: Color(0xFF1A1C43),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 11,
-                          ),
-                        ),
-                   ],
-                 ),
+                      '${firstItem['phone']} ',
+                      style: const TextStyle(
+                        color: Color(0xFF1A1C43),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 5),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -144,7 +145,6 @@ class _CusTotravelState extends State<CusTotravel> {
                     ),
                   ],
                 ),
-                
                 const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -166,7 +166,6 @@ class _CusTotravelState extends State<CusTotravel> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -180,7 +179,60 @@ class _CusTotravelState extends State<CusTotravel> {
                     ),
                   ],
                 ),
-                
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Center(
+                          child: AlertDialog(
+                            title: const Center(
+                              child: Text(
+                                'Motorcycle detail',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            content: Container(
+                              width: 200.0,
+                              height: 250.0,
+                              child: Image.asset(
+                                  "assets/images/ninja400-appcarpool.jpg"),
+                            ),
+                            actions: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1A1C43),
+                    minimumSize: const Size(5, 5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'car detail',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 20),
                 Container(
                   width: 300,
@@ -342,13 +394,110 @@ class _CusTotravelState extends State<CusTotravel> {
                   ),
                 ),
                 const SizedBox(height: 30),
-
-                Row( mainAxisAlignment: MainAxisAlignment.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Center(
+                              child: AlertDialog(
+                                title: const Center(
+                                  child: Text(
+                                    'Review',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                content: Container(
+                                  height: 100,
+                                  width: 250,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Container(
+                                          child: RatingBar.builder(
+                                            initialRating: 3,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: true,
+                                            itemSize: 25,
+                                            itemCount: 5,
+                                            itemPadding: EdgeInsets.symmetric(
+                                                horizontal: 1.0),
+                                            itemBuilder: (context, _) => Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            onRatingUpdate: (rating) {
+                                              print(rating);
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 10, bottom: 10),
+                                        child: Container(
+                                          width: 270,
+                                          height: 50,
+                                          child: TextField(
+                                            decoration: InputDecoration(
+                                              enabledBorder: border,
+                                              focusedBorder: border,
+                                              border: OutlineInputBorder(),
+                                              hintText: 'What is your opinion?',
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(0xFF1A1C43),
+                                          minimumSize: const Size(20, 10),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Send',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text('Close',
+                                            style:
+                                                TextStyle(color: Colors.grey)),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:  Colors.green,
+                        backgroundColor: Colors.green,
                         minimumSize: const Size(90, 40),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -364,25 +513,24 @@ class _CusTotravelState extends State<CusTotravel> {
                       ),
                     ),
                     const SizedBox(width: 10),
-
                     ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    minimumSize: const Size(90, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        minimumSize: const Size(90, 40),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),              
                   ],
                 ),
               ],
