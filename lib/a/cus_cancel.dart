@@ -100,32 +100,14 @@ class _CusCancelState extends State<CusCancel> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                  ],
+                    //star rating
+                const Row(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                    
+                ],
+                )
+                ],
                 ),
                 const SizedBox(height: 5),
                 Row(
