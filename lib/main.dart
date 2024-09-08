@@ -17,6 +17,8 @@ import 'package:gotwo_app_user/m2/login.dart';
 import 'package:gotwo_app_user/m2/payment.dart';
 import 'package:gotwo_app_user/m2/register.dart';
 import 'package:gotwo_app_user/m2/test.dart';
+import 'package:gotwo_app_user/m2/test2.dart';
+import 'package:http/http.dart' as http;
 
 // ignore: unused_import
 
@@ -48,7 +50,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  Home(),
+      home: Join(),
     );
   }
 }

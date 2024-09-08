@@ -1,12 +1,13 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/cus_pending.dart';
 import 'package:gotwo_app_user/a/tabbarcus/pending_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/m2/joindetail.dart';
-import 'package:searchfield/searchfield.dart';
-
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 class Join extends StatefulWidget {
   const Join({Key? key}) : super(key: key);
 
@@ -16,18 +17,70 @@ class Join extends StatefulWidget {
 
 class _JoinState extends State<Join> {
   int index = 0;
+  List<dynamic> listData = [];
 
-  final screens = [
-    JoinScreen(),
-    TabbarCus(),
-    // Report(),
-    // Profile(),
+  // ตัวแปรสำหรับ DropdownButton
+  String? selectedPickup; // เก็บค่าที่เลือกจาก Pickup
+  String? selectedDrop; // เก็บค่าที่เลือกจาก Drop
+
+  // ข้อมูลตัวเลือกสำหรับ Dropdown
+  final List<String> pickupLocations = [
+    'F1',
+    'Central',
+    'Airport',
+    'Station',
+    'Mall',
+    'Park',
+    'University',
+    'Downtown',
+    'Hotel',
+    'Restaurant'
   ];
+
+  final List<String> dropLocations = [
+    'F1',
+    'Central',
+    'Airport',
+    'Station',
+    'Mall',
+    'Park',
+    'University',
+    'Downtown',
+    'Hotel',
+    'Restaurant'
+  ];
+
+  // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
+  Future<void> fetchData() async {
+    final String url = "http://192.168.110.237:8080/gotwo/post.php";
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          listData = json.decode(response.body); // แปลง JSON เป็น List
+        });
+      } else {
+        print("Failed to load data");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData(); // ดึงข้อมูลเมื่อเริ่มแอป
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: screens[index],
+      // ใช้สำหรับการแสดงหน้าจอหลัก
+      body: _buildScreen(index),
+
+      // แถบ Navigation Bar ด้านล่าง
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           indicatorColor: Colors.blue.shade100,
@@ -52,8 +105,7 @@ class _JoinState extends State<Join> {
             backgroundColor: Colors.transparent,
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             selectedIndex: index,
-            onDestinationSelected: (index) =>
-                setState(() => this.index = index),
+            onDestinationSelected: (index) => setState(() => this.index = index),
             destinations: const [
               NavigationDestination(
                 icon: Icon(Icons.home_outlined),
@@ -81,61 +133,13 @@ class _JoinState extends State<Join> {
       ),
     );
   }
-}
 
-// ignore: must_be_immutable
-class JoinScreen extends StatelessWidget {
-  List<String> _items = ['Female', 'Male'];
-  String? selectedItem;
-  String? newValue;
-  final List<Map<String, String>> listData = [
-    {
-      'from': 'home',
-      'to': 'F1',
-      'date': '24/03/24',
-      'time': '10:30',
-      'gender': 'Male',
-      'price': '50 ',
-      'image': 'assets/images/profile.png',
-    },
-    {
-      'from': 'JJ',
-      'to': 'F3',
-      'date': '25/03/24',
-      'time': '18:30',
-      'gender': 'Male',
-      'price': '40 ',
-      'image': 'assets/images/profile.png',
-    },
-    {
-      'from': 'Gym',
-      'to': 'F5',
-      'date': '26/03/24',
-      'time': '13:30',
-      'gender': 'Female',
-      'price': '55 ',
-      'image': 'assets/images/profile.png',
-    },
-    {
-      'from': 'Park',
-      'to': 'F6',
-      'date': '27/03/24',
-      'time': '14:30',
-      'gender': 'Female',
-      'price': '60 ',
-      'image': 'assets/images/profile.png',
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+  // ฟังก์ชันสร้างหน้าจอหลัก
+  Widget _buildScreen(int index) {
+    if (index == 0) {
+      return Column(
         children: [
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
           const Center(
             child: Text(
               'Join',
@@ -146,288 +150,224 @@ class JoinScreen extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(height: 5),
+          _dropdown_p(), // Dropdown สำหรับการเลือก Pickup และ Drop
           const SizedBox(height: 10),
+          Expanded(
+            child: listData.isEmpty
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  ) // ถ้าข้อมูลว่างแสดง Loading
+                : ListView.builder(
+                    padding: const EdgeInsets.only(
+                        top: 20, left: 10, right: 10, bottom: 20),
+                    itemCount: listData.length,
+                    itemBuilder: (context, index) {
+                      final item = listData[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const Joindetail()), // ไปยังหน้าถัดไป
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF1A1C43),
+                            elevation: 2,
+                            minimumSize: const Size(350, 100),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: const BorderSide(
+                                color: Color(0xFF1A1C43),
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/profile.png',
+                                    height: 40,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'From: ${item['pick_up']} ',
+                                            style: const TextStyle(
+                                              color: Color(0xFF1A1C43),
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          const Icon(Icons.arrow_forward),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            'To: ${item['at_drop']}',
+                                            style: const TextStyle(
+                                              color: Color(0xFF1A1C43),
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        'Date: ${item['date']}',
+                                        style: const TextStyle(fontSize: 11.5),
+                                      ),
+                                      Text(
+                                        'Time: ${item['time']}',
+                                        style: const TextStyle(fontSize: 11.5),
+                                      ),
+                                      Text(
+                                        'Gender: ${item['rider_id']}',
+                                        style: const TextStyle(fontSize: 11.5),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Text(
+                                  '${item['price']} THB',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      );
+    } else {
+      return const TabbarCus();
+    }
+  }
 
-          _dropdown_p(),
+  // ฟังก์ชันสำหรับ Dropdown ที่อยู่ตรงกลาง
+  Widget _dropdown_p() {
+    return Center(
+      // จัดวางทั้งหมดให้อยู่ตรงกลาง
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center, // จัดให้อยู่กลางแนวตั้ง
+        children: [
+          Container(
+            height: 50,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(18, 10, 20, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Dropdown สำหรับ Pickup
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Container(
+                      constraints: const BoxConstraints(maxWidth: 110),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          value: selectedPickup,
+                          hint: const Text('Pickup'),
+                          items: pickupLocations.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedPickup = newValue; // อัปเดตค่า Pickup
+                            });
+                          },
+                          underline: Container(), // ซ่อนเส้นขีดใต้
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
 
-          const Divider(
-            color: Color(0xFF1A1C43),
-            thickness: 1,
-            height: 0.5,
+                  Image.asset(
+                    'assets/images/motorcycle.png',
+                    height: 20,
+                  ),
+                  const SizedBox(width: 15),
+
+                  // Dropdown สำหรับ Drop
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      constraints: const BoxConstraints(maxWidth: 110),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          value: selectedDrop,
+                          hint: const Text('Drop'),
+                          items: dropLocations.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedDrop = newValue; // อัปเดตค่า Drop
+                            });
+                          },
+                          underline: Container(), // ซ่อนเส้นขีดใต้
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
 
+          // ปุ่ม ค้นหา
           ElevatedButton(
-            onPressed: () {},
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                const Color(0xFF1A1C43),
-              ),
-              minimumSize: MaterialStateProperty.all(const Size(90, 30)),
+            onPressed: () {
+              if (selectedPickup != null && selectedDrop != null) {
+                // ดำเนินการเมื่อกดปุ่มค้นหาและค่า dropdown ไม่เป็น null
+                print('ค้นหาจาก: $selectedPickup ไปยัง: $selectedDrop');
+              } else {
+                print('กรุณาเลือก Pickup และ Drop');
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1A1C43), // สีพื้นหลังปุ่ม
             ),
             child: const Text(
               'Search',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              ),
-            ),
-          ),
-          // const SizedBox(height: 10),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                width: 80,
-                height: 20,
-                decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF1A1C43)),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      hint: const Text(
-                        "Gender",
-                        style: TextStyle(fontSize: 11),
-                      ),
-                      value: newValue,
-                      items: _items.map((String item) {
-                        return DropdownMenuItem(
-                          value: item,
-                          child: Text(
-                            item,
-                            style: const TextStyle(fontSize: 11),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) {
-                        // Handle gender selection
-                      },
-                      icon: const Icon(Icons.arrow_drop_down, size: 12),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.only(top: 20, left: 10 , right: 10,bottom: 20),
-              itemCount: listData.length,
-              itemBuilder: (context, index) {
-                final item = listData[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const Joindetail()), // ให้ NextPage() เป็นหน้าถัดไป
-                    );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF1A1C43),
-                      elevation: 2,
-                      minimumSize: const Size(350, 100),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: const BorderSide(
-                          color: Color(0xFF1A1C43),
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset(
-                              item['image']!,
-                              height: 40,
-                            ),
-                            const SizedBox(width: 10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      'From: ${item['from']} ',
-                                      style: const TextStyle(
-                                        color: Color(0xFF1A1C43),
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                    const Icon(Icons.arrow_forward),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      'To:${item['to']}',
-                                      style: const TextStyle(
-                                        color: Color(0xFF1A1C43),
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  'Date: ${item['date']}',
-                                  style: const TextStyle(fontSize: 11.5),
-                                ),
-                                Text(
-                                  'Time: ${item['time']}',
-                                  style: const TextStyle(fontSize: 11.5),
-                                ),
-                                Text(
-                                  'Gender: ${item['gender']}',
-                                  style: const TextStyle(fontSize: 11.5),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30),
-                      child: Text(
-                                '${item['price']} THB',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                ),
-                              
-                            ),
-                    ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-Widget _dropdown_p() {
-  return Container(
-    height: 50,
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(18, 10, 20, 10),
-      child: Row(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 110),
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: SearchField(
-                hint: 'Pickup',
-                searchInputDecoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                ),
-                itemHeight: 35,
-                maxSuggestionsInViewPort: 8,
-                suggestionsDecoration: SuggestionDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                  color: const Color(0x9FC8DFF0),
-                ),
-                onSubmit: (String value) {
-                  // Handle submission
-                },
-                suggestions: [
-                  'F1',
-                  'Central',
-                  'Airport',
-                  'Station',
-                  'Mall',
-                  'Park',
-                  'University',
-                  'Downtown',
-                  'Hotel',
-                  'Restaurant',
-                  // Add more suggestions as needed
-                ].map((e) => SearchFieldListItem<String>(e)).toList(),
-              ),
-            ),
-          ),
-          const SizedBox(width: 15),
-          Image.asset(
-            'assets/images/motorcycle.png',
-            height: 20,
-          ),
-          const SizedBox(width: 15),
-          Align(
-            alignment: Alignment.center,
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 110),
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: SearchField(
-                hint: 'Drop',
-                searchInputDecoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                ),
-                itemHeight: 35,
-                maxSuggestionsInViewPort: 8,
-                suggestionsDecoration: SuggestionDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                  color: const Color(0x9FC8DFF0),
-                ),
-                onSubmit: (String value) {
-                  // Handle submission
-                },
-                suggestions: [
-                  'F1',
-                  'Central',
-                  'Airport',
-                  'Station',
-                  'Mall',
-                  'Park',
-                  'University',
-                  'Downtown',
-                  'Hotel',
-                  'Restaurant',
-                  // Add more suggestions as needed
-                ].map((e) => SearchFieldListItem<String>(e)).toList(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 }
