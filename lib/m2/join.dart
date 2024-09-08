@@ -1,13 +1,10 @@
-// ignore_for_file: unused_import, unused_local_variable
-
-import 'package:flutter/material.dart';
-import 'package:gotwo_app_user/a/cus_pending.dart';
-import 'package:gotwo_app_user/a/tabbarcus/pending_tab.dart';
-import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
-import 'package:gotwo_app_user/m2/joindetail.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:gotwo_app_user/m2/test2.dart';
+import 'package:http/http.dart' as http;
+import 'joindetail.dart'; // Import หน้าจอแสดงรายละเอียด
+
 class Join extends StatefulWidget {
   const Join({Key? key}) : super(key: key);
 
@@ -77,60 +74,8 @@ class _JoinState extends State<Join> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // ใช้สำหรับการแสดงหน้าจอหลัก
-      body: _buildScreen(index),
-
-      // แถบ Navigation Bar ด้านล่าง
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          indicatorColor: Colors.blue.shade100,
-          labelTextStyle: MaterialStateProperty.all(
-            const TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
-            ),
-          ),
-        ),
-        child: Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20.0),
-              topRight: Radius.circular(20.0),
-            ),
-            color: Color(0xFF1A1C43),
-          ),
-          child: NavigationBar(
-            height: 60,
-            backgroundColor: Colors.transparent,
-            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-            selectedIndex: index,
-            onDestinationSelected: (index) => setState(() => this.index = index),
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home),
-                label: 'Dashboard',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.checklist_outlined),
-                selectedIcon: Icon(Icons.checklist),
-                label: 'Status',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.report_outlined),
-                selectedIcon: Icon(Icons.report),
-                label: 'Report',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.account_circle_outlined),
-                selectedIcon: Icon(Icons.account_circle),
-                label: 'Profile',
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: _buildScreen(index), // แสดงหน้าจอตาม index
+      bottomNavigationBar: _buildBottomNavBar(), // แสดง Navigation Bar ด้านล่าง
     );
   }
 
@@ -159,8 +104,7 @@ class _JoinState extends State<Join> {
                     child: CircularProgressIndicator(),
                   ) // ถ้าข้อมูลว่างแสดง Loading
                 : ListView.builder(
-                    padding: const EdgeInsets.only(
-                        top: 20, left: 10, right: 10, bottom: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                     itemCount: listData.length,
                     itemBuilder: (context, index) {
                       final item = listData[index];
@@ -171,8 +115,8 @@ class _JoinState extends State<Join> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const Joindetail()), // ไปยังหน้าถัดไป
+                                builder: (context) => Joindetail(item: item), 
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -199,8 +143,7 @@ class _JoinState extends State<Join> {
                                   ),
                                   const SizedBox(width: 10),
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -231,7 +174,7 @@ class _JoinState extends State<Join> {
                                         style: const TextStyle(fontSize: 11.5),
                                       ),
                                       Text(
-                                        'Gender: ${item['rider_id']}',
+                                        'Gender: ${item['rider_gender']}',
                                         style: const TextStyle(fontSize: 11.5),
                                       ),
                                     ],
@@ -259,10 +202,63 @@ class _JoinState extends State<Join> {
     }
   }
 
+  // ฟังก์ชันสร้าง Bottom Navigation Bar
+  Widget _buildBottomNavBar() {
+    return NavigationBarTheme(
+      data: NavigationBarThemeData(
+        indicatorColor: Colors.blue.shade100,
+        labelTextStyle: MaterialStateProperty.all(
+          const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      child: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+          color: Color(0xFF1A1C43),
+        ),
+        child: NavigationBar(
+          height: 60,
+          backgroundColor: Colors.transparent,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          selectedIndex: index,
+          onDestinationSelected: (index) => setState(() => this.index = index),
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: 'Dashboard',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.checklist_outlined),
+              selectedIcon: Icon(Icons.checklist),
+              label: 'Status',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.report_outlined),
+              selectedIcon: Icon(Icons.report),
+              label: 'Report',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.account_circle_outlined),
+              selectedIcon: Icon(Icons.account_circle),
+              label: 'Profile',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   // ฟังก์ชันสำหรับ Dropdown ที่อยู่ตรงกลาง
   Widget _dropdown_p() {
     return Center(
-      // จัดวางทั้งหมดให้อยู่ตรงกลาง
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center, // จัดให้อยู่กลางแนวตั้ง
         children: [
@@ -305,13 +301,8 @@ class _JoinState extends State<Join> {
                     ),
                   ),
                   const SizedBox(width: 15),
-
-                  Image.asset(
-                    'assets/images/motorcycle.png',
-                    height: 20,
-                  ),
+                  Image.asset('assets/images/motorcycle.png', height: 20),
                   const SizedBox(width: 15),
-
                   // Dropdown สำหรับ Drop
                   Align(
                     alignment: Alignment.center,
@@ -347,8 +338,6 @@ class _JoinState extends State<Join> {
               ),
             ),
           ),
-
-          // ปุ่ม ค้นหา
           ElevatedButton(
             onPressed: () {
               if (selectedPickup != null && selectedDrop != null) {
@@ -359,12 +348,9 @@ class _JoinState extends State<Join> {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1A1C43), // สีพื้นหลังปุ่ม
+              backgroundColor: const Color(0xFF1A1C43),
             ),
-            child: const Text(
-              'Search',
-              style: TextStyle(color: Colors.white),
-            ),
+            child: const Text('Search', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),

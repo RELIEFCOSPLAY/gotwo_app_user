@@ -2,7 +2,22 @@
 header('Content-Type: application/json; charset=utf-8');
 include("config.php"); // รวมไฟล์ config.php เพื่อเชื่อมต่อกับฐานข้อมูล
 
-$sql = "SELECT * FROM post";
+// ใช้ name_rider (int) จากตาราง post เพื่อเชื่อมโยงกับ regis_rider_id ของตาราง table_rider
+$sql = "
+    SELECT 
+        post.pick_up, 
+        post.comment_pick, 
+        post.at_drop, 
+        post.comment_drop, 
+        post.date, 
+        post.time, 
+        post.price, 
+        post.status_helmet, 
+        table_rider.name AS rider_id, 
+        table_rider.gender AS rider_gender
+    FROM post
+    INNER JOIN table_rider ON post.rider_id = table_rider.regis_rider_id"; // เชื่อมต่อ post กับ table_rider
+
 $result = mysqli_query($conn, $sql);
 
 $response = array();
@@ -17,7 +32,9 @@ if (mysqli_num_rows($result) > 0) {
         $tb_pos["date"] = $row['date'];
         $tb_pos["time"] = $row['time'];
         $tb_pos["price"] = $row['price'];
-        $tb_pos["rider_id"] = $row['rider_id'];
+        $tb_pos["status_helmet"] = $row['status_helmet'];
+        $tb_pos["rider_id"] = $row['rider_id']; 
+        $tb_pos["rider_gender"] = $row['rider_gender'];
 
         array_push($response, $tb_pos); 
     }
@@ -31,7 +48,10 @@ if (mysqli_num_rows($result) > 0) {
     $tb_pos["date"] = '';
     $tb_pos["time"] = '';
     $tb_pos["price"] = '';
+    $tb_pos["status_helmet"] = '';
     $tb_pos["rider_id"] = '';
+    $tb_pos["rider_gender"] = '';
+    
 
     array_push($response, $tb_pos); // เพิ่ม $tb_pos ที่เป็นข้อมูลว่างเข้าใน $response
 }
