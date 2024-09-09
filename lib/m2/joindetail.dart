@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 
 class Joindetail extends StatefulWidget {
-  const Joindetail({Key? key}) : super(key: key);
+  const Joindetail({Key? key, required item}) : super(key: key);
 
   @override
   State<Joindetail> createState() => _JoindetailState();

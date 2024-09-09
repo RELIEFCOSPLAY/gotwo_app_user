@@ -60,7 +60,8 @@ class _JoinState extends State<Join> {
       if (response.statusCode == 200) {
         setState(() {
           listData = json.decode(response.body); // แปลง JSON เป็น List
-          filteredList = listData; // เริ่มต้นให้ filteredList มีค่าเท่ากับ listData ทั้งหมด
+          filteredList =
+              listData; // เริ่มต้นให้ filteredList มีค่าเท่ากับ listData ทั้งหมด
         });
       } else {
         print("Failed to load data");
@@ -81,9 +82,12 @@ class _JoinState extends State<Join> {
     setState(() {
       filteredList = listData.where((item) {
         // กรองตามค่าที่ผู้ใช้เลือก (Pickup, Drop และ Gender)
-        final matchesPickup = selectedPickup == null || item['pick_up'] == selectedPickup;
-        final matchesDrop = selectedDrop == null || item['at_drop'] == selectedDrop;
-        final matchesGender = selectedOption == null || item['rider_gender'] == selectedOption;
+        final matchesPickup =
+            selectedPickup == null || item['pick_up'] == selectedPickup;
+        final matchesDrop =
+            selectedDrop == null || item['at_drop'] == selectedDrop;
+        final matchesGender =
+            selectedOption == null || item['rider_gender'] == selectedOption;
 
         return matchesPickup && matchesDrop && matchesGender;
       }).toList();
@@ -133,12 +137,12 @@ class _JoinState extends State<Join> {
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => Joindetail(item: item),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Joindetail(item: item),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
@@ -164,7 +168,8 @@ class _JoinState extends State<Join> {
                                   ),
                                   const SizedBox(width: 10),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -278,68 +283,118 @@ class _JoinState extends State<Join> {
   }
 
   // ฟังก์ชันสำหรับ Dropdown ที่ค้นหาได้
+  @override
   Widget _dropdown_p() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center, // Center vertically
         children: [
           // Dropdown for Pickup
-          DropdownSearch<String>(
-            popupProps: PopupProps.dialog( // ใช้ PopupProps แทน mode
-              showSearchBox: true, // เปิดช่องค้นหา
-            ),
-            items: pickupLocations, // รายการสถานที่
-            onChanged: (value) {
-              setState(() {
-                selectedPickup = value;
-              });
-            },
-            selectedItem: selectedPickup, // ค่าเริ่มต้นที่เลือก
-            dropdownDecoratorProps: DropDownDecoratorProps(
-              dropdownSearchDecoration: InputDecoration(
-                labelText: "Pickup", // ข้อความแสดงในฟิลด์
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15), // การตกแต่งขอบ
+          Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 50,
+                    child: DropdownSearch<String>(
+                      popupProps: PopupProps.dialog(
+                        showSearchBox: true,
+                      ),
+                      items: pickupLocations,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedPickup = value;
+                        });
+                      },
+                      selectedItem: selectedPickup,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: "Pickup",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(width: 10), // Add some space between the dropdowns
+                Expanded(
+                  child: Container(
+                    height: 50,
+                    child: DropdownSearch<String>(
+                      popupProps: PopupProps.dialog(
+                        showSearchBox: true,
+                      ),
+                      items: dropLocations,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedDrop = value;
+                        });
+                      },
+                      selectedItem: selectedDrop,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: "Drop",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
+
           const SizedBox(height: 10),
-          // Dropdown for Drop
-          DropdownSearch<String>(
-            popupProps: PopupProps.dialog( // ใช้ PopupProps แทน mode
-              showSearchBox: true, // เปิดช่องค้นหา
-            ),
-            items: dropLocations, // รายการสถานที่
-            onChanged: (value) {
-              setState(() {
-                selectedDrop = value;
-              });
-            },
-            selectedItem: selectedDrop, // ค่าเริ่มต้นที่เลือก
-            dropdownDecoratorProps: DropDownDecoratorProps(
-              dropdownSearchDecoration: InputDecoration(
-                labelText: "Drop", // ใช้ที่นี่แทนการใช้ label
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
+
           // ปุ่มค้นหา
-          ElevatedButton(
-            onPressed: () {
-              if (selectedPickup != null && selectedDrop != null) {
-                filterData(); // กรองข้อมูลใน listData
-              } else {
-                print('Please select Pickup and Drop,');
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF1A1C43),
+          Container(
+            margin: const EdgeInsets.only(left: 120, right: 120), // กำหนด padding
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1C43), // สีพื้นหลัง
+              borderRadius:
+                  BorderRadius.circular(20), // ทำให้มุมของ container โค้ง
             ),
-            child: const Text('Search', style: TextStyle(color: Colors.white)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    if (selectedPickup != null && selectedDrop != null) {
+                      filterData(); // กรองข้อมูลใน listData
+                    } else {
+                      print('Please select Pickup and Drop,');
+                    }
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Search',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedPickup = null; // รีเซ็ต Pickup
+                      selectedDrop = null; // รีเซ็ต Drop
+                      filteredList = listData; // แสดงข้อมูลทั้งหมดอีกครั้ง
+                    });
+                  },
+                  icon: const Icon(Icons.refresh), // ใช้ไอคอนแทนข้อความ
+                  color: Colors.red, // สีของไอคอน
+                  tooltip: 'Reset', // ข้อความแสดงเมื่อ hover หรือกดปุ่มค้างไว้
+                ),
+              ],
+            ),
           ),
         ],
       ),
