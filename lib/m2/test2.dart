@@ -1,342 +1,347 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:dropdown_search/dropdown_search.dart'; // Import dropdown_search
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:http/http.dart' as http;
+import 'joindetail.dart'; // Import หน้าจอแสดงรายละเอียด
 
-class Joindetail extends StatelessWidget {
-  final Map<String, dynamic> item; // ข้อมูลที่จะรับจากหน้า Join
+class Join extends StatefulWidget {
+  const Join({Key? key}) : super(key: key);
 
-  Joindetail({required this.item}); // รับข้อมูลผ่านคอนสตรัคเตอร์
+  @override
+  State<Join> createState() => _JoinState();
+}
+
+class _JoinState extends State<Join> {
+  int index = 0;
+  List<dynamic> listData = [];
+  List<dynamic> filteredList = []; // เก็บข้อมูลที่กรองแล้ว
+
+  // ตัวแปรสำหรับ DropdownButton
+  String? selectedPickup; // เก็บค่าที่เลือกจาก Pickup
+  String? selectedDrop; // เก็บค่าที่เลือกจาก Drop
+  String? selectedOption; // ตัวเลือกเพศ
+
+  // ข้อมูลตัวเลือกสำหรับ Dropdown
+  final List<String> pickupLocations = [
+    'F1',
+    'Central',
+    'Airport',
+    'Station',
+    'Mall',
+    'Park',
+    'University',
+    'Downtown',
+    'Hotel',
+    'Restaurant'
+  ];
+
+  final List<String> dropLocations = [
+    'F1',
+    'Central',
+    'Airport',
+    'Station',
+    'Mall',
+    'Park',
+    'University',
+    'Downtown',
+    'Hotel',
+    'Restaurant'
+  ];
+
+  final List<String> selectOptions = ['male', 'female']; // ตัวเลือกเพศ
+
+  // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
+  Future<void> fetchData() async {
+    final String url = "http://192.168.1.110:8080/gotwo/post.php";
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          listData = json.decode(response.body); // แปลง JSON เป็น List
+          filteredList = listData; // เริ่มต้นให้ filteredList มีค่าเท่ากับ listData ทั้งหมด
+        });
+      } else {
+        print("Failed to load data");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData(); // ดึงข้อมูลเมื่อเริ่มแอป
+  }
+
+  // ฟังก์ชันสำหรับกรองข้อมูลใน listData
+  void filterData() {
+    setState(() {
+      filteredList = listData.where((item) {
+        // กรองตามค่าที่ผู้ใช้เลือก (Pickup, Drop และ Gender)
+        final matchesPickup = selectedPickup == null || item['pick_up'] == selectedPickup;
+        final matchesDrop = selectedDrop == null || item['at_drop'] == selectedDrop;
+        final matchesGender = selectedOption == null || item['rider_gender'] == selectedOption;
+
+        return matchesPickup && matchesDrop && matchesGender;
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Join',
-          style: TextStyle(
-            color: Color(0xFF1A1C43),
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-          ),
-        ),
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous screen
-          },
-        ),
-      ),
-      body: Container(
-        height: double.infinity,
-       color: Colors.white,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 5),
-                  Image.network(
-                    item['image'] ?? 'https://your-default-image-url.com/default.png', // ใช้ Image.network สำหรับโหลดภาพจาก URL
-                    width: 50,
-                    height: 50,
-                    errorBuilder: (context, error, stauckTrace) {
-                      return Image.asset('assets/images/profile.png', width: 50, height: 50); // ใช้ภาพเริ่มต้นในกรณีที่ไม่สามารถโหลดภาพได้
-                    },
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    '${item['rider_id']} ',
-                    style: const TextStyle(
-                      color: Color(0xFF1A1C43),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 11,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Rate ',
-                        style: TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        item['rider_gender'] == 'Male' ? Icons.male : Icons.female,
-                        color: const Color(0xFF1A1C43),
-                        size: 15,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        '${item['rider_gender']} ',
-                        style: const TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.payment,
-                        color: Color(0xFF1A1C43),
-                        size: 15,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        '${item['price']} THB',
-                        style: const TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.calendar_today,
-                        color: Color(0xFF1A1C43),
-                        size: 15,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        'Date: ${item['date']}',
-                        style: const TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    width: 270,
-                    height: 215,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.grey, // Border color
-                        width: 1, // Border width
-                      ),
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Pickup',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.my_location,
-                              color: Colors.green,
-                              size: 15,
-                            ),
-                            const SizedBox(width: 10),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[100],
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                '${item['pick_up']}',
-                                style: const TextStyle(
-                                  color: Color(0xFF1A1C43),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30.0),
-                          child: Text(
-                            '${item['commpick']}',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 30.0),
-                          child: Divider(
-                            color: Color(0xFF1A1C43),
-                            thickness: 1,
-                            height: 0.5,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        const Text(
-                          'Drop',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.pin_drop,
-                              color: Color(0xFFD3261A),
-                              size: 15,
-                            ),
-                            const SizedBox(width: 10),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.blue[100],
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                '${item['at_drop']}',
-                                style: const TextStyle(
-                                  color: Color(0xFF1A1C43),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 3,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30.0),
-                          child: Text(
-                            '${item['commdrop']}',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 30.0),
-                          child: Divider(
-                            color: Color(0xFF1A1C43),
-                            thickness: 1,
-                            height: 0.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TabbarCus(),
-                        ),
-                        (Route<dynamic> route) => false,
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      minimumSize: const Size(90, 40),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'Join',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+      body: _buildScreen(index),
+      backgroundColor: Colors.white, // แสดงหน้าจอตาม index
+      bottomNavigationBar: _buildBottomNavBar(), // แสดง Navigation Bar ด้านล่าง
+    );
+  }
+
+  // ฟังก์ชันสร้างหน้าจอหลัก
+  Widget _buildScreen(int index) {
+    if (index == 0) {
+      return Column(
+        children: [
+          const SizedBox(height: 30),
+          const Center(
+            child: Text(
+              'Join',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+                color: Color(0xFF1A1C43),
               ),
             ),
           ),
+          const SizedBox(height: 5),
+          _dropdown_p(), // Dropdown สำหรับการเลือก Pickup และ Drop
+          const SizedBox(height: 10),
+          Expanded(
+            child: filteredList.isEmpty
+                ? const Center(
+                    child: Text('No data found'), // หากไม่พบข้อมูลหลังการค้นหา
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 10),
+                    itemCount: filteredList.length,
+                    itemBuilder: (context, index) {
+                      final item = filteredList[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => Joindetail(item: item),
+                            //   ),
+                            // );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF1A1C43),
+                            elevation: 2,
+                            minimumSize: const Size(350, 100),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              side: const BorderSide(
+                                color: Color(0xFF1A1C43),
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/profile.png',
+                                    height: 40,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'From: ${item['pick_up']} ',
+                                            style: const TextStyle(
+                                              color: Color(0xFF1A1C43),
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          const Icon(Icons.arrow_forward),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            'To: ${item['at_drop']}',
+                                            style: const TextStyle(
+                                              color: Color(0xFF1A1C43),
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        'Date: ${item['date']}',
+                                        style: const TextStyle(fontSize: 11.5),
+                                      ),
+                                      Text(
+                                        'Time: ${item['time']}',
+                                        style: const TextStyle(fontSize: 11.5),
+                                      ),
+                                      Text(
+                                        'Gender: ${item['rider_gender']}',
+                                        style: const TextStyle(fontSize: 11.5),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Text(
+                                  '${item['price']} THB',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      );
+    } else {
+      return const TabbarCus();
+    }
+  }
+
+  // ฟังก์ชันสร้าง Bottom Navigation Bar
+  Widget _buildBottomNavBar() {
+    return NavigationBarTheme(
+      data: NavigationBarThemeData(
+        indicatorColor: Colors.blue.shade100,
+        labelTextStyle: MaterialStateProperty.all(
+          const TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
         ),
+      ),
+      child: Container(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+          color: Color(0xFF1A1C43),
+        ),
+        child: NavigationBar(
+          height: 60,
+          backgroundColor: Colors.transparent,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          selectedIndex: index,
+          onDestinationSelected: (index) => setState(() => this.index = index),
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              selectedIcon: Icon(Icons.home),
+              label: 'Dashboard',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.checklist_outlined),
+              selectedIcon: Icon(Icons.checklist),
+              label: 'Status',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.report_outlined),
+              selectedIcon: Icon(Icons.report),
+              label: 'Report',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.account_circle_outlined),
+              selectedIcon: Icon(Icons.account_circle),
+              label: 'Profile',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ฟังก์ชันสำหรับ Dropdown ที่ค้นหาได้
+  Widget _dropdown_p() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+        children: [
+          // Dropdown for Pickup
+          DropdownSearch<String>(
+            popupProps: PopupProps.dialog( // ใช้ PopupProps แทน mode
+              showSearchBox: true, // เปิดช่องค้นหา
+            ),
+            items: pickupLocations, // รายการสถานที่
+            onChanged: (value) {
+              setState(() {
+                selectedPickup = value;
+              });
+            },
+            selectedItem: selectedPickup, // ค่าเริ่มต้นที่เลือก
+            dropdownDecoratorProps: DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Pickup", // ข้อความแสดงในฟิลด์
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15), // การตกแต่งขอบ
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          // Dropdown for Drop
+          DropdownSearch<String>(
+            popupProps: PopupProps.dialog( // ใช้ PopupProps แทน mode
+              showSearchBox: true, // เปิดช่องค้นหา
+            ),
+            items: dropLocations, // รายการสถานที่
+            onChanged: (value) {
+              setState(() {
+                selectedDrop = value;
+              });
+            },
+            selectedItem: selectedDrop, // ค่าเริ่มต้นที่เลือก
+            dropdownDecoratorProps: DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Drop", // ใช้ที่นี่แทนการใช้ label
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          // ปุ่มค้นหา
+          ElevatedButton(
+            onPressed: () {
+              if (selectedPickup != null && selectedDrop != null) {
+                filterData(); // กรองข้อมูลใน listData
+              } else {
+                print('Please select Pickup and Drop,');
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF1A1C43),
+            ),
+            child: const Text('Search', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
     );
   }
