@@ -1,11 +1,8 @@
-// // ignore_for_file: unused_import
-
+// import 'dart:convert';
 // import 'package:flutter/material.dart';
-// import 'package:gotwo_app_user/a/cus_pending.dart';
-// import 'package:gotwo_app_user/a/tabbarcus/pending_tab.dart';
-// import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
-// import 'package:gotwo_app_user/m2/joindetail.dart';
+// import 'package:http/http.dart' as http;
 // import 'package:searchfield/searchfield.dart';
+// import 'package:gotwo_app_user/m2/joindetail.dart';
 
 // class Join extends StatefulWidget {
 //   const Join({Key? key}) : super(key: key);
@@ -19,9 +16,7 @@
 
 //   final screens = [
 //     JoinScreen(),
-//     TabbarCus(),
-//     // Report(),
-//     // Profile(),
+//     //TabbarCus(),  // เนื่องจากไม่มีข้อมูลสำหรับ TabbarCus ผมจะไม่ใช้งานในโค้ดนี้
 //   ];
 
 //   @override
@@ -65,16 +60,6 @@
 //                 selectedIcon: Icon(Icons.checklist),
 //                 label: 'Status',
 //               ),
-//               NavigationDestination(
-//                 icon: Icon(Icons.report_outlined),
-//                 selectedIcon: Icon(Icons.report),
-//                 label: 'Report',
-//               ),
-//               NavigationDestination(
-//                 icon: Icon(Icons.account_circle_outlined),
-//                 selectedIcon: Icon(Icons.account_circle),
-//                 label: 'Profile',
-//               ),
 //             ],
 //           ),
 //         ),
@@ -85,139 +70,52 @@
 
 // // ignore: must_be_immutable
 // class JoinScreen extends StatelessWidget {
-//   List<String> _items = ['Female', 'Male'];
-//   String? selectedItem;
-//   String? newValue;
-//   final List<Map<String, String>> listData = [
-//     {
-//       'from': 'home',
-//       'to': 'F1',
-//       'date': '24/03/24',
-//       'time': '10:30',
-//       'gender': 'Male',
-//       'price': '50 ',
-//       'image': 'assets/images/profile.png',
-//     },
-//     {
-//       'from': 'JJ',
-//       'to': 'F3',
-//       'date': '25/03/24',
-//       'time': '18:30',
-//       'gender': 'Male',
-//       'price': '40 ',
-//       'image': 'assets/images/profile.png',
-//     },
-//     {
-//       'from': 'Gym',
-//       'to': 'F5',
-//       'date': '26/03/24',
-//       'time': '13:30',
-//       'gender': 'Female',
-//       'price': '55 ',
-//       'image': 'assets/images/profile.png',
-//     },
-//     {
-//       'from': 'Park',
-//       'to': 'F6',
-//       'date': '27/03/24',
-//       'time': '14:30',
-//       'gender': 'Female',
-//       'price': '60 ',
-//       'image': 'assets/images/profile.png',
-//     },
-//   ];
+//   const JoinScreen({Key? key}) : super(key: key);
 
 //   @override
 //   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.white,
-//       padding: const EdgeInsets.all(20),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           const SizedBox(height: 20),
-//           const Center(
-//             child: Text(
-//               'Join',
-//               style: TextStyle(
-//                 fontWeight: FontWeight.bold,
-//                 fontSize: 30,
-//                 color: Color(0xFF1A1C43),
-//               ),
-//             ),
-//           ),
-//           const SizedBox(height: 10),
+//     return JoinScreenList(); // เรียกใช้ JoinScreenList ที่ดึงข้อมูลจาก API
+//   }
+// }
 
-//           _dropdown_p(),
+// class JoinScreenList extends StatefulWidget {
+//   @override
+//   _JoinScreenListState createState() => _JoinScreenListState();
+// }
 
-//           const Divider(
-//             color: Color(0xFF1A1C43),
-//             thickness: 1,
-//             height: 0.5,
-//           ),
+// class _JoinScreenListState extends State<JoinScreenList> {
+//   Future<List<Map<String, dynamic>>> fetchData() async {
+//     try {
+//       final response =
+//           await http.get(Uri.parse('http://localhost:54518/connec.php'));
+//       if (response.statusCode == 200) {
+//         // การคืนค่าเป็น Future ที่มีข้อมูล List ของ Map
+//         return List<Map<String, dynamic>>.from(json.decode(response.body));
+//       } else {
+//         throw Exception('Failed to load data');
+//       }
+//     } catch (e) {
+//       throw Exception('Error fetching data: $e');
+//     }
+//   }
 
-//           ElevatedButton(
-//             onPressed: () {},
-//             style: ButtonStyle(
-//               backgroundColor: MaterialStateProperty.all<Color>(
-//                 const Color(0xFF1A1C43),
-//               ),
-//               minimumSize: MaterialStateProperty.all(const Size(90, 30)),
-//             ),
-//             child: const Text(
-//               'Search',
-//               style: TextStyle(
-//                 color: Colors.white,
-//                 fontSize: 12,
-//               ),
-//             ),
-//           ),
-//           // const SizedBox(height: 10),
-
-//           Padding(
-//             padding: const EdgeInsets.symmetric(horizontal: 20),
-//             child: Align(
-//               alignment: Alignment.centerRight,
-//               child: Container(
-//                 width: 80,
-//                 height: 20,
-//                 decoration: BoxDecoration(
-//                   border: Border.all(color: const Color(0xFF1A1C43)),
-//                   borderRadius: BorderRadius.circular(5.0),
-//                 ),
-//                 child: Padding(
-//                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-//                   child: DropdownButtonHideUnderline(
-//                     child: DropdownButton<String>(
-//                       isExpanded: true,
-//                       hint: const Text(
-//                         "Gender",
-//                         style: TextStyle(fontSize: 11),
-//                       ),
-//                       value: newValue,
-//                       items: _items.map((String item) {
-//                         return DropdownMenuItem(
-//                           value: item,
-//                           child: Text(
-//                             item,
-//                             style: const TextStyle(fontSize: 11),
-//                           ),
-//                         );
-//                       }).toList(),
-//                       onChanged: (String? value) {
-//                         // Handle gender selection
-//                       },
-//                       icon: const Icon(Icons.arrow_drop_down, size: 12),
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ),
-
-//           Expanded(
+//   @override
+//   Widget build(BuildContext context) {
+//     return FutureBuilder<List<Map<String, dynamic>>>(
+//       future: fetchData(),
+//       builder: (context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return const Center(child: CircularProgressIndicator());
+//         } else if (snapshot.hasError) {
+//           return Center(child: Text('Error: ${snapshot.error}'));
+//         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+//           return const Center(child: Text('No data available'));
+//         } else {
+//           final listData = snapshot.data!;
+//           return Expanded(
 //             child: ListView.builder(
-//               padding: const EdgeInsets.only(top: 20, left: 10 , right: 10,bottom: 20),
+//               padding: const EdgeInsets.only(
+//                   top: 20, left: 10, right: 10, bottom: 20),
 //               itemCount: listData.length,
 //               itemBuilder: (context, index) {
 //                 final item = listData[index];
@@ -226,11 +124,11 @@
 //                   child: ElevatedButton(
 //                     onPressed: () {
 //                       Navigator.push(
-//                       context,
-//                       MaterialPageRoute(
-//                           builder: (context) =>
-//                               const Joindetail()), // ให้ NextPage() เป็นหน้าถัดไป
-//                     );
+//                         context,
+//                         MaterialPageRoute(
+//                             builder: (context) =>
+//                                 const Joindetail()), // ให้ NextPage() เป็นหน้าถัดไป
+//                       );
 //                     },
 //                     style: ElevatedButton.styleFrom(
 //                       backgroundColor: Colors.white,
@@ -251,7 +149,7 @@
 //                         Row(
 //                           children: [
 //                             Image.asset(
-//                               item['image']!,
+//                               item['image'] ?? 'assets/images/profile.png',
 //                               height: 40,
 //                             ),
 //                             const SizedBox(width: 10),
@@ -261,18 +159,16 @@
 //                                 Row(
 //                                   children: [
 //                                     Text(
-//                                       'From: ${item['from']} ',
+//                                       'From: ${item['from'] ?? 'Unknown'} ',
 //                                       style: const TextStyle(
 //                                         color: Color(0xFF1A1C43),
 //                                         fontSize: 13,
 //                                       ),
 //                                     ),
 //                                     const Icon(Icons.arrow_forward),
-//                                     const SizedBox(
-//                                       width: 5,
-//                                     ),
+//                                     const SizedBox(width: 5),
 //                                     Text(
-//                                       'To:${item['to']}',
+//                                       'To: ${item['to'] ?? 'Unknown'}',
 //                                       style: const TextStyle(
 //                                         color: Color(0xFF1A1C43),
 //                                         fontSize: 13,
@@ -281,40 +177,39 @@
 //                                   ],
 //                                 ),
 //                                 Text(
-//                                   'Date: ${item['date']}',
+//                                   'Date: ${item['date'] ?? 'N/A'}',
 //                                   style: const TextStyle(fontSize: 11.5),
 //                                 ),
 //                                 Text(
-//                                   'Time: ${item['time']}',
+//                                   'Time: ${item['time'] ?? 'N/A'}',
 //                                   style: const TextStyle(fontSize: 11.5),
 //                                 ),
 //                                 Text(
-//                                   'Gender: ${item['gender']}',
+//                                   'Gender: ${item['gender'] ?? 'N/A'}',
 //                                   style: const TextStyle(fontSize: 11.5),
 //                                 ),
 //                               ],
 //                             ),
 //                           ],
 //                         ),
-//                     Padding(
-//                       padding: const EdgeInsets.only(top: 30),
-//                       child: Text(
-//                                 '${item['price']} THB',
-//                                 style: const TextStyle(
-//                                   fontSize: 16,
-//                                 ),
-                              
+//                         Padding(
+//                           padding: const EdgeInsets.only(top: 30),
+//                           child: Text(
+//                             '${item['price'] ?? 'N/A'} THB',
+//                             style: const TextStyle(
+//                               fontSize: 16,
 //                             ),
-//                     ),
+//                           ),
+//                         ),
 //                       ],
 //                     ),
 //                   ),
 //                 );
 //               },
 //             ),
-//           ),
-//         ],
-//       ),
+//           );
+//         }
+//       },
 //     );
 //   }
 // }
@@ -368,7 +263,6 @@
 //                   'Downtown',
 //                   'Hotel',
 //                   'Restaurant',
-//                   // Add more suggestions as needed
 //                 ].map((e) => SearchFieldListItem<String>(e)).toList(),
 //               ),
 //             ),
@@ -421,7 +315,6 @@
 //                   'Downtown',
 //                   'Hotel',
 //                   'Restaurant',
-//                   // Add more suggestions as needed
 //                 ].map((e) => SearchFieldListItem<String>(e)).toList(),
 //               ),
 //             ),
