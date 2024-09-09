@@ -19,6 +19,7 @@ class _JoinState extends State<Join> {
   // ตัวแปรสำหรับ DropdownButton
   String? selectedPickup; // เก็บค่าที่เลือกจาก Pickup
   String? selectedDrop; // เก็บค่าที่เลือกจาก Drop
+  String? selectedOption; // ปรับเป็น null แทนค่าเริ่มต้นที่ไม่ถูกต้อง
 
   // ข้อมูลตัวเลือกสำหรับ Dropdown
   final List<String> pickupLocations = [
@@ -47,9 +48,11 @@ class _JoinState extends State<Join> {
     'Restaurant'
   ];
 
+  final List<String> selectOptions = ['male', 'female']; // ตัวเลือกเพศ
+
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
-    final String url = "http://192.168.110.237:8080/gotwo/post.php";
+    final String url = "http://192.168.1.110:8080/gotwo/post.php";
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -74,7 +77,8 @@ class _JoinState extends State<Join> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildScreen(index), // แสดงหน้าจอตาม index
+      body: _buildScreen(index), 
+      backgroundColor: Colors.white,// แสดงหน้าจอตาม index
       bottomNavigationBar: _buildBottomNavBar(), // แสดง Navigation Bar ด้านล่าง
     );
   }
@@ -104,7 +108,8 @@ class _JoinState extends State<Join> {
                     child: CircularProgressIndicator(),
                   ) // ถ้าข้อมูลว่างแสดง Loading
                 : ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 10),
                     itemCount: listData.length,
                     itemBuilder: (context, index) {
                       final item = listData[index];
@@ -115,7 +120,7 @@ class _JoinState extends State<Join> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Joindetail(item: item), 
+                                builder: (context) => Joindetail(item: item),
                               ),
                             );
                           },
@@ -125,7 +130,7 @@ class _JoinState extends State<Join> {
                             elevation: 2,
                             minimumSize: const Size(350, 100),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(15),
                               side: const BorderSide(
                                 color: Color(0xFF1A1C43),
                                 width: 2,
@@ -143,7 +148,8 @@ class _JoinState extends State<Join> {
                                   ),
                                   const SizedBox(width: 10),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -256,12 +262,13 @@ class _JoinState extends State<Join> {
     );
   }
 
-  // ฟังก์ชันสำหรับ Dropdown ที่อยู่ตรงกลาง
+  // ฟังก์ชันสำหรับ Dropdown
   Widget _dropdown_p() {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center, // จัดให้อยู่กลางแนวตั้ง
+        mainAxisAlignment: MainAxisAlignment.center, // Center vertically
         children: [
+          // Existing Pickup and Drop section
           Container(
             height: 50,
             child: Padding(
@@ -269,7 +276,7 @@ class _JoinState extends State<Join> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Dropdown สำหรับ Pickup
+                  // Dropdown for Pickup
                   Align(
                     alignment: Alignment.topLeft,
                     child: Container(
@@ -292,10 +299,10 @@ class _JoinState extends State<Join> {
                           }).toList(),
                           onChanged: (newValue) {
                             setState(() {
-                              selectedPickup = newValue; // อัปเดตค่า Pickup
+                              selectedPickup = newValue; // Update Pickup value
                             });
                           },
-                          underline: Container(), // ซ่อนเส้นขีดใต้
+                          underline: Container(), // Hide underline
                         ),
                       ),
                     ),
@@ -303,7 +310,7 @@ class _JoinState extends State<Join> {
                   const SizedBox(width: 15),
                   Image.asset('assets/images/motorcycle.png', height: 20),
                   const SizedBox(width: 15),
-                  // Dropdown สำหรับ Drop
+                  // Dropdown for Drop
                   Align(
                     alignment: Alignment.center,
                     child: Container(
@@ -326,10 +333,10 @@ class _JoinState extends State<Join> {
                           }).toList(),
                           onChanged: (newValue) {
                             setState(() {
-                              selectedDrop = newValue; // อัปเดตค่า Drop
+                              selectedDrop = newValue; // Update Drop value
                             });
                           },
-                          underline: Container(), // ซ่อนเส้นขีดใต้
+                          underline: Container(), // Hide underline
                         ),
                       ),
                     ),
@@ -338,19 +345,69 @@ class _JoinState extends State<Join> {
               ),
             ),
           ),
+
+          // "Search" Button
           ElevatedButton(
             onPressed: () {
               if (selectedPickup != null && selectedDrop != null) {
-                // ดำเนินการเมื่อกดปุ่มค้นหาและค่า dropdown ไม่เป็น null
-                print('ค้นหาจาก: $selectedPickup ไปยัง: $selectedDrop');
+                // Perform search operation when Search button is clicked and values are not null
+                print('Searching from $selectedPickup to $selectedDrop');
               } else {
-                print('กรุณาเลือก Pickup และ Drop');
+                print('Please select Pickup and Drop');
               }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF1A1C43),
             ),
             child: const Text('Search', style: TextStyle(color: Colors.white)),
+          ),
+
+          const SizedBox(height: 10),
+
+          // Dropdown for "Select" aligned to the right
+          Padding(
+            padding:
+                const EdgeInsets.only(right: 20), // Add padding to the right
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end, // Align to the right
+              children: [
+                Container(
+                  width: 120,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    // foregroundColor: const Color(0xFF1A1C43),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Color(0xFF1A1C43), // สีของเส้นขอบ
+                      width: 1, // ความหนาของเส้นขอบ
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value:
+                          selectedOption, // Set the value to the current selected option
+                      hint: const Text('Select'), // Placeholder text
+                      items: selectOptions.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedOption =
+                              newValue; // Update selected value for the Select dropdown
+                        });
+                      },
+                      underline: Container(), // Hide underline
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

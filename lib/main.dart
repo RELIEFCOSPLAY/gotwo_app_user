@@ -16,7 +16,7 @@ import 'package:gotwo_app_user/m2/login.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/payment.dart';
 import 'package:gotwo_app_user/m2/register.dart';
-import 'package:gotwo_app_user/m2/test.dart';
+
 import 'package:gotwo_app_user/m2/test2.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,8 +47,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
+        appBarTheme:const AppBarTheme(
+    backgroundColor: Colors.white)
       ),
       home: Join(),
     );

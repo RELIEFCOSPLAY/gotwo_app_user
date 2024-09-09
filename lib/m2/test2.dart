@@ -18,7 +18,6 @@ class Joindetail extends StatelessWidget {
             fontSize: 30,
           ),
         ),
-        backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
@@ -29,7 +28,8 @@ class Joindetail extends StatelessWidget {
         ),
       ),
       body: Container(
-        color: Colors.white,
+        height: double.infinity,
+       color: Colors.white,
         child: SafeArea(
           child: SingleChildScrollView(
             child: Center(
@@ -42,7 +42,7 @@ class Joindetail extends StatelessWidget {
                     item['image'] ?? 'https://your-default-image-url.com/default.png', // ใช้ Image.network สำหรับโหลดภาพจาก URL
                     width: 50,
                     height: 50,
-                    errorBuilder: (context, error, stackTrace) {
+                    errorBuilder: (context, error, stauckTrace) {
                       return Image.asset('assets/images/profile.png', width: 50, height: 50); // ใช้ภาพเริ่มต้นในกรณีที่ไม่สามารถโหลดภาพได้
                     },
                   ),
