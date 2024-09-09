@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gotwo_app_user/m2/bank.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -29,6 +32,16 @@ class _RegisterState extends State<Register> {
   String? selectedItem;
 
   @override
+  // final formkey = GlobalKey<FormState>();
+
+  // TextEditingController name = TextEditingController();
+  // TextEditingController pass = TextEditingController();
+  // TextEditingController email = TextEditingController();
+
+  // Future sign_up() async {
+  //   String url = "";
+  // }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +55,7 @@ class _RegisterState extends State<Register> {
         ),
         backgroundColor: Colors.transparent, // กำหนดสีของ AppBar เป็นโปร่งใส
         elevation: 0, // ไม่มีเงาใต้ AppBar
-          centerTitle: true, 
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back,
               color: Colors.black), // ใช้ไอคอนแบ็กสีดำ

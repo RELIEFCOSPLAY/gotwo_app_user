@@ -386,7 +386,7 @@ class _CusCancelState extends State<CusCancel> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 10,left: 55),
+                          padding: EdgeInsets.only(top: 100,left: 55),
                           child: Text(
                             'Review',
                             style: TextStyle(

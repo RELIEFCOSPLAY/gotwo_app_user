@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/join.dart';
 
@@ -11,14 +14,26 @@ class Loginpage extends StatefulWidget {
 
 class _LoginpageState extends State<Loginpage> {
   @override
+  final formmkey = GlobalKey<FormState>();
+
+  TextEditingController name = TextEditingController();
+  TextEditingController pass = TextEditingController();
+
+  Future sign_in() async {
+    String url = "";
+    // final response = await http.post(Uri.parse(url), body: {
+    //   'name': name.text, 'password': pass.text
+    // });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent, 
-        elevation: 0, 
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
-          icon:const Icon(Icons.arrow_back, color: Colors.black), 
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้านี้
           },
@@ -50,7 +65,8 @@ class _LoginpageState extends State<Loginpage> {
                 child: Container(
                   decoration: BoxDecoration(
                     // color: Colors.grey[200],
-                    border: Border.all(color: const Color(0xFF1A1C43), width: 2),
+                    border:
+                        Border.all(color: const Color(0xFF1A1C43), width: 2),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
@@ -71,11 +87,12 @@ class _LoginpageState extends State<Loginpage> {
                 child: Container(
                   decoration: BoxDecoration(
                     // color: Colors.grey[100],
-                    border: Border.all(color: const Color(0xFF1A1C43), width: 2),
+                    border:
+                        Border.all(color: const Color(0xFF1A1C43), width: 2),
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: const Padding(
-                    padding:EdgeInsets.only(left: 20.0),
+                    padding: EdgeInsets.only(left: 20.0),
                     child: TextField(
                       obscureText: true, // ซ่อนนรหัส
                       decoration: InputDecoration(
@@ -90,14 +107,14 @@ class _LoginpageState extends State<Loginpage> {
 
               Center(
                 child: ElevatedButton(
-                  onPressed: () {  
+                  onPressed: () {
                     // Navigator.push(
                     //   context,
                     //   MaterialPageRoute(
                     //       builder: (context) =>
                     //           const Join()), // ให้ NextPage() เป็นหน้าถัดไป
                     // );
-                    },
+                  },
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all<Color>(
                         const Color(0xFF1A1C43)), //  background color
