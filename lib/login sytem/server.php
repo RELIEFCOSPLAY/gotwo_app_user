@@ -1,12 +1,12 @@
 <?php
     $servername = "localhost";
     $username = "root";
-    $email = "root":
+    // $email = "root":
     $password = "";
     $dbname = "register_db";
 
     //Creat Connection
-    $conn = mysqli_connect( $servername,$username,$email,$password,$dbname)
+    $conn = mysqli_connect( $servername,$username,$email,$password,$dbname);
 
     //check connection
     if (!$conn) {
