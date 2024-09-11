@@ -4,48 +4,23 @@ import 'package:http/http.dart' as http;
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 
 class Joindetail extends StatefulWidget {
-  const Joindetail({Key? key, required item}) : super(key: key);
+  final Map<String, dynamic> item; // รับข้อมูลจากหน้าแรก
+
+  const Joindetail({Key? key, required this.item}) : super(key: key);
 
   @override
   State<Joindetail> createState() => _JoindetailState();
 }
 
 class _JoindetailState extends State<Joindetail> {
-  Map<String, dynamic>? item;
   bool isLoading = true;
-  List<dynamic> listData = [];
+  Map<String, dynamic>? item;
 
   @override
   void initState() {
     super.initState();
-    fetchData();
-  }
-
-  Future<void> fetchData() async {
-    final String url = "http://192.168.110.237:8080/gotwo/post.php"; // เปลี่ยนเป็น URL จริง
-    try {
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        setState(() {
-          listData = json.decode(response.body); // แปลง JSON เป็น List
-          if (listData.isNotEmpty) {
-            item = listData[0]; // กำหนดค่าให้กับ item จากรายการแรก
-            isLoading = false;  // หยุดแสดง Loading
-          }
-        });
-      } else {
-        print("Failed to load data");
-        setState(() {
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      print("Error: $e");
-      setState(() {
-        isLoading = false;
-      });
-    }
+    item = widget.item; // ใช้ข้อมูล item ที่ส่งมาจากหน้าแรก
+    isLoading = false;
   }
 
   @override
@@ -54,14 +29,6 @@ class _JoindetailState extends State<Joindetail> {
       return Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
-    if (item == null) {
-      return Scaffold(
-        body: Center(
-          child: Text('No data available'),
         ),
       );
     }
@@ -82,7 +49,7 @@ class _JoindetailState extends State<Joindetail> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous screen
+            Navigator.pop(context); // ย้อนกลับไปหน้าก่อนหน้า
           },
         ),
       ),
@@ -112,46 +79,6 @@ class _JoindetailState extends State<Joindetail> {
                       fontWeight: FontWeight.bold,
                       fontSize: 11,
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Rate ',
-                        style: TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: Colors.yellow,
-                        size: 15,
-                      ),
-                    ],
                   ),
                   const SizedBox(height: 5),
                   Row(

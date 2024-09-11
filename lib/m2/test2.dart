@@ -49,11 +49,11 @@ class _JoinState extends State<Join> {
     'Restaurant'
   ];
 
-  final List<String> selectOptions = ['male', 'female']; // ตัวเลือกเพศ
+  final List<String> selectOptions = ['male', 'female'];
 
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
-    final String url = "http://192.168.1.110:8080/gotwo/post.php";
+    final String url = "http://192.168.110.237:8080/gotwo/post.php";
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -121,7 +121,7 @@ class _JoinState extends State<Join> {
           ),
           const SizedBox(height: 5),
           _dropdown_p(), // Dropdown สำหรับการเลือก Pickup และ Drop
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           Expanded(
             child: filteredList.isEmpty
                 ? const Center(
@@ -353,7 +353,8 @@ class _JoinState extends State<Join> {
 
           // ปุ่มค้นหา
           Container(
-            margin: const EdgeInsets.only(left: 120, right: 120), // กำหนด padding
+            margin:
+                const EdgeInsets.only(left: 120, right: 120), // กำหนด padding
             decoration: BoxDecoration(
               color: const Color(0xFF1A1C43), // สีพื้นหลัง
               borderRadius:
@@ -386,12 +387,60 @@ class _JoinState extends State<Join> {
                     setState(() {
                       selectedPickup = null; // รีเซ็ต Pickup
                       selectedDrop = null; // รีเซ็ต Drop
+                      selectedOption = null; // รีเซ็ตเพศ
                       filteredList = listData; // แสดงข้อมูลทั้งหมดอีกครั้ง
                     });
                   },
                   icon: const Icon(Icons.refresh), // ใช้ไอคอนแทนข้อความ
                   color: Colors.red, // สีของไอคอน
                   tooltip: 'Reset', // ข้อความแสดงเมื่อ hover หรือกดปุ่มค้างไว้
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          //////////////////////////////////////////////////////
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  width: 110,
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Color(0xFF1A1C43), // สีของเส้นขอบ
+                      width: 1, // ความหนาของเส้นขอบ
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value:
+                          selectedOption, // Set the value to the current selected option
+                      hint: const Text('Gender'), // Placeholder text
+                      items: selectOptions.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedOption =
+                              newValue; // Update selected value for the Select dropdown
+                          filterData(); // เรียกใช้ฟังก์ชันกรองข้อมูลเมื่อเลือกเพศ
+                        });
+                      },
+                      underline: Container(), // Hide underline
+                    ),
+                  ),
                 ),
               ],
             ),
