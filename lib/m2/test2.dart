@@ -97,190 +97,188 @@ class _JoinState extends State<Join> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildScreen(index),
+      body: _buildScreen(),
       backgroundColor: Colors.white, // แสดงหน้าจอตาม index
-      bottomNavigationBar: _buildBottomNavBar(), // แสดง Navigation Bar ด้านล่าง
+
+      // แสดง Navigation Bar ด้านล่าง
     );
   }
 
   // ฟังก์ชันสร้างหน้าจอหลัก
-  Widget _buildScreen(int index) {
-    if (index == 0) {
-      return Column(
-        children: [
-          const SizedBox(height: 30),
-          const Center(
-            child: Text(
-              'Join',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 30,
-                color: Color(0xFF1A1C43),
-              ),
+  Widget _buildScreen() {
+    return Column(
+      children: [
+        const SizedBox(height: 30),
+        const Center(
+          child: Text(
+            'Join',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 30,
+              color: Color(0xFF1A1C43),
             ),
           ),
-          const SizedBox(height: 5),
-          _dropdown_p(), // Dropdown สำหรับการเลือก Pickup และ Drop
-          const SizedBox(height: 8),
-          Expanded(
-            child: filteredList.isEmpty
-                ? const Center(
-                    child: Text('No data found'), // หากไม่พบข้อมูลหลังการค้นหา
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 10),
-                    itemCount: filteredList.length,
-                    itemBuilder: (context, index) {
-                      final item = filteredList[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => Joindetail(item: item),
-                              ),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: const Color(0xFF1A1C43),
-                            elevation: 2,
-                            minimumSize: const Size(350, 100),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              side: const BorderSide(
-                                color: Color(0xFF1A1C43),
-                                width: 2,
-                              ),
+        ),
+        const SizedBox(height: 5),
+        _dropdown_p(), // Dropdown สำหรับการเลือก Pickup และ Drop
+        const SizedBox(height: 8),
+        Expanded(
+          child: filteredList.isEmpty
+              ? const Center(
+                  child: Text('No data found'), // หากไม่พบข้อมูลหลังการค้นหา
+                )
+              : ListView.builder(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  itemCount: filteredList.length,
+                  itemBuilder: (context, index) {
+                    final item = filteredList[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Joindetail(item: item),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xFF1A1C43),
+                          elevation: 2,
+                          minimumSize: const Size(350, 100),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: const BorderSide(
+                              color: Color(0xFF1A1C43),
+                              width: 2,
                             ),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/profile.png',
-                                    height: 40,
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'From: ${item['pick_up']} ',
-                                            style: const TextStyle(
-                                              color: Color(0xFF1A1C43),
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                          const Icon(Icons.arrow_forward),
-                                          const SizedBox(width: 5),
-                                          Text(
-                                            'To: ${item['at_drop']}',
-                                            style: const TextStyle(
-                                              color: Color(0xFF1A1C43),
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        'Date: ${item['date']}',
-                                        style: const TextStyle(fontSize: 11.5),
-                                      ),
-                                      Text(
-                                        'Time: ${item['time']}',
-                                        style: const TextStyle(fontSize: 11.5),
-                                      ),
-                                      Text(
-                                        'Gender: ${item['rider_gender']}',
-                                        style: const TextStyle(fontSize: 11.5),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: Text(
-                                  '${item['price']} THB',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ],
-                          ),
                         ),
-                      );
-                    },
-                  ),
-          ),
-        ],
-      );
-    } else {
-      return const TabbarCus();
-    }
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              children: [
+                                Image.asset(
+                                  'assets/images/profile.png',
+                                  height: 40,
+                                ),
+                                const SizedBox(width: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'From: ${item['pick_up']} ',
+                                          style: const TextStyle(
+                                            color: Color(0xFF1A1C43),
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        const Icon(Icons.arrow_forward),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          'To: ${item['at_drop']}',
+                                          style: const TextStyle(
+                                            color: Color(0xFF1A1C43),
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      'Date: ${item['date']}',
+                                      style: const TextStyle(fontSize: 11.5),
+                                    ),
+                                    Text(
+                                      'Time: ${item['time']}',
+                                      style: const TextStyle(fontSize: 11.5),
+                                    ),
+                                    Text(
+                                      'Gender: ${item['rider_gender']}',
+                                      style: const TextStyle(fontSize: 11.5),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 30),
+                              child: Text(
+                                '${item['price']} THB',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+        
+        Expanded(child: bar()),
+      ],
+    );
   }
 
   // ฟังก์ชันสร้าง Bottom Navigation Bar
-  Widget _buildBottomNavBar() {
-    return NavigationBarTheme(
-      data: NavigationBarThemeData(
-        indicatorColor: Colors.blue.shade100,
-        labelTextStyle: MaterialStateProperty.all(
-          const TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
-          ),
-        ),
-      ),
-      child: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.0),
-            topRight: Radius.circular(20.0),
-          ),
-          color: Color(0xFF1A1C43),
-        ),
-        child: NavigationBar(
-          height: 60,
-          backgroundColor: Colors.transparent,
-          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-          selectedIndex: index,
-          onDestinationSelected: (index) => setState(() => this.index = index),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: 'Dashboard',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.checklist_outlined),
-              selectedIcon: Icon(Icons.checklist),
-              label: 'Status',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.report_outlined),
-              selectedIcon: Icon(Icons.report),
-              label: 'Report',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.account_circle_outlined),
-              selectedIcon: Icon(Icons.account_circle),
-              label: 'Profile',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget _buildBottomNavBar() {
+  //   return NavigationBarTheme(
+  //     data: NavigationBarThemeData(
+  //       indicatorColor: Colors.blue.shade100,
+  //       labelTextStyle: MaterialStateProperty.all(
+  //         const TextStyle(
+  //           fontSize: 10,
+  //           fontWeight: FontWeight.w500,
+  //           color: Colors.white,
+  //         ),
+  //       ),
+  //     ),
+  //     child: Container(
+  //       decoration: const BoxDecoration(
+  //         borderRadius: BorderRadius.only(
+  //           topLeft: Radius.circular(20.0),
+  //           topRight: Radius.circular(20.0),
+  //         ),
+  //         color: Color(0xFF1A1C43),
+  //       ),
+  //       child: NavigationBar(
+  //         height: 60,
+  //         backgroundColor: Colors.transparent,
+  //         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+  //         selectedIndex: index,
+  //         onDestinationSelected: (index) => setState(() => this.index = index),
+  //         destinations: const [
+  //           NavigationDestination(
+  //             icon: Icon(Icons.home_outlined),
+  //             selectedIcon: Icon(Icons.home),
+  //             label: 'Dashboard',
+  //           ),
+  //           NavigationDestination(
+  //             icon: Icon(Icons.checklist_outlined),
+  //             selectedIcon: Icon(Icons.checklist),
+  //             label: 'Status',
+  //           ),
+  //           NavigationDestination(
+  //             icon: Icon(Icons.report_outlined),
+  //             selectedIcon: Icon(Icons.report),
+  //             label: 'Report',
+  //           ),
+  //           NavigationDestination(
+  //             icon: Icon(Icons.account_circle_outlined),
+  //             selectedIcon: Icon(Icons.account_circle),
+  //             label: 'Profile',
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // ฟังก์ชันสำหรับ Dropdown ที่ค้นหาได้
   @override
@@ -447,6 +445,71 @@ class _JoinState extends State<Join> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget bar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: const Color(0xff1a1c43),
+            backgroundColor: Colors.white,
+            shadowColor: Colors.transparent,
+          ),
+          onPressed: () {
+            debugPrint("Dashboard");
+          },
+          child: const Column(
+            children: [
+              Icon(
+                Icons.home,
+                size: 50.0,
+              ),
+              Text("Dashboard")
+            ],
+          ),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: const Color(0xff1a1c43),
+            backgroundColor: Colors.white,
+            shadowColor: Colors.transparent,
+          ),
+          onPressed: () {
+            debugPrint("Status");
+          },
+          child: const Column(
+            children: [
+              Icon(
+                Icons.grading,
+                size: 50.0,
+              ),
+              Text("Status")
+            ],
+          ),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: const Color(0xff1a1c43),
+            backgroundColor: Colors.white,
+            shadowColor: Colors.transparent,
+          ),
+          onPressed: () {
+            debugPrint("Profile");
+          },
+          child: const Column(
+            children: [
+              Icon(
+                Icons.account_circle,
+                size: 50.0,
+              ),
+              Text("Profile")
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
