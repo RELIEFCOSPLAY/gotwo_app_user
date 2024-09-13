@@ -295,7 +295,7 @@ class _JoindetailState extends State<Joindetail> {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const TabbarCus(),
+                             builder: (context) => TabbarCus(),
                         ),
                         (Route<dynamic> route) => false,
                       );
