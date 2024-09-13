@@ -220,65 +220,11 @@ class _JoinState extends State<Join> {
                   },
                 ),
         ),
-        
+
         Expanded(child: bar()),
       ],
     );
   }
-
-  // ฟังก์ชันสร้าง Bottom Navigation Bar
-  // Widget _buildBottomNavBar() {
-  //   return NavigationBarTheme(
-  //     data: NavigationBarThemeData(
-  //       indicatorColor: Colors.blue.shade100,
-  //       labelTextStyle: MaterialStateProperty.all(
-  //         const TextStyle(
-  //           fontSize: 10,
-  //           fontWeight: FontWeight.w500,
-  //           color: Colors.white,
-  //         ),
-  //       ),
-  //     ),
-  //     child: Container(
-  //       decoration: const BoxDecoration(
-  //         borderRadius: BorderRadius.only(
-  //           topLeft: Radius.circular(20.0),
-  //           topRight: Radius.circular(20.0),
-  //         ),
-  //         color: Color(0xFF1A1C43),
-  //       ),
-  //       child: NavigationBar(
-  //         height: 60,
-  //         backgroundColor: Colors.transparent,
-  //         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-  //         selectedIndex: index,
-  //         onDestinationSelected: (index) => setState(() => this.index = index),
-  //         destinations: const [
-  //           NavigationDestination(
-  //             icon: Icon(Icons.home_outlined),
-  //             selectedIcon: Icon(Icons.home),
-  //             label: 'Dashboard',
-  //           ),
-  //           NavigationDestination(
-  //             icon: Icon(Icons.checklist_outlined),
-  //             selectedIcon: Icon(Icons.checklist),
-  //             label: 'Status',
-  //           ),
-  //           NavigationDestination(
-  //             icon: Icon(Icons.report_outlined),
-  //             selectedIcon: Icon(Icons.report),
-  //             label: 'Report',
-  //           ),
-  //           NavigationDestination(
-  //             icon: Icon(Icons.account_circle_outlined),
-  //             selectedIcon: Icon(Icons.account_circle),
-  //             label: 'Profile',
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   // ฟังก์ชันสำหรับ Dropdown ที่ค้นหาได้
   @override
