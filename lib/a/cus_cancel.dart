@@ -339,7 +339,7 @@ class _CusCancelState extends State<CusCancel> {
                   ),
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
                 const Divider(
                   height: 1,
@@ -367,10 +367,10 @@ class _CusCancelState extends State<CusCancel> {
                           padding: const EdgeInsets.only(top:5,left: 55),
                           child: Container(
                             child: RatingBar.builder(
-                              initialRating: 3,
+                              initialRating: 0,
                               minRating: 1,
                               direction: Axis.horizontal,
-                              allowHalfRating: true,
+                              allowHalfRating: false,
                               itemSize: 25,
                               itemCount: 5,
                               itemPadding:
@@ -386,7 +386,7 @@ class _CusCancelState extends State<CusCancel> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 100,left: 55),
+                          padding: EdgeInsets.only(top: 10,left: 55),
                           child: Text(
                             'Review',
                             style: TextStyle(
@@ -403,7 +403,7 @@ class _CusCancelState extends State<CusCancel> {
                   padding: EdgeInsets.only(top: 5, bottom: 10),
                   child: Container(
                     width: 270,
-                    height: 40,
+                    height: 50,
                     child: TextField(
                       decoration: InputDecoration(
                         enabledBorder: border,
