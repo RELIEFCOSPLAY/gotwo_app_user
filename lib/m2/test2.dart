@@ -53,7 +53,7 @@ class _JoinState extends State<Join> {
 
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
-    final String url = "http://192.168.110.237:8080/gotwo/post.php";
+    final String url = "http://172.27.25.191:8080/gotwo/post.php";
     try {
       final response = await http.get(Uri.parse(url));
 
