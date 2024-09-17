@@ -49,7 +49,7 @@ class _LoginpageState extends State<Loginpage> {
 
   // ฟังก์ชันสำหรับเข้าสู่ระบบ
   Future<void> signIn() async {
-    String url = "http://192.168.1.121:80/gotwo/signin.php";
+    String url = "http://192.168.1.139:8080/gotwo/signin.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email.text,
