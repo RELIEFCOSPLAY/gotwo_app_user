@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
 class Joindetail extends StatefulWidget {
@@ -15,54 +16,56 @@ class _JoindetailState extends State<Joindetail> {
   bool isLoading = true;
   Map<String, dynamic>? item;
 
+  final storage = const FlutterSecureStorage();
+  String? emails;
+
+  String? userId; // เก็บ ID ของผู้ใช้หลังจากดึงมา
+
+  Future<void> loadLoginInfo() async {
+    String? savedEmail = await storage.read(key: 'email');
+    setState(() {
+      emails = savedEmail;
+    });
+    if (emails != null) {
+      fetchUserId(emails!); // เรียกใช้ API เพื่อตรวจสอบ user id
+    }
+  }
+
+  Future<void> fetchUserId(String email) async {
+    final String url =
+        "http://192.168.110.237:80/gotwo/getUserId.php"; // URL API
+    try {
+      final response = await http.post(Uri.parse(url), body: {
+        'email': email, // ส่ง email เพื่อค้นหา user id
+      });
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success']) {
+          setState(() {
+            userId = data['user_id']; // เก็บ user id ที่ได้มา
+          });
+        } else {
+          print('Error: ${data['message']}');
+        }
+      } else {
+        print("Failed to fetch user id");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     item = widget.item; // ใช้ข้อมูล item ที่ส่งมาจากหน้าแรก
     print(item); // พิมพ์ข้อมูล item ออกมาเพื่อตรวจสอบ
     isLoading = false;
+    loadLoginInfo();
   }
 
-  // ฟังก์ชันสำหรับส่งข้อมูลไปยัง PHP server เมื่อกดปุ่ม Join
-  // void _joinRide() async {
-  //   final url = Uri.parse('http://192.168.110.237/gotwo/join.php');
-
-  //   try {
-  //     final response = await http.post(
-  //       url,
-  //       body: {
-  //         'rider_id': item!['rider_id'].toString(),
-  //         'post_id': item!['post_id'].toString(),
-  //         'status': item!['status'].toString(),
-  //       },
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-
-  //       if (data['success']) {
-  //         // ถ้าสำเร็จ แสดง SnackBar
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text('Joined successfully!')),
-  //         );
-  //       } else {
-  //         // แสดงข้อความ Error จาก server
-  //         ScaffoldMessenger.of(context).showSnackBar(
-  //           SnackBar(content: Text('Error: ${data['message']}')),
-  //         );
-  //       }
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Failed to connect to the server')),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(content: Text('Error: $e')),
-  //     );
-  //   }
-  // }
-  final url = Uri.parse('http://192.168.110.237/gotwo/join.php');
+  final url = Uri.parse('http://192.168.110.237/gotwo/post_customer.php');
   Future<void> insert(
     String status,
     String reason,
@@ -74,7 +77,7 @@ class _JoindetailState extends State<Joindetail> {
   ) async {
     var request = await http.post(url, body: {
       "status": status,
-      "reason":reason,
+      "reason": reason,
       "post_id": post_id,
       "customer_id": customer_id,
       "pay": pay,
@@ -90,6 +93,7 @@ class _JoindetailState extends State<Joindetail> {
       print('Error: ${request.statusCode}, Body: ${request.body}');
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -358,7 +362,22 @@ class _JoindetailState extends State<Joindetail> {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      // insert();
+                      String status = 'required';
+                      String reason = 'wait to long';
+                      String rider_id = item!['rider_id'];
+                      String? customer_id = userId;
+                      String pay = '0';
+                      String reviwe = '0';
+                      String comment = 'cancel';
+                      insert(
+                        status,
+                        reason,
+                        rider_id,
+                        customer_id!,
+                        pay,
+                        reviwe,
+                        comment
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
