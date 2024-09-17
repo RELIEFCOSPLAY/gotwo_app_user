@@ -79,7 +79,7 @@ class _TermState extends State<Term> {
                                 size: 7.0,
                                 color: Colors.transparent,
                               ),
-                      ),
+                      ),  
                     ),
                   ),
                   SizedBox(width: 10),
