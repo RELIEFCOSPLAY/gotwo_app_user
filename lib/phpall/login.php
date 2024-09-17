@@ -15,11 +15,11 @@ $response = array();
 // สร้าง JSON ที่ถูกต้อง
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
-        $tb_pos = array();
-        $tb_pos["customer_name"] = $row['customer_name'];
-        $tb_pos["customer_password"] = $row['customer_password'];
+        $tb_log = array();
+        $tb_log["customer_name"] = $row['customer_name'];
+        $tb_log["customer_password"] = $row['customer_password'];
 
-        array_push($response, $tb_pos);
+        array_push($response, $tb_log);
     }
 } else {
     $response["error"] = "No data found.";

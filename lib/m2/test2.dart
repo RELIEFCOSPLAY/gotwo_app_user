@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart'; // Import dropdown_search
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:gotwo_app_user/m2/test2.dart';
 import 'package:http/http.dart' as http;
 import 'joindetail.dart'; // Import หน้าจอแสดงรายละเอียด
 
@@ -53,7 +54,7 @@ class _JoinState extends State<Join> {
 
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
-    final String url = "http://192.168.110.237:8080/gotwo/post.php";
+    final String url = "http://172.20.10.3:8080/gotwo/post.php";
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -61,7 +62,7 @@ class _JoinState extends State<Join> {
         setState(() {
           listData = json.decode(response.body); // แปลง JSON เป็น List
           filteredList =
-              listData; // เริ่มต้นให้ filteredList มีค่าเท่ากับ listData ทั้งหมด
+              listData; 
         });
       } else {
         print("Failed to load data");
@@ -97,10 +98,16 @@ class _JoinState extends State<Join> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildScreen(),
+      body: Column(
+        children: [
+          Expanded(child: _buildScreen()), // เนื้อหา
+          Align(
+            alignment: Alignment.bottomCenter, // ชิดขอบด้านล่าง
+            child: bar(), // แถบปุ่มด้านล่าง
+          ),
+        ],
+      ),
       backgroundColor: Colors.white, // แสดงหน้าจอตาม index
-
-      // แสดง Navigation Bar ด้านล่าง
     );
   }
 
@@ -220,8 +227,6 @@ class _JoinState extends State<Join> {
                   },
                 ),
         ),
-
-        Expanded(child: bar()),
       ],
     );
   }
@@ -393,54 +398,86 @@ class _JoinState extends State<Join> {
       ),
     );
   }
-
-  Widget bar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+/////////////////////////////////////////////////
+  @override
+ Widget bar() {
+  return Container(
+    decoration: const BoxDecoration(
+      color: Color(0xff1a1c43), // ตั้งค่า background ของแถบปุ่ม
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(20), // โค้งมุมบนซ้าย
+        topRight: Radius.circular(20), // โค้งมุมบนขวา
+      ),
+    ),
+    padding: const EdgeInsets.symmetric(vertical: 8), // กำหนด padding
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            foregroundColor: const Color(0xff1a1c43),
-            backgroundColor: Colors.white,
-            shadowColor: Colors.transparent,
+            backgroundColor: Colors.transparent, // ไม่มีพื้นหลัง
+            shadowColor: Colors.transparent, // ไม่มีเงา
+            elevation: 0, // ยกเลิกการยกปุ่มขึ้น
           ),
           onPressed: () {
-            debugPrint("Dashboard");
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Join(),
+              ),
+              (Route<dynamic> route) => false,
+            );
           },
           child: const Column(
             children: [
               Icon(
                 Icons.home,
-                size: 50.0,
+                size: 30.0,
+                color: Colors.white,
               ),
-              Text("Dashboard")
+              Text(
+                "Dashboard",
+                style: TextStyle(color: Colors.white),
+              ),
             ],
           ),
         ),
+        //////////////////////////
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            foregroundColor: const Color(0xff1a1c43),
-            backgroundColor: Colors.white,
-            shadowColor: Colors.transparent,
+            backgroundColor: Colors.transparent, // ไม่มีพื้นหลัง
+            shadowColor: Colors.transparent, // ไม่มีเงา
+            elevation: 0, // ยกเลิกการยกปุ่มขึ้น
           ),
           onPressed: () {
-            debugPrint("Status");
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TabbarCus(),
+              ),
+              (Route<dynamic> route) => false,
+            );
           },
           child: const Column(
             children: [
               Icon(
                 Icons.grading,
-                size: 50.0,
+                size: 30.0,
+                color: Colors.white,
               ),
-              Text("Status")
+              Text(
+                "Status",
+                style: TextStyle(color: Colors.white),
+              ),
             ],
           ),
         ),
+        ///////////////////
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            foregroundColor: const Color(0xff1a1c43),
-            backgroundColor: Colors.white,
-            shadowColor: Colors.transparent,
+            backgroundColor: Colors.transparent, // ไม่มีพื้นหลัง
+            shadowColor: Colors.transparent, // ไม่มีเงา
+            elevation: 0, // ยกเลิกการยกปุ่มขึ้น
           ),
           onPressed: () {
             debugPrint("Profile");
@@ -449,13 +486,19 @@ class _JoinState extends State<Join> {
             children: [
               Icon(
                 Icons.account_circle,
-                size: 50.0,
+                size: 30.0,
+                color: Colors.white,
               ),
-              Text("Profile")
+              Text(
+                "Profile",
+                style: TextStyle(color: Colors.white),
+              ),
             ],
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
+
 }

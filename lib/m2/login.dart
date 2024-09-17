@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/m2/test2.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Import secure storage
-import 'package:gotwo_app_user/m2/join.dart';
 
 class Loginpage extends StatefulWidget {
   const Loginpage({super.key});
@@ -25,7 +25,8 @@ class _LoginpageState extends State<Loginpage> {
     if (rememberMe) {
       await storage.write(key: 'email', value: email.text);
       await storage.write(key: 'password', value: pass.text);
-      await storage.write(key: 'isLoggedIn', value: 'true'); // บันทึกสถานะการเข้าสู่ระบบ
+      await storage.write(
+          key: 'isLoggedIn', value: 'true'); // บันทึกสถานะการเข้าสู่ระบบ
     } else {
       await storage.deleteAll(); // ลบข้อมูลการเข้าสู่ระบบ
     }
@@ -48,7 +49,7 @@ class _LoginpageState extends State<Loginpage> {
 
   // ฟังก์ชันสำหรับเข้าสู่ระบบ
   Future<void> signIn() async {
-    String url = "http://192.168.1.121:80/gotwo/signin.php";
+    String url = "http://192.168.110.212:80/gotwo/signin.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email.text,
@@ -205,13 +206,13 @@ class _LoginpageState extends State<Loginpage> {
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         await signIn();
+                        debugPrint("Login ");
                       }
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
+                      backgroundColor: WidgetStateProperty.all<Color>(
                           const Color(0xFF1A1C43)),
-                      minimumSize:
-                          MaterialStateProperty.all(const Size(110, 35)),
+                      minimumSize: WidgetStateProperty.all(const Size(110, 35)),
                     ),
                     child: const Text(
                       'Login',
@@ -230,4 +231,5 @@ class _LoginpageState extends State<Loginpage> {
       ),
     );
   }
+
 }
