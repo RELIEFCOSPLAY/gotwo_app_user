@@ -7,8 +7,6 @@ class SuccessTab extends StatefulWidget {
 }
 
 class _SuccessTabState extends State<SuccessTab> {
-  int _selectedIndex = 0;
-
   List testDate = [
     {
       'from': 'home',
@@ -60,152 +58,137 @@ class _SuccessTabState extends State<SuccessTab> {
   ];
 
   // Function to handle bottom navigation bar taps
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Success Tab"),
-      ),
-      body: Column(
-        children: [
-          // Use Expanded to avoid overflow issues
-          Expanded(child: _SuccessTab()),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.checklist),
-            label: 'Status',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.report),
-            label: 'Report',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent,
-        onTap: _onItemTapped,
-      ),
+    return Column(
+      children: [
+        _SuccessTab(),
+      ],
     );
   }
 
   Widget _SuccessTab() {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
-      child: ListView.builder(
-        itemCount: testDate.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
-            child: SizedBox(
-              width: 300,
-              height: 100,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CusSuccess()),
-                  );
-                  debugPrint("CardRequest ${testDate[index]['from']}");
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Color(0xfffbf8ff)),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: const BorderSide(color: Color(0xff1a1c43)),
+      child: SizedBox(
+        width: 320,
+        height: 444,
+        child: ListView.builder(
+          itemCount: testDate.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding:
+                  const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
+              child: SizedBox(
+                width: 300,
+                height: 100,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CusSuccess()),
+                    );
+                    debugPrint("CardRequest ${testDate[index]['from']}");
+                  },
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Color(0xfffbf8ff)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: const BorderSide(color: Color(0xff1a1c43)),
+                      ),
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "From: ${testDate[index]['from']}",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Color(0xff1a1c43)),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "Date: ${testDate[index]['date']} ",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 12, color: Color(0xff1a1c43)),
+                            ),
+                            Text(
+                              "Time: ${testDate[index]['time']}",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 12, color: Color(0xff1a1c43)),
+                            ),
+                            Text(
+                              "Status: ${testDate[index]['status']}",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 12, color: Color(0xff1a1c43)),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Icon(Icons.arrow_forward,
+                            color: Color(0xff1a1c43)),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.tour,
+                                    color: Color(0xff1a1c43), size: 20.0),
+                                const SizedBox(width: 5),
+                                Text(
+                                  "To: ${testDate[index]['to']}",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Color(0xff1a1c43)),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "${testDate[index]['price']} ",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontSize: 16, color: Color(0xff1a1c43)),
+                                ),
+                                const Text(
+                                  "THB",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 10, color: Color(0xff1a1c43)),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "From: ${testDate[index]['from']}",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 12, color: Color(0xff1a1c43)),
-                              ),
-                            ],
-                          ),
-                          Text(
-                            "Date: ${testDate[index]['date']} ",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12, color: Color(0xff1a1c43)),
-                          ),
-                          Text(
-                            "Time: ${testDate[index]['time']}",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12, color: Color(0xff1a1c43)),
-                          ),
-                          Text(
-                            "Status: ${testDate[index]['status']}",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12, color: Color(0xff1a1c43)),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Icon(Icons.arrow_forward, color: Color(0xff1a1c43)),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.tour, color: Color(0xff1a1c43), size: 20.0),
-                              const SizedBox(width: 5),
-                              Text(
-                                "To: ${testDate[index]['to']}",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 12, color: Color(0xff1a1c43)),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                "${testDate[index]['price']} ",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(fontSize: 16, color: Color(0xff1a1c43)),
-                              ),
-                              const Text(
-                                "THB",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 10, color: Color(0xff1a1c43)),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

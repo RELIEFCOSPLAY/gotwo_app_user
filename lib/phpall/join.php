@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 include("config.php"); // รวมไฟล์ config.php เพื่อเชื่อมต่อกับฐานข้อมูล
 
-// ใช้ name_rider (int) จากตาราง post เพื่อเชื่อมโยงกับ regis_rider_id ของตาราง table_rider
+
 $sql = "
     SELECT 
         post.pick_up, 
