@@ -37,20 +37,20 @@ class _JoinState extends State<Join> {
     'Restaurant'
   ];
 
-//   final List<String> dropLocations = [
-//     'F1',
-//     'Central',
-//     'Airport',
-//     'Station',
-//     'Mall',
-//     'Park',
-//     'University',
-//     'Downtown',
-//     'Hotel',
-//     'Restaurant'
-//   ];
+  final List<String> dropLocations = [
+    'F1',
+    'Central',
+    'Airport',
+    'Station',
+    'Mall',
+    'Park',
+    'University',
+    'Downtown',
+    'Hotel',
+    'Restaurant'
+  ];
 
-//   final List<String> selectOptions = ['male', 'female'];
+  final List<String> selectOptions = ['male', 'female'];
 
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
