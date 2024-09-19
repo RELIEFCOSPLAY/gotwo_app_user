@@ -191,10 +191,7 @@ class _JoinState extends State<Join> {
                 itemBuilder: (context, index) {
                   final item = filteredList[index];
 
-<<<<<<< HEAD
-                  // ตรวจสอบว่า userId ตรงกับ item['customer_id'] หรือไม่
-=======
->>>>>>> 26748d70ded83bce990ac184832dd33de2f62c7e
+
                   // if (userId == item['customer_id'].toString()) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -294,15 +291,7 @@ class _JoinState extends State<Join> {
                         ),
                       ),
                     );
-<<<<<<< HEAD
-                  // }
-                  //  else {
-                  //   return const SizedBox.shrink(); // ไม่แสดงอะไรถ้าไม่ตรงกัน
-=======
-                  // } else {
-                  //   return const SizedBox.shrink();
->>>>>>> 26748d70ded83bce990ac184832dd33de2f62c7e
-                  // }
+
                 },
               ),
       ),

@@ -65,7 +65,6 @@ class _JoindetailState extends State<Joindetail> {
     loadLoginInfo();
   }
 
-<<<<<<< HEAD
   final url = Uri.parse('http://192.168.110.237:80/gotwo/post_cus2.php');
   // Future<void> insert(
   //   String status,
@@ -94,11 +93,9 @@ class _JoindetailState extends State<Joindetail> {
   //     print('Error: ${request.statusCode}, Body: ${request.body}');
   //   }
   // }
-  Future<void> updateOrInsert(
-=======
-  final url = Uri.parse('http://172.27.133.41:8080/gotwo/post_customer.php');
+  Future<void> updateOrInsert(final url = Uri.parse('http://172.27.133.41:8080/gotwo/post_customer.php');
   Future<void> insert(
->>>>>>> 26748d70ded83bce990ac184832dd33de2f62c7e
+
     String status,
     String reason,
     String post_id, 
