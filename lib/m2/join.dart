@@ -71,7 +71,7 @@ class _JoinState extends State<Join> {
 
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
-    final String url = "http://172.27.133.41:8080/gotwo/join.php";
+    final String url = "http://192.168.1.139:8080/gotwo/join.php";
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -90,7 +90,7 @@ class _JoinState extends State<Join> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://172.27.133.41:8080/gotwo/getUserId_cus.php"; // URL API
+        "http://192.168.1.139:8080/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -181,7 +181,7 @@ class _JoinState extends State<Join> {
       Expanded(
         child: filteredList.isEmpty
             ? const Center(
-                child: Text('No data found'), // หากไม่พบข้อมูลหลังการค้นหา
+                child: Text('No data found'),
               )
             : ListView.builder(
                 padding:
@@ -190,8 +190,7 @@ class _JoinState extends State<Join> {
                 itemBuilder: (context, index) {
                   final item = filteredList[index];
 
-                  // ตรวจสอบว่า userId ตรงกับ item['customer_id'] หรือไม่
-                  if (userId == item['customer_id'].toString()) {
+                  // if (userId == item['customer_id'].toString()) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: ElevatedButton(
@@ -217,53 +216,67 @@ class _JoinState extends State<Join> {
                           ),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/profile.png',
-                                  height: 40,
-                                ),
-                                const SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
+                            Flexible(
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/profile.png',
+                                    height: 40,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Flexible(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'From: ${item['pick_up']} ',
-                                          style: const TextStyle(
-                                            color: Color(0xFF1A1C43),
-                                            fontSize: 13,
-                                          ),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                'From: ${item['pick_up']}',
+                                                style: const TextStyle(
+                                                  color: Color(0xFF1A1C43),
+                                                  fontSize: 13,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            const Icon(Icons.arrow_forward),
+                                            const SizedBox(width: 5),
+                                            Expanded(
+                                              child: Text(
+                                                'To: ${item['at_drop']}',
+                                                style: const TextStyle(
+                                                  color: Color(0xFF1A1C43),
+                                                  fontSize: 13,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        const Icon(Icons.arrow_forward),
-                                        const SizedBox(width: 5),
                                         Text(
-                                          'To: ${item['at_drop']}',
-                                          style: const TextStyle(
-                                            color: Color(0xFF1A1C43),
-                                            fontSize: 13,
-                                          ),
+                                          'Date: ${item['date']}',
+                                          style:
+                                              const TextStyle(fontSize: 11.5),
+                                        ),
+                                        Text(
+                                          'Time: ${item['time']}',
+                                          style:
+                                              const TextStyle(fontSize: 11.5),
+                                        ),
+                                        Text(
+                                          'Gender: ${item['rider_gender']}',
+                                          style:
+                                              const TextStyle(fontSize: 11.5),
                                         ),
                                       ],
                                     ),
-                                    Text(
-                                      'Date: ${item['date']}',
-                                      style: const TextStyle(fontSize: 11.5),
-                                    ),
-                                    Text(
-                                      'Time: ${item['time']}',
-                                      style: const TextStyle(fontSize: 11.5),
-                                    ),
-                                    Text(
-                                      'Gender: ${item['rider_gender']}',
-                                      style: const TextStyle(fontSize: 11.5),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                  ),
+                                ],
+                              ),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 30),
@@ -276,9 +289,9 @@ class _JoinState extends State<Join> {
                         ),
                       ),
                     );
-                  } else {
-                    return const SizedBox.shrink(); // ไม่แสดงอะไรถ้าไม่ตรงกัน
-                  }
+                  // } else {
+                  //   return const SizedBox.shrink();
+                  // }
                 },
               ),
       ),
