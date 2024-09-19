@@ -33,7 +33,7 @@ class _JoindetailState extends State<Joindetail> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://192.168.110.237:80/gotwo/getUserId.php"; // URL API
+        "http://172.27.133.41:8080/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -65,17 +65,49 @@ class _JoindetailState extends State<Joindetail> {
     loadLoginInfo();
   }
 
-  final url = Uri.parse('http://192.168.110.237/gotwo/post_customer.php');
+<<<<<<< HEAD
+  final url = Uri.parse('http://192.168.110.237:80/gotwo/post_cus2.php');
+  // Future<void> insert(
+  //   String status,
+  //   String reason,
+  //   String post_id,
+  //   String customer_id,
+  //   String pay,
+  //   String review,
+  //   String comment,
+  // ) async {
+  //   var request = await http.post(url, body: {
+  //     "status": status,
+  //     "reason": reason,
+  //     "post_id": post_id,
+  //     "customer_id": customer_id,
+  //     "pay": pay,
+  //     "review": review,
+  //     "comment": comment,
+  //   });
+
+  //   if (request.statusCode == 200) {
+  //     // ข้อมูลถูกส่งสำเร็จ
+  //     print('Success: ${request.body}');
+  //   } else {
+  //     // มีปัญหาในการส่งข้อมูล
+  //     print('Error: ${request.statusCode}, Body: ${request.body}');
+  //   }
+  // }
+  Future<void> updateOrInsert(
+=======
+  final url = Uri.parse('http://172.27.133.41:8080/gotwo/post_customer.php');
   Future<void> insert(
+>>>>>>> 26748d70ded83bce990ac184832dd33de2f62c7e
     String status,
     String reason,
-    String post_id,
+    String post_id, 
     String customer_id,
     String pay,
     String review,
     String comment,
   ) async {
-    var request = await http.post(url, body: {
+    final response = await http.post(url, body: {
       "status": status,
       "reason": reason,
       "post_id": post_id,
@@ -85,20 +117,32 @@ class _JoindetailState extends State<Joindetail> {
       "comment": comment,
     });
 
-    if (request.statusCode == 200) {
-      // ข้อมูลถูกส่งสำเร็จ
-      print('Success: ${request.body}');
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['error'] != null) {
+        showError(data['error']); // แสดงข้อผิดพลาดที่ได้จาก API
+      } else {
+        showSuccess(data['message']); // แสดงข้อความสำเร็จ
+      }
     } else {
-      // มีปัญหาในการส่งข้อมูล
-      print('Error: ${request.statusCode}, Body: ${request.body}');
+      showError('Error: ${response.statusCode}, Body: ${response.body}');
     }
   }
-  
+
+  void showError(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void showSuccess(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),
@@ -362,22 +406,25 @@ class _JoindetailState extends State<Joindetail> {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      String status = 'required';
-                      String reason = 'wait to long';
-                      String rider_id = item!['rider_id'];
-                      String? customer_id = userId;
-                      String pay = '0';
-                      String reviwe = '0';
-                      String comment = 'cancel';
-                      insert(
-                        status,
-                        reason,
-                        rider_id,
-                        customer_id!,
-                        pay,
-                        reviwe,
-                        comment
-                      );
+                      print("User ID: $userId"); // ตรวจสอบค่าของ userId
+                      print(
+                          "Post ID: ${item!['post_id']}"); // ตรวจสอบค่าของ post_id
+
+                      if (userId != null && item!['post_id'] != null) {
+                        String status = 'required';
+                        String reason = 'wait too long';
+                        String post_id = item!['post_id']
+                            .toString(); // ตรวจสอบว่า post_id มีค่าจริง
+                        String customer_id = userId!;
+                        String pay = '0';
+                        String review = '0';
+                        String comment = 'cancel';
+
+                        updateOrInsert(status, reason, post_id, customer_id, pay,
+                            review, comment);
+                      } else {
+                        showError("User ID or Post ID is missing.");
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,

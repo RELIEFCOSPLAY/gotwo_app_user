@@ -1,33 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class CusConfirm extends StatefulWidget {
-  const CusConfirm({Key? key}) : super(key: key);
+class CusConfirm extends StatelessWidget {
+  final Map<String, dynamic> data; // รับค่าที่ส่งมาจาก ConfirmTab
 
-  @override
-  State<CusConfirm> createState() => _CusConfirmState();
-}
-
-class _CusConfirmState extends State<CusConfirm> {
-
-  final Map<String, String> item = {
-   
-  'name': 'Name Lastname',  
-    'to': 'F1',
-    'date': '24/03/24',
-    'gender': 'female',
-    'price': '50 THB',
-    'comment': 'comment',
-    'image': 'assets/images/profile.png',
-    'status': 'There is a helmet for you.',
-    'status2': 'Bring your own a helmet.',
-  };
+  const CusConfirm({Key? key, required this.data})
+      : super(key: key); // เพิ่มตัวแปร data
 
   @override
   Widget build(BuildContext context) {
-    // Selecting the first item from listData
-    final Map<String, String> firstItem = item;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -46,7 +30,7 @@ class _CusConfirmState extends State<CusConfirm> {
           onPressed: () {
             Navigator.pop(
               context,
-              MaterialPageRoute(builder: (context) => (TabbarCus())),
+              MaterialPageRoute(builder: (context) => const TabbarCus()),
             );
           },
         ),
@@ -60,29 +44,29 @@ class _CusConfirmState extends State<CusConfirm> {
               children: [
                 const SizedBox(height: 5),
                 Image.asset(
-                  firstItem['image'] ?? 'assets/images/profile.png',
+                  data['image'] ?? 'assets/images/profile.png',
                   width: 50,
                   height: 50,
                 ),
                 const SizedBox(height: 5),
-                 Row(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Text(
-                          '${firstItem['name']} ',
-                          style: const TextStyle(
-                            color: Color(0xFF1A1C43),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 11,
-                          ),
-                        ),
+                      '${data['rider_id']} ',
+                      style: const TextStyle(
+                        color: Color(0xFF1A1C43),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
+                      ),
+                    ),
                     Icon(
-                      firstItem['gender'] == 'Male' ? Icons.male : Icons.female,
+                      data['gender'] == 'Male' ? Icons.male : Icons.female,
                       color: const Color(0xFF1A1C43),
                       size: 15,
                     ),
-                   ],
-                 ),
+                  ],
+                ),
                 const SizedBox(height: 5),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -96,46 +80,22 @@ class _CusConfirmState extends State<CusConfirm> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
                   ],
                 ),
-                
                 const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.calendar_today,
-                      color: Color(0xFF1A1C43),
-                      size: 15,
-                    ),
+                    const Icon(Icons.calendar_today,
+                        color: Color(0xFF1A1C43), size: 15),
                     const SizedBox(width: 5),
                     Text(
-                      '${firstItem['date']}',
+                      '${data['date']}',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -145,18 +105,14 @@ class _CusConfirmState extends State<CusConfirm> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.payment,
-                      color: Color(0xFF1A1C43),
-                      size: 15,
-                    ),
+                    const Icon(Icons.payment,
+                        color: Color(0xFF1A1C43), size: 15),
                     const SizedBox(width: 5),
                     Text(
-                      '${firstItem['price']} ',
+                      '${data['price']} THB',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -165,17 +121,13 @@ class _CusConfirmState extends State<CusConfirm> {
                     ),
                   ],
                 ),
-                
                 const SizedBox(height: 20),
                 Container(
                   width: 300,
                   height: 150,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(
-                      color: Colors.grey, // Border color
-                      width: 1, // Border width
-                    ),
+                    border: Border.all(color: Colors.grey, width: 1),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Padding(
@@ -198,23 +150,18 @@ class _CusConfirmState extends State<CusConfirm> {
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.my_location,
-                              color: Colors.green,
-                              size: 18,
-                            ),
+                            const Icon(Icons.my_location,
+                                color: Colors.green, size: 18),
                             const SizedBox(width: 10),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 10,
-                              ),
+                                  vertical: 5, horizontal: 10),
                               decoration: BoxDecoration(
                                 color: Colors.blue[100],
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
-                                '${firstItem['from']}',
+                                '${data['pick_up']}',
                                 style: const TextStyle(
                                   color: Color(0xFF1A1C43),
                                   fontWeight: FontWeight.bold,
@@ -224,13 +171,11 @@ class _CusConfirmState extends State<CusConfirm> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ),
+                        const SizedBox(height: 3),
                         Padding(
                           padding: const EdgeInsets.only(left: 40.0),
                           child: Text(
-                            '${firstItem['comment']}',
+                            '${data['comment_pick']}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -241,12 +186,9 @@ class _CusConfirmState extends State<CusConfirm> {
                         const Padding(
                           padding: EdgeInsets.only(left: 30.0),
                           child: Divider(
-                            color: Color(0xFF1A1C43),
-                            thickness: 0.5,
-                            height: 1,
-                            indent: 5,
-                            endIndent: 30,
-                          ),
+                              color: Color(0xFF1A1C43),
+                              thickness: 0.5,
+                              height: 1),
                         ),
                         const Padding(
                           padding: EdgeInsets.only(left: 10),
@@ -261,23 +203,18 @@ class _CusConfirmState extends State<CusConfirm> {
                         ),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.pin_drop,
-                              color: Color(0xFFD3261A),
-                              size: 18,
-                            ),
+                            const Icon(Icons.pin_drop,
+                                color: Color(0xFFD3261A), size: 18),
                             const SizedBox(width: 10),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 10,
-                              ),
+                                  vertical: 5, horizontal: 10),
                               decoration: BoxDecoration(
                                 color: Colors.blue[100],
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
-                                '${firstItem['to']}',
+                                '${data['at_drop']}',
                                 style: const TextStyle(
                                   color: Color(0xFF1A1C43),
                                   fontWeight: FontWeight.bold,
@@ -287,13 +224,11 @@ class _CusConfirmState extends State<CusConfirm> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ),
+                        const SizedBox(height: 3),
                         Padding(
                           padding: const EdgeInsets.only(left: 40.0),
                           child: Text(
-                            '${firstItem['comment']}',
+                            '${data['comment_drop']}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -304,36 +239,103 @@ class _CusConfirmState extends State<CusConfirm> {
                         const Padding(
                           padding: EdgeInsets.only(left: 30.0),
                           child: Divider(
-                            color: Color(0xFF1A1C43),
-                            thickness: 0.5,
-                            height: 1,
-                            indent: 5,
-                            endIndent: 30,
-                          ),
+                              color: Color(0xFF1A1C43),
+                              thickness: 0.5,
+                              height: 1),
                         ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                const SizedBox(height: 30),
                 Text(
-                  ' ${firstItem['status']}',
-                  style: const TextStyle(
-                    color: Colors.green,
+                  data['status_helmet'] == '0'
+                      ? 'Bring your own a helmet.'
+                      : 'There is a helmet for you.',
+                  style: TextStyle(
+                    color: data['status_helmet'] == '0'
+                        ? Colors.red
+                        : Colors.green,
                     fontWeight: FontWeight.bold,
                     fontSize: 10,
                   ),
                 ),
                 const SizedBox(height: 30),
-
-                Row( mainAxisAlignment: MainAxisAlignment.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Show QR code dialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return Center(
+                              child: AlertDialog(
+                                title: const Center(
+                                  child: Text(
+                                    'QR Code',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                content: SizedBox(
+                                  width: 200.0,
+                                  height: 250.0,
+                                  child: Column(
+                                    children: [
+                                      QrImageView(
+                                        data:
+                                            '${data['price']}', // ข้อมูลสำหรับ QR Code
+                                        version: QrVersions.auto,
+                                        size: 220.0,
+                                      ),
+                                      const SizedBox(height: 10),
+                                    ],
+                                  ),
+                                ),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final ImagePicker _picker = ImagePicker();
+                                      final XFile? image =
+                                          await _picker.pickImage(
+                                              source: ImageSource.gallery);
+                                      // Handle the selected image (save or display)
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue[300],
+                                      minimumSize: const Size(15, 30),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: const Text(
+                                      'Attach Image',
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors
+                                              .white), // ปรับขนาดตัวอักษรที่นี่
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors
+                                          .red, // เปลี่ยนสีของข้อความที่แสดงบนปุ่ม
+                                    ),
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:  Colors.green,
+                        backgroundColor: Colors.green,
                         minimumSize: const Size(90, 40),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -349,26 +351,24 @@ class _CusConfirmState extends State<CusConfirm> {
                       ),
                     ),
                     const SizedBox(width: 10),
-
                     ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    minimumSize: const Size(90, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                      onPressed: () {},
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        minimumSize: const Size(90, 40),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'Cancel',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-               
                   ],
                 ),
               ],
