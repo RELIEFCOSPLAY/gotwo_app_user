@@ -117,7 +117,6 @@ class _JoinState extends State<Join> {
   void initState() {
     super.initState();
     fetchData(); // ดึงข้อมูลเมื่อเริ่มแอป
-
     loadLoginInfo();
   }
 
