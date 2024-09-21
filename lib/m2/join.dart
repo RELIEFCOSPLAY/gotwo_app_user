@@ -4,6 +4,7 @@ import 'package:dropdown_search/dropdown_search.dart'; // Import dropdown_search
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gotwo_app_user/a/cus_logout.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:gotwo_app_user/m2/test.dart';
 import 'package:gotwo_app_user/m2/test2.dart';
 import 'package:http/http.dart' as http;
 import 'joindetail.dart'; // Import หน้าจอแสดงรายละเอียด
@@ -189,6 +190,7 @@ class _JoinState extends State<Join> {
                 itemBuilder: (context, index) {
                   final item = filteredList[index];
 
+
                   // if (userId == item['customer_id'].toString()) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -288,9 +290,7 @@ class _JoinState extends State<Join> {
                         ),
                       ),
                     );
-                  // } else {
-                  //   return const SizedBox.shrink();
-                  // }
+
                 },
               ),
       ),

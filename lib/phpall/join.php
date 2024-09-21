@@ -56,6 +56,6 @@ if (mysqli_num_rows($result) > 0) {
     array_push($response, $tb_pos); // เพิ่ม $tb_pos ที่เป็นข้อมูลว่างเข้าใน $response
 }
 
-echo json_encode($response); // ส่งข้อมูลเป็น JSON
+echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ; // ส่งข้อมูลเป็น JSON
 mysqli_close($conn);
 ?>

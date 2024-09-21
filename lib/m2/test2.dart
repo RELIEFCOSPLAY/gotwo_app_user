@@ -87,19 +87,22 @@ class _JoindetailState extends State<Joindetail> {
       "rider_id": rider_id,
     });
 
-    if (request.statusCode == 200) {
-      // ข้อมูลถูกส่งสำเร็จ
-      print('Success: ${request.body}');
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['error'] != null) {
+        showError(data['error']); // แสดงข้อผิดพลาดที่ได้จาก API
+      } else {
+        showSuccess(data['message']); // แสดงข้อความสำเร็จ
+      }
     } else {
-      // มีปัญหาในการส่งข้อมูล
-      print('Error: ${request.statusCode}, Body: ${request.body}');
+      showError('Error: ${response.statusCode}, Body: ${response.body}');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),
