@@ -87,15 +87,13 @@ class _JoindetailState extends State<Joindetail> {
       "rider_id": rider_id,
     });
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['error'] != null) {
-        showError(data['error']); // แสดงข้อผิดพลาดที่ได้จาก API
-      } else {
-        showSuccess(data['message']); // แสดงข้อความสำเร็จ
-      }
+    if (request.statusCode == 200) {
+      // ข้อมูลถูกส่งสำเร็จ
+      print('Success: ${request.body}');
+      print('Id Be ${userId}');
     } else {
-      showError('Error: ${response.statusCode}, Body: ${response.body}');
+      // มีปัญหาในการส่งข้อมูล
+      print('Error: ${request.statusCode}, Body: ${request.body}');
     }
   }
 
@@ -385,14 +383,14 @@ class _JoindetailState extends State<Joindetail> {
                         comment,
                         rider_id,
                       );
-                      // debugPrint(status);
-                      // debugPrint(reason);
-                      // debugPrint(post_id);
-                      // debugPrint(customer_id);
-                      // debugPrint(pay);
-                      // debugPrint(review);
-                      // debugPrint(comment);
-                      // debugPrint(rider_id);
+
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Join(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
