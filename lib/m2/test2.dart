@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:gotwo_app_user/m2/join.dart';
 import 'package:http/http.dart' as http;
 
 class Joindetail extends StatefulWidget {
@@ -18,7 +19,6 @@ class _JoindetailState extends State<Joindetail> {
 
   final storage = const FlutterSecureStorage();
   String? emails;
-
   String? userId; // เก็บ ID ของผู้ใช้หลังจากดึงมา
 
   Future<void> loadLoginInfo() async {
@@ -33,7 +33,7 @@ class _JoindetailState extends State<Joindetail> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://172.27.133.41:8080/gotwo/getUserId_cus.php"; // URL API
+        "http://192.168.1.139:8080/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -65,16 +65,17 @@ class _JoindetailState extends State<Joindetail> {
     loadLoginInfo();
   }
 
-  final url = Uri.parse('http://172.27.133.41:8080/gotwo/post_customer.php');
-  Future<void> insert(
-    String status,
-    String reason,
-    String post_id,
-    String customer_id,
-    String pay,
-    String review,
-    String comment,
-  ) async {
+  final url =
+      Uri.parse('http://192.168.1.139:8080/gotwo/join_post_customer.php');
+  Future<void> join_post(
+      String status,
+      String reason,
+      String post_id,
+      String customer_id,
+      String pay,
+      String review,
+      String comment,
+      String rider_id) async {
     var request = await http.post(url, body: {
       "status": status,
       "reason": reason,
@@ -83,6 +84,7 @@ class _JoindetailState extends State<Joindetail> {
       "pay": pay,
       "review": review,
       "comment": comment,
+      "rider_id": rider_id,
     });
 
     if (request.statusCode == 200) {
@@ -93,7 +95,6 @@ class _JoindetailState extends State<Joindetail> {
       print('Error: ${request.statusCode}, Body: ${request.body}');
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +150,7 @@ class _JoindetailState extends State<Joindetail> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '${item!['rider_id']} ',
+                    '${item!['rider_name']} ',
                     style: const TextStyle(
                       color: Color(0xFF1A1C43),
                       fontWeight: FontWeight.bold,
@@ -364,20 +365,31 @@ class _JoindetailState extends State<Joindetail> {
                     onPressed: () {
                       String status = 'required';
                       String reason = 'wait to long';
-                      String rider_id = item!['rider_id'];
+                      String post_id = item!['post_id'];
                       String? customer_id = userId;
                       String pay = '0';
-                      String reviwe = '0';
+                      String review = '0';
                       String comment = 'cancel';
-                      insert(
+                      String rider_id = item!['rider_id'];
+
+                      join_post(
                         status,
                         reason,
-                        rider_id,
+                        post_id,
                         customer_id!,
                         pay,
-                        reviwe,
-                        comment
+                        review,
+                        comment,
+                        rider_id,
                       );
+                      // debugPrint(status);
+                      // debugPrint(reason);
+                      // debugPrint(post_id);
+                      // debugPrint(customer_id);
+                      // debugPrint(pay);
+                      // debugPrint(review);
+                      // debugPrint(comment);
+                      // debugPrint(rider_id);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
