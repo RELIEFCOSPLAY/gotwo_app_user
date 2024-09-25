@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/cus_confirm1.dart';
+import 'package:gotwo_app_user/global_ip.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -20,7 +21,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
   Future<void> fetchTravelData() async {
     try {
       final response = await http.get(Uri.parse(
-          "http://192.168.110.237:80/gotwo/status_pending.php")); // URL API
+          "http://${Global.ip_8080}/gotwo/status_pending.php")); // URL API
 
       if (response.statusCode == 200) {
         setState(() {

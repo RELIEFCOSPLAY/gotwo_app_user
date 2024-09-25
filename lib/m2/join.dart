@@ -4,6 +4,7 @@ import 'package:dropdown_search/dropdown_search.dart'; // Import dropdown_search
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gotwo_app_user/a/cus_logout.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:gotwo_app_user/global_ip.dart';
 import 'package:gotwo_app_user/m2/test.dart';
 import 'package:gotwo_app_user/m2/test2.dart';
 import 'package:http/http.dart' as http;
@@ -72,7 +73,7 @@ class _JoinState extends State<Join> {
 
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
-    final String url = "http://192.168.1.139:8080/gotwo/join.php";
+    final String url = "http://${Global.ip_8080}/gotwo/join.php";
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -91,7 +92,7 @@ class _JoinState extends State<Join> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://192.168.1.139:8080/gotwo/getUserId_cus.php"; // URL API
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -368,7 +369,7 @@ class _JoinState extends State<Join> {
           // ปุ่มค้นหา
           Container(
             margin:
-                const EdgeInsets.only(left: 120, right: 120), // กำหนด padding
+                const EdgeInsets.only(left: 110, right: 110), // กำหนด padding
             decoration: BoxDecoration(
               color: const Color(0xFF1A1C43), // สีพื้นหลัง
               borderRadius:
