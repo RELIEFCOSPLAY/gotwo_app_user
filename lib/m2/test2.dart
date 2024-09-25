@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:gotwo_app_user/global_ip.dart';
 import 'package:gotwo_app_user/m2/join.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,10 +32,9 @@ class _JoindetailState extends State<Joindetail> {
     }
   }
 
-
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://10.0.2.2:80/gotwo/getUserId.php"; // URL API
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -67,7 +67,7 @@ class _JoindetailState extends State<Joindetail> {
   }
 
   final url =
-      Uri.parse('http://10.0.2.2:80/gotwo/join_post_customer.php');
+      Uri.parse('http://${Global.ip_8080}/gotwo/join_post_customer.php');
   Future<void> join_post(
       String status,
       String reason,
