@@ -3,33 +3,29 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 
 class CusTotravel extends StatefulWidget {
-  const CusTotravel({Key? key}) : super(key: key);
+  final Map<String, dynamic> data; // รับข้อมูลจากหน้าก่อนหน้า
+
+  const CusTotravel({Key? key, required this.data}) : super(key: key);
 
   @override
   State<CusTotravel> createState() => _CusTotravelState();
 }
 
 class _CusTotravelState extends State<CusTotravel> {
-  final Map<String, String> item = {
-    'name': 'Name Lastname',
-    'phone': '012345678',
-    'to': 'F1',
-    'date': '24/03/24',
-    'gender': 'female',
-    'price': '50 THB',
-    'comment': 'comment',
-    'image': 'assets/images/profile.png',
-    'status': 'There is a helmet for you.',
-    'status2': 'Bring your own a helmet.',
-  };
+  late Map<String, dynamic> item; // ใช้เก็บข้อมูลที่รับมาจากหน้าก่อนหน้า
   var border = OutlineInputBorder(
       borderRadius: BorderRadius.circular(18),
       borderSide: const BorderSide(color: Color(0xff1a1c43)));
+
+  @override
+  void initState() {
+    super.initState();
+    // ตั้งค่า item จากข้อมูลที่ได้รับจาก widget.data
+    item = widget.data;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Selecting the first item from listData
-    final Map<String, String> firstItem = item;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -46,10 +42,7 @@ class _CusTotravelState extends State<CusTotravel> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(
-              context,
-              MaterialPageRoute(builder: (context) => (TabbarCus())),
-            );
+            Navigator.pop(context);
           },
         ),
       ),
@@ -62,7 +55,7 @@ class _CusTotravelState extends State<CusTotravel> {
               children: [
                 const SizedBox(height: 5),
                 Image.asset(
-                  firstItem['image'] ?? 'assets/images/profile.png',
+                  item['image'] ?? 'assets/images/profile.png',
                   width: 50,
                   height: 50,
                 ),
@@ -71,15 +64,17 @@ class _CusTotravelState extends State<CusTotravel> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${firstItem['name']} ',
+                      '${item['rider_id']} ',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                        fontSize: 18,
                       ),
                     ),
                     Icon(
-                      firstItem['gender'] == 'Male' ? Icons.male : Icons.female,
+                      (item['gender']?.toLowerCase() == 'male')
+                          ? Icons.male
+                          : Icons.female,
                       color: const Color(0xFF1A1C43),
                       size: 15,
                     ),
@@ -89,14 +84,10 @@ class _CusTotravelState extends State<CusTotravel> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.phone,
-                      color: Color(0xFF1A1C43),
-                      size: 15,
-                    ),
+                    const Icon(Icons.phone, color: Color(0xFF1A1C43), size: 15),
                     const SizedBox(width: 5),
                     Text(
-                      '${firstItem['phone']} ',
+                      '${item['rider_tel']} ',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -118,45 +109,22 @@ class _CusTotravelState extends State<CusTotravel> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
                   ],
                 ),
                 const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.calendar_today,
-                      color: Color(0xFF1A1C43),
-                      size: 15,
-                    ),
+                    const Icon(Icons.calendar_today,
+                        color: Color(0xFF1A1C43), size: 15),
                     const SizedBox(width: 5),
                     Text(
-                      '${firstItem['date']}',
+                      '${item['date']}',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -170,7 +138,7 @@ class _CusTotravelState extends State<CusTotravel> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${firstItem['price']} ',
+                      '${item['price']} THB',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -192,7 +160,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                 textAlign: TextAlign.center,
                               ),
                             ),
-                            content: Container(
+                            content: SizedBox(
                               width: 200.0,
                               height: 250.0,
                               child: Image.asset(
@@ -218,7 +186,7 @@ class _CusTotravelState extends State<CusTotravel> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1A1C43),
+                    backgroundColor: const Color(0xFF1A1C43),
                     minimumSize: const Size(5, 5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
@@ -239,10 +207,7 @@ class _CusTotravelState extends State<CusTotravel> {
                   height: 150,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(
-                      color: Colors.grey, // Border color
-                      width: 1, // Border width
-                    ),
+                    border: Border.all(color: Colors.grey, width: 1),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Padding(
@@ -265,23 +230,18 @@ class _CusTotravelState extends State<CusTotravel> {
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.my_location,
-                              color: Colors.green,
-                              size: 18,
-                            ),
+                            const Icon(Icons.my_location,
+                                color: Colors.green, size: 18),
                             const SizedBox(width: 10),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 10,
-                              ),
+                                  vertical: 5, horizontal: 10),
                               decoration: BoxDecoration(
                                 color: Colors.blue[100],
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
-                                '${firstItem['from']}',
+                                '${item['pick_up']}',
                                 style: const TextStyle(
                                   color: Color(0xFF1A1C43),
                                   fontWeight: FontWeight.bold,
@@ -291,13 +251,11 @@ class _CusTotravelState extends State<CusTotravel> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ),
+                        const SizedBox(height: 3),
                         Padding(
                           padding: const EdgeInsets.only(left: 40.0),
                           child: Text(
-                            '${firstItem['comment']}',
+                            '${item['comment_pick']}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -308,12 +266,9 @@ class _CusTotravelState extends State<CusTotravel> {
                         const Padding(
                           padding: EdgeInsets.only(left: 30.0),
                           child: Divider(
-                            color: Color(0xFF1A1C43),
-                            thickness: 0.5,
-                            height: 1,
-                            indent: 5,
-                            endIndent: 30,
-                          ),
+                              color: Color(0xFF1A1C43),
+                              thickness: 0.5,
+                              height: 1),
                         ),
                         const Padding(
                           padding: EdgeInsets.only(left: 10),
@@ -328,23 +283,18 @@ class _CusTotravelState extends State<CusTotravel> {
                         ),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.pin_drop,
-                              color: Color(0xFFD3261A),
-                              size: 18,
-                            ),
+                            const Icon(Icons.pin_drop,
+                                color: Color(0xFFD3261A), size: 18),
                             const SizedBox(width: 10),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 10,
-                              ),
+                                  vertical: 5, horizontal: 10),
                               decoration: BoxDecoration(
                                 color: Colors.blue[100],
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
-                                '${firstItem['to']}',
+                                '${item['at_drop']}',
                                 style: const TextStyle(
                                   color: Color(0xFF1A1C43),
                                   fontWeight: FontWeight.bold,
@@ -354,13 +304,11 @@ class _CusTotravelState extends State<CusTotravel> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ),
+                        const SizedBox(height: 3),
                         Padding(
                           padding: const EdgeInsets.only(left: 40.0),
                           child: Text(
-                            '${firstItem['comment']}',
+                            '${item['comment_drop']}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -371,24 +319,23 @@ class _CusTotravelState extends State<CusTotravel> {
                         const Padding(
                           padding: EdgeInsets.only(left: 30.0),
                           child: Divider(
-                            color: Color(0xFF1A1C43),
-                            thickness: 0.5,
-                            height: 1,
-                            indent: 5,
-                            endIndent: 30,
-                          ),
+                              color: Color(0xFF1A1C43),
+                              thickness: 0.5,
+                              height: 1),
                         ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                const SizedBox(height: 30),
                 Text(
-                  ' ${firstItem['status']}',
-                  style: const TextStyle(
-                    color: Colors.green,
+                  item['status_helmet'] == '0'
+                      ? 'Bring your own a helmet.'
+                      : 'There is a helmet for you.',
+                  style: TextStyle(
+                    color: item['status_helmet'] == '0'
+                        ? Colors.red
+                        : Colors.green,
                     fontWeight: FontWeight.bold,
                     fontSize: 10,
                   ),
@@ -417,24 +364,22 @@ class _CusTotravelState extends State<CusTotravel> {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(top: 5),
-                                        child: Container(
-                                          child: RatingBar.builder(
-                                            initialRating: 3,
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: true,
-                                            itemSize: 25,
-                                            itemCount: 5,
-                                            itemPadding: EdgeInsets.symmetric(
-                                                horizontal: 1.0),
-                                            itemBuilder: (context, _) => Icon(
-                                              Icons.star,
-                                              color: Colors.amber,
-                                            ),
-                                            onRatingUpdate: (rating) {
-                                              print(rating);
-                                            },
+                                        child: RatingBar.builder(
+                                          initialRating: 1,
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: false,
+                                          itemSize: 25,
+                                          itemCount: 5,
+                                          itemPadding: EdgeInsets.symmetric(
+                                              horizontal: 1),
+                                          itemBuilder: (context, _) => Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
                                           ),
+                                          onRatingUpdate: (rating) {
+                                            print(rating);
+                                          },
                                         ),
                                       ),
                                       Padding(
@@ -464,8 +409,8 @@ class _CusTotravelState extends State<CusTotravel> {
                                       ElevatedButton(
                                         onPressed: () {},
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Color(0xFF1A1C43),
-                                          minimumSize: const Size(20, 10),
+                                          backgroundColor: Colors.blue,
+                                          minimumSize: const Size(15, 29),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
@@ -486,7 +431,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                         },
                                         child: Text('Close',
                                             style:
-                                                TextStyle(color: Colors.grey)),
+                                                TextStyle(color: Colors.red)),
                                       ),
                                     ],
                                   ),

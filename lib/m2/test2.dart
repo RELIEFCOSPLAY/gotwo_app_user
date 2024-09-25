@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 
 class Joindetail extends StatefulWidget {
   final Map<String, dynamic> item; // รับข้อมูลจากหน้าแรก
@@ -16,130 +16,19 @@ class _JoindetailState extends State<Joindetail> {
   bool isLoading = true;
   Map<String, dynamic>? item;
 
-  final storage = const FlutterSecureStorage();
-  String? emails;
-
-  String? userId; // เก็บ ID ของผู้ใช้หลังจากดึงมา
-
-  Future<void> loadLoginInfo() async {
-    String? savedEmail = await storage.read(key: 'email');
-    setState(() {
-      emails = savedEmail;
-    });
-    if (emails != null) {
-      fetchUserId(emails!); // เรียกใช้ API เพื่อตรวจสอบ user id
-    }
-  }
-
-  Future<void> fetchUserId(String email) async {
-    final String url =
-        "http://172.27.133.41:8080/gotwo/getUserId_cus.php"; // URL API
-    try {
-      final response = await http.post(Uri.parse(url), body: {
-        'email': email, // ส่ง email เพื่อค้นหา user id
-      });
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['success']) {
-          setState(() {
-            userId = data['user_id']; // เก็บ user id ที่ได้มา
-          });
-        } else {
-          print('Error: ${data['message']}');
-        }
-      } else {
-        print("Failed to fetch user id");
-      }
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     item = widget.item; // ใช้ข้อมูล item ที่ส่งมาจากหน้าแรก
-    print(item); // พิมพ์ข้อมูล item ออกมาเพื่อตรวจสอบ
     isLoading = false;
-    loadLoginInfo();
   }
 
-  final url = Uri.parse('http://192.168.110.237:80/gotwo/post_cus2.php');
-  // Future<void> insert(
-  //   String status,
-  //   String reason,
-  //   String post_id,
-  //   String customer_id,
-  //   String pay,
-  //   String review,
-  //   String comment,
-  // ) async {
-  //   var request = await http.post(url, body: {
-  //     "status": status,
-  //     "reason": reason,
-  //     "post_id": post_id,
-  //     "customer_id": customer_id,
-  //     "pay": pay,
-  //     "review": review,
-  //     "comment": comment,
-  //   });
-
-  //   if (request.statusCode == 200) {
-  //     // ข้อมูลถูกส่งสำเร็จ
-  //     print('Success: ${request.body}');
-  //   } else {
-  //     // มีปัญหาในการส่งข้อมูล
-  //     print('Error: ${request.statusCode}, Body: ${request.body}');
-  //   }
-  // }
-  Future<void> updateOrInsert(final url = Uri.parse('http://172.27.133.41:8080/gotwo/post_customer.php');
-  Future<void> insert(
-
-    String status,
-    String reason,
-    String post_id, 
-    String customer_id,
-    String pay,
-    String review,
-    String comment,
-  ) async {
-    final response = await http.post(url, body: {
-      "status": status,
-      "reason": reason,
-      "post_id": post_id,
-      "customer_id": customer_id,
-      "pay": pay,
-      "review": review,
-      "comment": comment,
-    });
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['error'] != null) {
-        showError(data['error']); // แสดงข้อผิดพลาดที่ได้จาก API
-      } else {
-        showSuccess(data['message']); // แสดงข้อความสำเร็จ
-      }
-    } else {
-      showError('Error: ${response.statusCode}, Body: ${response.body}');
-    }
-  }
-
-  void showError(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  void showSuccess(String message) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
-  }
+  
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(
+      return Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),
@@ -178,14 +67,14 @@ class _JoindetailState extends State<Joindetail> {
                   const SizedBox(height: 5),
                   Image.network(
                     item!['image'] ??
-                        'https://your-default-image-url.com/default.png', // ใช้ Image.network สำหรับโหลดภาพจาก URL
+                        'https://your-default-image-url.com/default.png', 
                     width: 50,
                     height: 50,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.asset('assets/images/profile.png',
                           width: 50,
                           height:
-                              50); // ใช้ภาพเริ่มต้นในกรณีที่ไม่สามารถโหลดภาพได้
+                              50); 
                     },
                   ),
                   const SizedBox(height: 5),
@@ -194,7 +83,7 @@ class _JoindetailState extends State<Joindetail> {
                     style: const TextStyle(
                       color: Color(0xFF1A1C43),
                       fontWeight: FontWeight.bold,
-                      fontSize: 20,
+                      fontSize: 18,
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -202,7 +91,7 @@ class _JoindetailState extends State<Joindetail> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        item!['rider_gender'] == 'Male'
+                        (item!['rider_gender']?.toLowerCase() == 'male')
                             ? Icons.male
                             : Icons.female,
                         color: const Color(0xFF1A1C43),
@@ -320,7 +209,9 @@ class _JoindetailState extends State<Joindetail> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 3),
+                        const SizedBox(
+                          height: 3,
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(left: 30.0),
                           child: Text(
@@ -340,7 +231,9 @@ class _JoindetailState extends State<Joindetail> {
                             height: 0.5,
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(
+                          height: 30,
+                        ),
                         const Text(
                           'Drop',
                           style: TextStyle(
@@ -377,7 +270,9 @@ class _JoindetailState extends State<Joindetail> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 3),
+                        const SizedBox(
+                          height: 3,
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(left: 30.0),
                           child: Text(
@@ -400,28 +295,18 @@ class _JoindetailState extends State<Joindetail> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(
+                    height: 30,
+                  ),
                   ElevatedButton(
                     onPressed: () {
-                      print("User ID: $userId"); // ตรวจสอบค่าของ userId
-                      print(
-                          "Post ID: ${item!['post_id']}"); // ตรวจสอบค่าของ post_id
-
-                      if (userId != null && item!['post_id'] != null) {
-                        String status = 'required';
-                        String reason = 'wait too long';
-                        String post_id = item!['post_id']
-                            .toString(); // ตรวจสอบว่า post_id มีค่าจริง
-                        String customer_id = userId!;
-                        String pay = '0';
-                        String review = '0';
-                        String comment = 'cancel';
-
-                        updateOrInsert(status, reason, post_id, customer_id, pay,
-                            review, comment);
-                      } else {
-                        showError("User ID or Post ID is missing.");
-                      }
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TabbarCus(),
+                        ),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,

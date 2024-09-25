@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/cus_confirm1.dart';
+import 'package:gotwo_app_user/m2/test.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -14,30 +15,31 @@ class _ConfirmTabState extends State<ConfirmTab> {
   @override
   void initState() {
     super.initState();
-    fetchTravelData(); // เรียกใช้ฟังก์ชันเมื่อเริ่มต้น
+    fetchData(); // Call fetchData() on init
   }
 
-  Future<void> fetchTravelData() async {
+  Future<void> fetchData() async {
+    final String url = "http://192.168.110.237:80/gotwo/status_pending.php";
     try {
-      final response = await http.get(Uri.parse(
-          "http://192.168.110.237:80/gotwo/status_pending.php")); // URL API
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         setState(() {
-          travelData = json.decode(response.body); // แปลง JSON เป็น List
+          travelData = json.decode(response.body);
         });
       } else {
-        throw Exception('Failed to load data');
+        print("Failed to load data");
       }
     } catch (e) {
-      print("Error: $e"); // แสดงข้อผิดพลาดใน console
+      print("Error: $e");
     }
   }
 
   String getStatusLabel(String pay) {
-    int payCode = int.tryParse(pay) ??
-        -1; // แปลงเป็น int หรือคืนค่า -1 หากแปลงไม่สำเร็จ
-    return payCode == 0 ? "Unaid" 
+    int payCode =
+        int.tryParse(pay) ?? -1; // แปลงเป็น int หรือคืนค่า -1 หากแปลงไม่สำเร็จ
+    return payCode == 0
+        ? "Unaid"
         : (payCode == 1 ? "Paid" : "Unknown"); // ตรวจสอบสถานะ
   }
 
@@ -76,6 +78,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
                                       ['comment_drop'],
                                   'status_helmet': travelData[index]
                                       ['status_helmet'],
+                                  'pay': travelData[index]['pay'],
                                 },
                               )),
                     );

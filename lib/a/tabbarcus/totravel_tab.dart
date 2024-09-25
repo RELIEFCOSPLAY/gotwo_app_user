@@ -1,56 +1,44 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/cus_totravel.dart';
+import 'package:http/http.dart' as http;
 
-class TotravelTab extends StatelessWidget {
-    List testDate = [
-    {
-      'from': 'home',
-      'to': 'F1',
-      'date': '24/03/24',
-      'time': '10:30',
-      'price': '50 ',
-      'status': 'Unpaid',
-    },
-    {
-      'from': 'School',
-      'to': 'F2',
-      'date': '25/03/24',
-      'time': '11:30',
-      'price': '35 ',
-      'status': 'Unpaid',
-    },
-    {
-      'from': 'JJ',
-      'to': 'F3',
-      'date': '25/03/24',
-      'time': '18:30',
-      'price': '40 ',
-      'status': 'Paid',
-    },
-    {
-      'from': 'Workplace',
-      'to': 'F4',
-      'date': '26/03/24',
-      'time': '12:30',
-      'price': '45 ',
-      'status': 'Paid',
-    },
-    {
-      'from': 'Gym',
-      'to': 'F5',
-      'date': '26/03/24',
-      'time': '13:30',
-      'price': '55 ',
-      'status': 'Paid',
-    },
-    {
-      'from': 'Park',
-      'to': 'F6',
-      'date': '27/03/24',
-      'price': '60 ',
-      'status': 'Unpaid',
-    },
-  ];
+class TotravelTab extends StatefulWidget {
+  @override
+  State<TotravelTab> createState() => _TotravelTabState();
+}
+
+class _TotravelTabState extends State<TotravelTab> {
+  List<dynamic> testDate = []; // สร้าง List สำหรับเก็บข้อมูลที่ดึงมา
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTravelData(); // เรียกใช้ฟังก์ชันเมื่อเริ่มต้น
+  }
+
+  Future<void> fetchTravelData() async {
+    try {
+      final response = await http.get(Uri.parse(
+          "http://192.168.110.237:80/gotwo/status_pending.php")); // URL API
+
+      if (response.statusCode == 200) {
+        setState(() {
+          testDate = json.decode(response.body); // แปลง JSON เป็น List
+        });
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print("Error: $e"); // แสดงข้อผิดพลาดใน console
+    }
+  }
+
+  String getStatusLabel(String pay) {
+    int payCode = int.tryParse(pay) ?? -1; // แปลงเป็น int หรือคืนค่า -1 หากแปลงไม่สำเร็จ
+    return payCode == 0 ? "Unaid" : (payCode == 1 ? "Paid" : "Unknown"); // ตรวจสอบสถานะ
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -70,28 +58,43 @@ class TotravelTab extends StatelessWidget {
           itemCount: testDate.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding:
-                  const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
+              padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
               child: SizedBox(
                 width: 300,
                 height: 100,
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => (CusTotravel())),
-                   );
-                  
-                    debugPrint("CardRequest ${testDate[index]['from']}");
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CusTotravel(
+                          data: {
+                            'rider_id': testDate[index]['rider_id'],
+                            'gender': testDate[index]['rider_gender'],
+                            'date': testDate[index]['date'],
+                            'price': testDate[index]['price'],
+                            'pick_up': testDate[index]['pick_up'],
+                            'comment_pick': testDate[index]['comment_pick'],
+                            'at_drop': testDate[index]['at_drop'],
+                            'comment_drop': testDate[index]['comment_drop'],
+                            'status_helmet': testDate[index]['status_helmet'],
+                            'pay': testDate[index]['pay'],
+                            'rider_tel': testDate[index]['rider_tel'],
+                          },
+                        ),
+                      ),
+                    );
+                    debugPrint("CardRequest ${testDate[index]['pick_up']}");
                   },
                   style: ButtonStyle(
-                      backgroundColor:
-                          const WidgetStatePropertyAll(Color(0xfffbf8ff)),
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side:
-                                  const BorderSide(color: Color(0xff1a1c43))))),
+                    backgroundColor: MaterialStateProperty.all(Color(0xfffbf8ff)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                        side: const BorderSide(color: Color(0xff1a1c43)),
+                      ),
+                    ),
+                  ),
                   child: SizedBox(
                     width: double.infinity,
                     child: Row(
@@ -100,16 +103,16 @@ class TotravelTab extends StatelessWidget {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "From: ${testDate[index]['from']}",
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                          fontSize: 12, color: Color(0xff1a1c43)),
-                                    ),
-                                  ],
+                            Row(
+                              children: [
+                                Text(
+                                  "From: ${testDate[index]['pick_up']}",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Color(0xff1a1c43)),
                                 ),
+                              ],
+                            ),
                             Text(
                               "Date: ${testDate[index]['date']} ",
                               textAlign: TextAlign.center,
@@ -123,35 +126,25 @@ class TotravelTab extends StatelessWidget {
                                   fontSize: 12, color: Color(0xff1a1c43)),
                             ),
                             Text(
-                              "Status: ${testDate[index]['status']}",
+                              "Status: ${getStatusLabel(testDate[index]['pay'])}",
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                   fontSize: 12, color: Color(0xff1a1c43)),
                             ),
-
                           ],
                         ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const Icon(Icons.arrow_forward,
-                            color: Color(0xff1a1c43)),
-                        const SizedBox(
-                          width: 10,
-                        ),
+                        const SizedBox(width: 10),
+                        const Icon(Icons.arrow_forward, color: Color(0xff1a1c43)),
+                        const SizedBox(width: 10),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Row(
                               children: [
-                                const Icon(
-                                  Icons.tour,
-                                  color: Color(0xff1a1c43),
-                                  size: 20.0,
-                                ),
+                                const Icon(Icons.tour, color: Color(0xff1a1c43), size: 20.0),
                                 const SizedBox(width: 5),
                                 Text(
-                                  "To: ${testDate[index]['to']}",
+                                  "To: ${testDate[index]['at_drop']}",
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                       fontSize: 12, color: Color(0xff1a1c43)),
@@ -188,4 +181,3 @@ class TotravelTab extends StatelessWidget {
     );
   }
 }
-
