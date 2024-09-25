@@ -72,7 +72,7 @@ class _JoinState extends State<Join> {
 
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
-    final String url = "http://192.168.110.237:80/gotwo/join.php";
+    final String url = "http://10.0.2.2:80/gotwo/join.php";
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -91,7 +91,7 @@ class _JoinState extends State<Join> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://192.168.110.237:80/gotwo/getUserId.php"; // URL API
+        "http://10.0.2.2:80/gotwo/getUserId.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -369,7 +369,7 @@ class _JoinState extends State<Join> {
           // ปุ่มค้นหา
           Container(
             margin:
-                const EdgeInsets.only(left: 120, right: 120), // กำหนด padding
+                const EdgeInsets.only(left: 110, right: 110), // กำหนด padding
             decoration: BoxDecoration(
               color: const Color(0xFF1A1C43), // สีพื้นหลัง
               borderRadius:

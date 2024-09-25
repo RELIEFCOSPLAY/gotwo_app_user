@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/a/cus_cancel.dart';
-import 'package:gotwo_app_user/a/cus_confirm1.dart';
 import 'package:gotwo_app_user/a/cus_pending.dart';
 import 'package:gotwo_app_user/a/cus_totravel.dart';
 import 'package:gotwo_app_user/a/cus_profilepage.dart';
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
         appBarTheme:const AppBarTheme(
     backgroundColor: Colors.white)
       ),
-      home: Home(),
+      home: Loginpage(),
     );
   }
 }

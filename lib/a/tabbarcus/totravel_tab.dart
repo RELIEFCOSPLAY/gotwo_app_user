@@ -20,7 +20,7 @@ class _TotravelTabState extends State<TotravelTab> {
   Future<void> fetchTravelData() async {
     try {
       final response = await http.get(Uri.parse(
-          "http://192.168.110.237:80/gotwo/status_pending.php")); // URL API
+          "http://10.0.2.2:80/gotwo/status_pending.php")); // URL API
 
       if (response.statusCode == 200) {
         setState(() {
