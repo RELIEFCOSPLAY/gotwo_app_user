@@ -191,7 +191,6 @@ class _JoinState extends State<Join> {
                 itemBuilder: (context, index) {
                   final item = filteredList[index];
 
-
                   // if (userId == item['customer_id'].toString()) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -291,7 +290,9 @@ class _JoinState extends State<Join> {
                         ),
                       ),
                     );
-
+                  // } else {
+                  //   return const SizedBox.shrink();
+                  // }
                 },
               ),
       ),

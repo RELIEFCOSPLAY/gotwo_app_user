@@ -4,6 +4,7 @@ import 'package:gotwo_app_user/a/tabbarcus/pending_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/success_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/totravel_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/cancel_tab.dart';
+import 'package:gotwo_app_user/m2/join.dart';
 
 class TabbarCus extends StatefulWidget {
   const TabbarCus({super.key});
@@ -28,7 +29,7 @@ class _TabbarCusState extends State<TabbarCus> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
-                      child: _backButton(),
+                       child: _backButton(context),
                     ),
                     const Padding(
                       padding: EdgeInsets.only(left: 80),
@@ -115,7 +116,16 @@ class _TabbarCusState extends State<TabbarCus> {
         ),
       ),
     );
-  }
+  }Widget _backButton(BuildContext context) {
+  return IconButton(
+    icon: Icon(Icons.arrow_back, color: Color(0xff1a1c43)),
+    onPressed: () {
+   Navigator.push(context, MaterialPageRoute(builder: (context) => Join())); // นำทางไปยังหน้าชื่อ Status
+    },
+  );
+}
+
+}
 
   Widget _backButton() {
     return GestureDetector(
@@ -130,4 +140,4 @@ class _TabbarCusState extends State<TabbarCus> {
     );
     
   }
-}
+
