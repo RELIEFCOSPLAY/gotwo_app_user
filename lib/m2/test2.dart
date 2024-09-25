@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gotwo_app_user/global_ip.dart';
 import 'package:gotwo_app_user/m2/join.dart';
 import 'package:http/http.dart' as http;
-import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 
 class Joindetail extends StatefulWidget {
   final Map<String, dynamic> item; // รับข้อมูลจากหน้าแรก
@@ -62,7 +61,9 @@ class _JoindetailState extends State<Joindetail> {
   void initState() {
     super.initState();
     item = widget.item; // ใช้ข้อมูล item ที่ส่งมาจากหน้าแรก
+    print(item); // พิมพ์ข้อมูล item ออกมาเพื่อตรวจสอบ
     isLoading = false;
+    loadLoginInfo();
   }
 
   final url =
@@ -100,7 +101,7 @@ class _JoindetailState extends State<Joindetail> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),
@@ -139,14 +140,14 @@ class _JoindetailState extends State<Joindetail> {
                   const SizedBox(height: 5),
                   Image.network(
                     item!['image'] ??
-                        'https://your-default-image-url.com/default.png', 
+                        'https://your-default-image-url.com/default.png', // ใช้ Image.network สำหรับโหลดภาพจาก URL
                     width: 50,
                     height: 50,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.asset('assets/images/profile.png',
                           width: 50,
                           height:
-                              50); 
+                              50); // ใช้ภาพเริ่มต้นในกรณีที่ไม่สามารถโหลดภาพได้
                     },
                   ),
                   const SizedBox(height: 5),
@@ -155,7 +156,7 @@ class _JoindetailState extends State<Joindetail> {
                     style: const TextStyle(
                       color: Color(0xFF1A1C43),
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 20,
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -163,7 +164,7 @@ class _JoindetailState extends State<Joindetail> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                        (item!['rider_gender']?.toLowerCase() == 'male')
+                        item!['rider_gender'] == 'Male'
                             ? Icons.male
                             : Icons.female,
                         color: const Color(0xFF1A1C43),
@@ -281,9 +282,7 @@ class _JoindetailState extends State<Joindetail> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ),
+                        const SizedBox(height: 3),
                         Padding(
                           padding: const EdgeInsets.only(left: 30.0),
                           child: Text(
@@ -303,9 +302,7 @@ class _JoindetailState extends State<Joindetail> {
                             height: 0.5,
                           ),
                         ),
-                        const SizedBox(
-                          height: 30,
-                        ),
+                        const SizedBox(height: 30),
                         const Text(
                           'Drop',
                           style: TextStyle(
@@ -342,9 +339,7 @@ class _JoindetailState extends State<Joindetail> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ),
+                        const SizedBox(height: 3),
                         Padding(
                           padding: const EdgeInsets.only(left: 30.0),
                           child: Text(
@@ -367,9 +362,7 @@ class _JoindetailState extends State<Joindetail> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
+                  const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
                       String status = 'required';
