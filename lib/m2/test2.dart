@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:gotwo_app_user/m2/join.dart';
 import 'package:http/http.dart' as http;
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 
@@ -23,7 +25,37 @@ class _JoindetailState extends State<Joindetail> {
     isLoading = false;
   }
 
-  
+  final url =
+      Uri.parse('http://192.168.1.139:8080/gotwo/join_post_customer.php');
+  Future<void> join_post(
+      String status,
+      String reason,
+      String post_id,
+      String customer_id,
+      String pay,
+      String review,
+      String comment,
+      String rider_id) async {
+    var request = await http.post(url, body: {
+      "status": status,
+      "reason": reason,
+      "post_id": post_id,
+      "customer_id": customer_id,
+      "pay": pay,
+      "review": review,
+      "comment": comment,
+      "rider_id": rider_id,
+    });
+
+    if (request.statusCode == 200) {
+      // ข้อมูลถูกส่งสำเร็จ
+      print('Success: ${request.body}');
+      print('Id Be ${userId}');
+    } else {
+      // มีปัญหาในการส่งข้อมูล
+      print('Error: ${request.statusCode}, Body: ${request.body}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +111,7 @@ class _JoindetailState extends State<Joindetail> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '${item!['rider_id']} ',
+                    '${item!['rider_name']} ',
                     style: const TextStyle(
                       color: Color(0xFF1A1C43),
                       fontWeight: FontWeight.bold,
@@ -300,10 +332,30 @@ class _JoindetailState extends State<Joindetail> {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      String status = 'required';
+                      String reason = 'wait to long';
+                      String post_id = item!['post_id'];
+                      String? customer_id = userId;
+                      String pay = '0';
+                      String review = '0';
+                      String comment = 'cancel';
+                      String rider_id = item!['rider_id'];
+
+                      join_post(
+                        status,
+                        reason,
+                        post_id,
+                        customer_id!,
+                        pay,
+                        review,
+                        comment,
+                        rider_id,
+                      );
+
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TabbarCus(),
+                          builder: (context) => const Join(),
                         ),
                         (Route<dynamic> route) => false,
                       );
