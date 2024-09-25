@@ -20,7 +20,6 @@ class _ConfirmTabState extends State<ConfirmTab> {
   }
 
   Future<void> fetchData() async {
-    final String url = "http://192.168.110.237:80/gotwo/status_pending.php";
     try {
       final response = await http.get(Uri.parse(
           "http://${Global.ip_8080}/gotwo/status_pending.php")); // URL API
