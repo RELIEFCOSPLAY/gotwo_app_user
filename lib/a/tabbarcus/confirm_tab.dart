@@ -14,10 +14,10 @@ class ConfirmTab extends StatefulWidget {
 
 class _ConfirmTabState extends State<ConfirmTab> {
   List<dynamic> travelData = []; // สร้าง List สำหรับเก็บข้อมูลที่ดึงมา
+
   final storage = const FlutterSecureStorage();
   String? emails;
-  String? userId; // เก็บ ID ของผู้ใช้หลังจากดึงมา
-
+  String? userId; 
   Future<void> loadLoginInfo() async {
     String? savedEmail = await storage.read(key: 'email');
     setState(() {
@@ -30,47 +30,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://${Global.ip_80}/gotwo/getUserId_cus.php"; // URL API
-    try {
-      final response = await http.post(Uri.parse(url), body: {
-        'email': email, // ส่ง email เพื่อค้นหา user id
-      });
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['success']) {
-          setState(() {
-            userId = data['user_id']; // เก็บ user id ที่ได้มา
-          });
-        } else {
-          print('Error: ${data['message']}');
-        }
-      } else {
-        print("Failed to fetch user id");
-      }
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
-
-  bool isLoading = true;
-  Map<String, dynamic>? item;
-
-  final storage = const FlutterSecureStorage();
-  String? emails;
-  String? userId; // เก็บ ID ของผู้ใช้หลังจากดึงมา
-  Future<void> loadLoginInfo() async {
-    String? savedEmail = await storage.read(key: 'email');
-    setState(() {
-      emails = savedEmail;
-    });
-    if (emails != null) {
-      fetchUserId(emails!); // เรียกใช้ API เพื่อตรวจสอบ user id
-    }
-  }
-
-  Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_80}/gotwo/getUserId.php"; // URL API
+        "http://${Global.ip_80}/gotwo/getUserId.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
