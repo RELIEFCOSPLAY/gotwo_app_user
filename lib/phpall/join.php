@@ -1,10 +1,11 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
-include("config.php");
+include("config.php"); // รวมไฟล์ config.php เพื่อเชื่อมต่อกับฐานข้อมูล
 
-
+// SQL ที่รวมข้อมูลจาก post, table_rider และ table_customer
 $sql = "
     SELECT 
+        post.post_id, 
         post.pick_up, 
         post.comment_pick, 
         post.at_drop, 
@@ -13,10 +14,14 @@ $sql = "
         post.time, 
         post.price, 
         post.status_helmet, 
-        table_rider.name AS rider_id, 
-        table_rider.gender AS rider_gender
+        table_rider.regis_rider_id AS rider_id, 
+        table_rider.name AS rider_name, 
+        table_rider.gender AS rider_gender,
+        table_customer.email AS customer_email,
+        table_customer.regis_customer_id  AS customer_id
     FROM post
-    INNER JOIN table_rider ON post.rider_id = table_rider.regis_rider_id"; // เชื่อมต่อ post กับ table_rider
+    INNER JOIN table_rider ON post.rider_id = table_rider.regis_rider_id
+    INNER JOIN table_customer ON post.customer_id = table_customer.regis_customer_id";
 
 $result = mysqli_query($conn, $sql);
 
@@ -25,6 +30,7 @@ $response = array();
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
         $tb_pos = array();
+        $tb_pos["post_id"] = $row['post_id'];
         $tb_pos["pick_up"] = $row['pick_up'];
         $tb_pos["commpick"] = $row['comment_pick'];
         $tb_pos["at_drop"] = $row['at_drop'];
@@ -33,10 +39,13 @@ if (mysqli_num_rows($result) > 0) {
         $tb_pos["time"] = $row['time'];
         $tb_pos["price"] = $row['price'];
         $tb_pos["status_helmet"] = $row['status_helmet'];
-        $tb_pos["rider_id"] = $row['rider_id']; 
+        $tb_pos["rider_id"] = $row['rider_id'];
+        $tb_pos["rider_name"] = $row['rider_name'];
         $tb_pos["rider_gender"] = $row['rider_gender'];
+        $tb_pos["customer_email"] = $row['customer_email'];
+        $tb_pos["customer_id"] = $row['customer_id'];
 
-        array_push($response, $tb_pos); 
+        array_push($response, $tb_pos);
     }
 } else {
     // หากไม่มีข้อมูลในฐานข้อมูล
@@ -51,44 +60,11 @@ if (mysqli_num_rows($result) > 0) {
     $tb_pos["status_helmet"] = '';
     $tb_pos["rider_id"] = '';
     $tb_pos["rider_gender"] = '';
-    
+    $tb_pos["customer_email"] = ''; // ค่าเริ่มต้นของ customer_email
 
     array_push($response, $tb_pos); // เพิ่ม $tb_pos ที่เป็นข้อมูลว่างเข้าใน $response
 }
 
-
-//insert
-$status = $_POST['status'];
-$reason = $_POST['reason'];
-$post_id = intval($_POST['post_id']);
-$customer_id = intval($_POST['customer_id']);
-$pay = intval($_POST['pay']);
-$review = intval($_POST['review']);
-$comment = $_POST['comment'];
-$rider_id = intval($_POST['rider_id']);
-
-// SQL สำหรับการ insert ข้อมูลลงในตาราง status_post
-$sql = "INSERT INTO `status_post` (`status`, `reason`, `post_id`, `customer_id`, `pay`, `review`, `comment`, `rider_id`) 
-VALUES ('$status', '$reason', '$post_id', '$customer_id', '$pay', '$review', '$comment', '$rider_id');";
-
-// ดำเนินการคำสั่ง insert
-if ($conn->query($sql)) {
-    echo "Insert Success";
-
-    // SQL สำหรับการ update ข้อมูลในตาราง post
-    $update_sql = "UPDATE `post` SET `customer_id` = '$customer_id' WHERE `post_id` = '$post_id';";
-
-    // ดำเนินการคำสั่ง update
-    if ($conn->query($update_sql)) {
-        echo " and Update Success";
-    } else {
-        echo " but Error updating post!";
-    }
-
-} else {
-    echo "Error insert!";
-}
-
-echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) ; // ส่งข้อมูลเป็น JSON
+echo json_encode($response, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT); // ส่งข้อมูลเป็น JSON
 mysqli_close($conn);
 ?>

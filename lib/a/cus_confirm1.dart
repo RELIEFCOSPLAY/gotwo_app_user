@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class CusConfirm extends StatefulWidget {
   final Map<String, dynamic> data; // รับค่าที่ส่งมาจาก ConfirmTab
@@ -36,8 +37,7 @@ class _CusConfirmState extends State<CusConfirm> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url =
-        "http://10.0.2.2:80/gotwo/getUserId.php"; // URL API
+    final String url = "http://10.0.2.2:80/gotwo/getUserId.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -65,7 +65,8 @@ class _CusConfirmState extends State<CusConfirm> {
     super.initState();
     loadLoginInfo();
   }
-  final url = Uri.parse('http://10.0.2.2:80/gotwo/status_update.php');
+
+  final url = Uri.parse('http://10.0.2.2:80/gotwo/status_confirme.php');
   Future<void> update_pay(
     String customer_id,
     String pay,
@@ -81,6 +82,16 @@ class _CusConfirmState extends State<CusConfirm> {
     } else {
       // มีปัญหาในการส่งข้อมูล
       print('Error: ${request.statusCode}, Body: ${request.body}');
+    }
+  }
+
+  String formatDate(String date) {
+    try {
+      DateTime parsedDate = DateTime.parse(date);
+
+      return DateFormat('dd/MM/yyyy').format(parsedDate);
+    } catch (e) {
+      return "";
     }
   }
 
@@ -269,12 +280,10 @@ class _CusConfirmState extends State<CusConfirm> {
                         color: Color(0xFF1A1C43), size: 15),
                     const SizedBox(width: 5),
                     Text(
-                      '${widget.data['date']}',
+                      "Date: ${formatDate(widget.data['date'])}",
+                      textAlign: TextAlign.start,
                       style: const TextStyle(
-                        color: Color(0xFF1A1C43),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
-                      ),
+                          fontSize: 12, color: Color(0xff1a1c43),fontWeight: FontWeight.bold, ),
                     ),
                   ],
                 ),
@@ -298,7 +307,7 @@ class _CusConfirmState extends State<CusConfirm> {
                 const SizedBox(height: 20),
                 Container(
                   width: 300,
-                  height: 150,
+                  height: 190,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border.all(color: Colors.grey, width: 1),
