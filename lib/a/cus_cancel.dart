@@ -1,37 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class CusCancel extends StatefulWidget {
-  const CusCancel({super.key});
+  final Map<String, dynamic> data;
+  const CusCancel({Key? key, required this.data}) : super(key: key);
 
   @override
   State<CusCancel> createState() => _CusCancelState();
 }
 
 class _CusCancelState extends State<CusCancel> {
-  final Map<String, String> item = {
-    'name': 'Name Lastname',
-    'from': 'MFU library ',
-    'to': 'F1 Dormitory',
-    'date': '24/03/24',
-    'eft': 'Unpaid',
-    'gender': 'Male',
-    'price': '50 THB',
-    'comment': 'comment',
-    'image': 'assets/images/profile.png',
-    'status': 'There is a helmet for you.',
-    'status2': 'Bring your own a helmet.',
-  };
-  var border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(18),
-      borderSide: const BorderSide(color: Color(0xff1a1c43)));
+  late Map<String, dynamic> item;
+  List<dynamic> cancelData = [];
+  final border = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(18),
+    borderSide: const BorderSide(color: Color(0xff1a1c43)),
+  );
+  String? emails;
+  String? userId;
+
+  final storage = const FlutterSecureStorage();
+  Future<void> loadLoginInfo() async {
+    String? savedEmail = await storage.read(key: 'email');
+    setState(() {
+      emails = savedEmail;
+    });
+    if (emails != null) {
+      fetchUserId(emails!); // เรียกใช้ API เพื่อตรวจสอบ user id
+    }
+  }
+
+  Future<void> fetchUserId(String email) async {
+    final String url = "http://10.0.2.2:80/gotwo/getUserId.php"; // URL API
+    try {
+      final response = await http.post(Uri.parse(url), body: {
+        'email': email, // ส่ง email เพื่อค้นหา user id
+      });
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success']) {
+          setState(() {
+            userId = data['user_id']; // เก็บ user id ที่ได้มา
+          });
+        } else {
+          print('Error: ${data['message']}');
+        }
+      } else {
+        print("Failed to fetch user id");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    item = widget.data;
+    loadLoginInfo();
+  }
+
+  // String getStatusLabel(String pay) {
+  //   int payCode =
+  //       int.tryParse(pay) ?? -1; // แปลงเป็น int หรือคืนค่า -1 หากแปลงไม่สำเร็จ
+  //   return payCode == 2
+  //       ? "Refun"
+  //       : (payCode == 3 ? "Compled" : "Unknown"); // ตรวจสอบสถานะ
+  // }
+
+  String formatDate(String date) {
+    try {
+      DateTime parsedDate = DateTime.parse(date);
+      return DateFormat('dd/MM/yyyy').format(parsedDate);
+    } catch (e) {
+      return "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var _saveRating;
-    final Map<String, String> firstItem = item;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -48,10 +102,7 @@ class _CusCancelState extends State<CusCancel> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(
-              context,
-              MaterialPageRoute(builder: (context) => (TabbarCus())),
-            );
+            Navigator.pop(context);
           },
         ),
       ),
@@ -64,7 +115,7 @@ class _CusCancelState extends State<CusCancel> {
               children: [
                 const SizedBox(height: 5),
                 Image.asset(
-                  firstItem['image'] ?? 'assets/images/profile.png',
+                  item['image'] ?? 'assets/images/profile.png',
                   width: 50,
                   height: 50,
                 ),
@@ -73,15 +124,17 @@ class _CusCancelState extends State<CusCancel> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${firstItem['name']} ',
+                      '${item['rider_id']} ',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: 18,
                       ),
                     ),
                     Icon(
-                      firstItem['gender'] == 'Male' ? Icons.male : Icons.female,
+                      (item['gender']?.toLowerCase() == 'male')
+                          ? Icons.male
+                          : Icons.female,
                       color: const Color(0xFF1A1C43),
                       size: 15,
                     ),
@@ -96,39 +149,15 @@ class _CusCancelState extends State<CusCancel> {
                       style: TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                        fontSize: 11,
                       ),
                     ),
                     SizedBox(width: 5),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 15,
-                    ),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [],
-                    )
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
+                    Icon(Icons.star, color: Colors.yellow, size: 15),
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -142,45 +171,28 @@ class _CusCancelState extends State<CusCancel> {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      '${firstItem['date']}',
+                      "Date: ${formatDate(widget.data['date'])}",
+                      textAlign: TextAlign.start,
                       style: const TextStyle(
-                        color: Color(0xFF1A1C43),
-                        fontWeight: FontWeight.bold,
                         fontSize: 12,
+                        color: Color(0xff1a1c43),
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (firstItem['eft'] == 'Paid')
-                      const Text(
-                        'Paid',
-                        style: const TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      )
-                    else
-                      const Text(
-                        'Unpaid',
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      )
                   ],
                 ),
                 const SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const Icon(
+                      Icons.payment,
+                      color: Color(0xFF1A1C43),
+                      size: 15,
+                    ),
                     const SizedBox(width: 5),
                     Text(
-                      '${firstItem['price']} ',
+                      '${item['price']} THB',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -188,17 +200,86 @@ class _CusCancelState extends State<CusCancel> {
                       ),
                     ),
                   ],
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      widget.data['pay'] == '2' ? 'Refun' : 'Compled',
+                      style: TextStyle(
+                        color: widget.data['pay'] == '2'
+                            ? Colors.amber
+                            : Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Center(
+                          child: AlertDialog(
+                            title: const Center(
+                              child: Text(
+                                'Money slip',
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            content: SizedBox(
+                              width: 200.0,
+                              height: 250.0,
+                              child: Image.asset("assets/images/slip.jpg"),
+                            ),
+                            actions: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Close',
+                                        style: TextStyle(color: Colors.red)),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1A1C43),
+                    minimumSize: const Size(5, 5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                  ),
+                  child: const Text(
+                    'Money slip',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 5),
                 Container(
                   width: 300,
-                  height: 150,
+                  height: 180,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    border: Border.all(
-                      color: Colors.grey, // Border color
-                      width: 1, // Border width
-                    ),
+                    border: Border.all(color: Colors.grey, width: 1),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Padding(
@@ -218,26 +299,21 @@ class _CusCancelState extends State<CusCancel> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 5),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.my_location,
-                              color: Colors.green,
-                              size: 18,
-                            ),
+                            const Icon(Icons.my_location,
+                                color: Colors.green, size: 18),
                             const SizedBox(width: 10),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 10,
-                              ),
+                                  vertical: 5, horizontal: 10),
                               decoration: BoxDecoration(
                                 color: Colors.blue[100],
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
-                                '${firstItem['from']}',
+                                '${item['pick_up']}',
                                 style: const TextStyle(
                                   color: Color(0xFF1A1C43),
                                   fontWeight: FontWeight.bold,
@@ -247,13 +323,11 @@ class _CusCancelState extends State<CusCancel> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ),
+                        const SizedBox(height: 3),
                         Padding(
                           padding: const EdgeInsets.only(left: 40.0),
                           child: Text(
-                            '${firstItem['comment']}',
+                            '${item['comment_pick']}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -264,12 +338,9 @@ class _CusCancelState extends State<CusCancel> {
                         const Padding(
                           padding: EdgeInsets.only(left: 30.0),
                           child: Divider(
-                            color: Color(0xFF1A1C43),
-                            thickness: 0.5,
-                            height: 1,
-                            indent: 5,
-                            endIndent: 30,
-                          ),
+                              color: Color(0xFF1A1C43),
+                              thickness: 0.5,
+                              height: 1),
                         ),
                         const Padding(
                           padding: EdgeInsets.only(left: 10),
@@ -284,23 +355,18 @@ class _CusCancelState extends State<CusCancel> {
                         ),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.pin_drop,
-                              color: Color(0xFFD3261A),
-                              size: 18,
-                            ),
+                            const Icon(Icons.pin_drop,
+                                color: Color(0xFFD3261A), size: 18),
                             const SizedBox(width: 10),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal: 10,
-                              ),
+                                  vertical: 5, horizontal: 10),
                               decoration: BoxDecoration(
                                 color: Colors.blue[100],
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
-                                '${firstItem['to']}',
+                                '${item['at_drop']}',
                                 style: const TextStyle(
                                   color: Color(0xFF1A1C43),
                                   fontWeight: FontWeight.bold,
@@ -310,13 +376,11 @@ class _CusCancelState extends State<CusCancel> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 3,
-                        ),
+                        const SizedBox(height: 3),
                         Padding(
                           padding: const EdgeInsets.only(left: 40.0),
                           child: Text(
-                            '${firstItem['comment']}',
+                            '${item['comment_drop']}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -327,110 +391,39 @@ class _CusCancelState extends State<CusCancel> {
                         const Padding(
                           padding: EdgeInsets.only(left: 30.0),
                           child: Divider(
-                            color: Color(0xFF1A1C43),
-                            thickness: 0.5,
-                            height: 1,
-                            indent: 5,
-                            endIndent: 30,
-                          ),
+                              color: Color(0xFF1A1C43),
+                              thickness: 0.5,
+                              height: 1),
                         ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                  indent: 20,
-                  endIndent: 20,
-                  color: Colors.grey,
-                ),
+                const SizedBox(height: 10),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(top: 10, left: 50),
-                          child: Text(
-                            'Overall rating',
-                            style: TextStyle(
-                              color: Color(0xFF1A1C43),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top:5,left: 55),
-                          child: Container(
-                            child: RatingBar.builder(
-                              initialRating: 0,
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: false,
-                              itemSize: 25,
-                              itemCount: 5,
-                              itemPadding:
-                                  EdgeInsets.symmetric(horizontal: 1.0),
-                              itemBuilder: (context, _) => Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              onRatingUpdate: (rating) {
-                                print(rating);
-                              },
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10,left: 55),
-                          child: Text(
-                            'Review',
-                            style: TextStyle(
-                              color: Color(0xFF1A1C43),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 10),
-                  child: Container(
-                    width: 270,
-                    height: 50,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        enabledBorder: border,
-                        focusedBorder: border,
-                        border: OutlineInputBorder(),
-                        hintText: 'What is your opinion?',
+                    const Text(
+                      'Rate ',
+                      style: TextStyle(
+                        color: Color(0xFF1A1C43),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11,
                       ),
                     ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1A1C43),
-                    minimumSize: const Size(90, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                    const SizedBox(width: 5),
+                    RatingBarIndicator(
+                      rating: double.parse(
+                          item['review'] ?? '0'), 
+                      itemBuilder: (context, index) => const Icon(
+                        Icons.star,
+                        color: Colors.yellow,
+                      ),
+                      itemCount: 5,
+                      itemSize: 15.0,
+                      direction: Axis.horizontal,
                     ),
-                  ),
-                  child: const Text(
-                    'Send',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
+                  ],
                 ),
               ],
             ),
