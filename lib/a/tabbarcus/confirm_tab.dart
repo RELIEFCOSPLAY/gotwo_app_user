@@ -121,6 +121,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
                         MaterialPageRoute(
                           builder: (context) => CusConfirm(
                             data: {
+                               'status_post_id': item['status_post_id'],
                               'rider_id': item['rider_id'],
                               'gender': item['rider_gender'],
                               'date': item['date'],
@@ -131,6 +132,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
                               'comment_drop': item['comment_drop'],
                               'status_helmet': item['status_helmet'],
                               'pay': item['pay'],
+                               'review': item['review'],
                             },
                           ),
                         ),

@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 
 class CusSuccess extends StatefulWidget {
-   final Map<String, dynamic> data;
+  final Map<String, dynamic> data;
   const CusSuccess({Key? key, required this.data}) : super(key: key);
 
   @override
@@ -14,16 +14,15 @@ class CusSuccess extends StatefulWidget {
 }
 
 class _CusSuccessState extends State<CusSuccess> {
-    late Map<String, dynamic> item;
+  late Map<String, dynamic> item;
   List<dynamic> succData = [];
- final border = OutlineInputBorder(
+  final border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(18),
     borderSide: const BorderSide(color: Color(0xff1a1c43)),
   );
   String? emails;
   String? userId;
 
-  
   final storage = const FlutterSecureStorage();
   Future<void> loadLoginInfo() async {
     String? savedEmail = await storage.read(key: 'email');
@@ -62,7 +61,7 @@ class _CusSuccessState extends State<CusSuccess> {
   @override
   void initState() {
     super.initState();
-     item = widget.data;
+    item = widget.data;
     loadLoginInfo();
   }
 
@@ -77,7 +76,7 @@ class _CusSuccessState extends State<CusSuccess> {
 
   @override
   Widget build(BuildContext context) {
-
+    int _currentRating = int.parse(item['review']);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -122,8 +121,8 @@ class _CusSuccessState extends State<CusSuccess> {
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
-                    ), 
-                   Icon(
+                    ),
+                    Icon(
                       (item['gender']?.toLowerCase() == 'male')
                           ? Icons.male
                           : Icons.female,
@@ -132,26 +131,21 @@ class _CusSuccessState extends State<CusSuccess> {
                     ),
                   ],
                 ),
-                   
                 const SizedBox(height: 5),
-
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Rate ',
-                      style: TextStyle(
-                        color: Color(0xFF1A1C43),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                    const Text("Rate",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 5),
+                    for (var i = 1; i <= 5; i++)
+                      Icon(
+                        Icons.star,
+                        size: 12,
+                        color:
+                            i <= _currentRating ? Colors.yellow : Colors.grey,
                       ),
-                    ),
-                    SizedBox(width: 5),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -195,7 +189,6 @@ class _CusSuccessState extends State<CusSuccess> {
                     ),
                   ],
                 ),
-                
                 const SizedBox(height: 20),
                 Container(
                   width: 300,

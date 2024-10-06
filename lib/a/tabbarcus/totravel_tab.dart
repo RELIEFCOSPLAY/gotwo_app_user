@@ -122,6 +122,7 @@ String getStatusLabel(String pay) {
                         MaterialPageRoute(
                           builder: (context) => CusTotravel(
                             data: {
+                                'status_post_id': item['status_post_id'],
                               'rider_id': item['rider_id'],
                               'gender': item['rider_gender'],
                               'date': item['date'],
@@ -133,6 +134,7 @@ String getStatusLabel(String pay) {
                               'status_helmet': item['status_helmet'],
                               'pay': item['pay'],
                               'rider_tel': item['rider_tel'],
+                               'review': item['review'],
                             },
                           ),
                         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:gotwo_app_user/a/tabbarcus/cancel_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,11 +19,16 @@ class CusConfirm extends StatefulWidget {
 }
 
 class _CusConfirmState extends State<CusConfirm> {
+  late Map<String, dynamic> item;
   List<dynamic> travelData = [];
   bool isPaid = false; // สถานะสำหรับเช็คการจ่ายเงิน
   bool isImageUploaded = false; // สถานะสำหรับเช็คว่ารูปถูกอัปโหลดหรือยัง
 
   final storage = const FlutterSecureStorage();
+  final border = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(18),
+    borderSide: const BorderSide(color: Color(0xff1a1c43)),
+  );
   String? emails;
   String? userId; // เก็บ ID ของผู้ใช้หลังจากดึงมา
 
@@ -37,17 +43,17 @@ class _CusConfirmState extends State<CusConfirm> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://10.0.2.2:80/gotwo/getUserId.php"; // URL API
+    final String url = "http://10.0.2.2:80/gotwo/getUserId.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
-        'email': email, // ส่ง email เพื่อค้นหา user id
+        'email': email,
       });
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success']) {
           setState(() {
-            userId = data['user_id']; // เก็บ user id ที่ได้มา
+            userId = data['user_id'];
           });
         } else {
           print('Error: ${data['message']}');
@@ -60,29 +66,55 @@ class _CusConfirmState extends State<CusConfirm> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    loadLoginInfo();
-  }
-
   final url = Uri.parse('http://10.0.2.2:80/gotwo/status_confirme.php');
   Future<void> update_pay(
-    String customer_id,
+    String status_post_id,
     String pay,
+    String status,
   ) async {
     var request = await http.post(url, body: {
-      "customer_id": customer_id,
+      "status_post_id": status_post_id,
       "pay": pay,
+      'status': status,
     });
     if (request.statusCode == 200) {
-      // ข้อมูลถูกส่งสำเร็จ
       print('Success: ${request.body}');
       print('Id Be ${userId}');
     } else {
-      // มีปัญหาในการส่งข้อมูล
       print('Error: ${request.statusCode}, Body: ${request.body}');
     }
+  }
+
+  Future<void> update_cancel(
+    String status_post_id,
+    String status,
+    String comment,
+    String pay,
+  ) async {
+    var request = await http.post(url, body: {
+      "status_post_id": status_post_id,
+      'status': status,
+      'comment': comment,
+      "pay": pay,
+    });
+    if (request.statusCode == 200) {
+      print('Success: ${request.body}');
+      print('Id Be ${userId}');
+    } else {
+      print('Error: ${request.statusCode}, Body: ${request.body}');
+    }
+  }
+
+  Future<void> uploadImage(File imageFile) async {
+    print('Uploading image: ${imageFile.path}');
+    await Future.delayed(Duration(seconds: 2));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    item = widget.data;
+    loadLoginInfo();
   }
 
   String formatDate(String date) {
@@ -94,6 +126,8 @@ class _CusConfirmState extends State<CusConfirm> {
       return "";
     }
   }
+
+  TextEditingController commentController = TextEditingController();
 
   void showQrCodeDialog() {
     showDialog(
@@ -113,7 +147,7 @@ class _CusConfirmState extends State<CusConfirm> {
               child: Column(
                 children: [
                   QrImageView(
-                    data: '${widget.data['price']}', // ข้อมูลสำหรับ QR Code
+                    data: '${item['price']}', // ข้อมูลสำหรับ QR Code
                     version: QrVersions.auto,
                     size: 220.0,
                   ),
@@ -159,42 +193,9 @@ class _CusConfirmState extends State<CusConfirm> {
     );
   }
 
-  Future<void> uploadImage(File imageFile) async {
-    print('Uploading image: ${imageFile.path}');
-    await Future.delayed(Duration(seconds: 2)); // จำลองเวลาในการอัปโหลด
-    // ที่นี่คุณสามารถเพิ่มโค้ดเพื่ออัปโหลดรูปไปยังเซิร์ฟเวอร์จริงๆ ได้
-  }
-
-  Future<void> updatePaymentStatus() async {
-    // ฟังก์ชันสำหรับการอัปเดตสถานะการชำระเงินไปยัง API
-    final url = Uri.parse("http://10.0.2.2:80/gotwo/status_update.php");
-    final response = await http.post(
-      url,
-      body: {
-        'customer_id': widget.data['customer_id'],
-        'pay': '1',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Payment status updated successfully'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to update payment status'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    int _currentRating = int.parse(item['review']);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -227,7 +228,7 @@ class _CusConfirmState extends State<CusConfirm> {
               children: [
                 const SizedBox(height: 5),
                 Image.asset(
-                  widget.data['image'] ?? 'assets/images/profile.png',
+                  item['image'] ?? 'assets/images/profile.png',
                   width: 50,
                   height: 50,
                 ),
@@ -236,7 +237,7 @@ class _CusConfirmState extends State<CusConfirm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${widget.data['rider_id']} ',
+                      '${item['rider_id']} ',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -244,7 +245,7 @@ class _CusConfirmState extends State<CusConfirm> {
                       ),
                     ),
                     Icon(
-                      (widget.data['gender']?.toLowerCase() == 'male')
+                      (item['gender']?.toLowerCase() == 'male')
                           ? Icons.male
                           : Icons.female,
                       color: const Color(0xFF1A1C43),
@@ -253,23 +254,20 @@ class _CusConfirmState extends State<CusConfirm> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Rate ',
-                      style: TextStyle(
-                        color: Color(0xFF1A1C43),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                    const Text("Rate",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 5),
+                    for (var i = 1; i <= 5; i++)
+                      Icon(
+                        Icons.star,
+                        size: 12,
+                        color:
+                            i <= _currentRating ? Colors.yellow : Colors.grey,
                       ),
-                    ),
-                    SizedBox(width: 5),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -280,10 +278,13 @@ class _CusConfirmState extends State<CusConfirm> {
                         color: Color(0xFF1A1C43), size: 15),
                     const SizedBox(width: 5),
                     Text(
-                      "Date: ${formatDate(widget.data['date'])}",
+                      "Date: ${formatDate(item['date'])}",
                       textAlign: TextAlign.start,
                       style: const TextStyle(
-                          fontSize: 12, color: Color(0xff1a1c43),fontWeight: FontWeight.bold, ),
+                        fontSize: 12,
+                        color: Color(0xff1a1c43),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -295,7 +296,7 @@ class _CusConfirmState extends State<CusConfirm> {
                         color: Color(0xFF1A1C43), size: 15),
                     const SizedBox(width: 5),
                     Text(
-                      '${widget.data['price']} THB',
+                      '${item['price']} THB',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -344,7 +345,7 @@ class _CusConfirmState extends State<CusConfirm> {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
-                                '${widget.data['pick_up']}',
+                                '${item['pick_up']}',
                                 style: const TextStyle(
                                   color: Color(0xFF1A1C43),
                                   fontWeight: FontWeight.bold,
@@ -358,7 +359,7 @@ class _CusConfirmState extends State<CusConfirm> {
                         Padding(
                           padding: const EdgeInsets.only(left: 40.0),
                           child: Text(
-                            '${widget.data['comment_pick']}',
+                            '${item['comment_pick']}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -397,7 +398,7 @@ class _CusConfirmState extends State<CusConfirm> {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               child: Text(
-                                '${widget.data['at_drop']}',
+                                '${item['at_drop']}',
                                 style: const TextStyle(
                                   color: Color(0xFF1A1C43),
                                   fontWeight: FontWeight.bold,
@@ -411,7 +412,7 @@ class _CusConfirmState extends State<CusConfirm> {
                         Padding(
                           padding: const EdgeInsets.only(left: 40.0),
                           child: Text(
-                            '${widget.data['comment_drop']}',
+                            '${item['comment_drop']}',
                             style: const TextStyle(
                               color: Colors.grey,
                               fontWeight: FontWeight.bold,
@@ -432,11 +433,11 @@ class _CusConfirmState extends State<CusConfirm> {
                 ),
                 const SizedBox(height: 30),
                 Text(
-                  widget.data['status_helmet'] == '0'
+                  item['status_helmet'] == '0'
                       ? 'Bring your own a helmet.'
                       : 'There is a helmet for you.',
                   style: TextStyle(
-                    color: widget.data['status_helmet'] == '0'
+                    color: item['status_helmet'] == '0'
                         ? Colors.red
                         : Colors.green,
                     fontWeight: FontWeight.bold,
@@ -448,22 +449,23 @@ class _CusConfirmState extends State<CusConfirm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: widget.data['pay'] == '1' || isPaid
+                      onPressed: item['pay'] == '1' || isPaid
                           ? null
                           : isImageUploaded
                               ? () async {
                                   setState(() {
                                     isPaid = true;
                                   });
-                                  if (widget.data['pay'] == '1' ||
-                                      isPaid == true) {
-                                    String? customer_id = userId;
+                                  if (item['pay'] == '1' || isPaid == true) {
+                                    String? status_post_id = userId;
                                     String pay = '1';
-                                    print(customer_id);
+                                    String status = '3';
+                                    print(status_post_id);
 
                                     update_pay(
-                                      customer_id!,
+                                      status_post_id!,
                                       pay,
+                                      status,
                                     );
                                   }
                                 }
@@ -471,7 +473,7 @@ class _CusConfirmState extends State<CusConfirm> {
                                   showQrCodeDialog();
                                 },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: widget.data['pay'] == '1' || isPaid
+                        backgroundColor: item['pay'] == '1' || isPaid
                             ? Colors.grey
                             : Colors.green,
                         minimumSize: const Size(90, 40),
@@ -490,7 +492,74 @@ class _CusConfirmState extends State<CusConfirm> {
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text(
+                                'Why did you cancel?',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              content: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: SizedBox(
+                                  width: 270,
+                                  height: 60,
+                                  child: TextField(
+                                    controller: commentController,
+                                    decoration: InputDecoration(
+                                      enabledBorder: border,
+                                      focusedBorder: border,
+                                      border: const OutlineInputBorder(),
+                                      hintText: 'What is your opinion?',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    String status = '5';
+                                    String pay = "0";
+                                    if (item['pay'].toString() == "1") {
+                                      pay = "2";
+                                    } else if (item['pay'].toString() == "0") {
+                                      pay = "0";
+                                    }
+                                    String cancelReason =
+                                        commentController.text;
+                                    String status_post_id =
+                                        '${item['status_post_id'] ?? 'Unknown'}';
+
+                                    update_cancel(status_post_id, status,
+                                        cancelReason, pay);
+                                    print(status_post_id);
+                                    print(cancelReason);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TabbarCus()),
+                                    );
+                                  },
+                                  child: const Text('OK',
+                                      style: TextStyle(color: Colors.green)),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Close',
+                                      style: TextStyle(color: Colors.red)),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         minimumSize: const Size(90, 40),

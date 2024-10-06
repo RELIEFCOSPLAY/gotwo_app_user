@@ -4,6 +4,7 @@ include("config.php"); // รวมไฟล์ config.php เพื่อเช
 
 $sql = "
     SELECT 
+        status_post.status_post_id,
         status_post.status, 
         status_post.reason, 
         status_post.pay, 
@@ -34,6 +35,7 @@ $response = array();
 if (mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
         $tb_sta = array();
+        $tb_sta["status_post_id"] = $row['status_post_id'];
         $tb_sta["status"] = $row['status'];
         $tb_sta["reason"] = $row['reason'];
         $tb_sta["post_id"] = $row['post_id']; 
@@ -41,7 +43,7 @@ if (mysqli_num_rows($result) > 0) {
         $tb_sta["pay"] = $row['pay'];
         $tb_sta["review"] = $row['review'];
         $tb_sta["comment"] = $row['comment'];
-        $tb_sta["rider_id"] = $row['rider_id']; // แสดงชื่อไรเดอร์
+        $tb_sta["rider_id"] = $row['rider_id']; 
         $tb_sta["rider_gender"] = $row['rider_gender'];
         $tb_sta["rider_tel"] = $row['rider_tel'];
         $tb_sta["pick_up"] = $row['pick_up']; 
@@ -57,6 +59,7 @@ if (mysqli_num_rows($result) > 0) {
     }
 } else {
     $tb_sta = array(); 
+    $tb_sta["status_post_id"] = '';
     $tb_sta["status"] = '';
     $tb_sta["reason"] = '';
     $tb_sta["post_id"] = ''; 

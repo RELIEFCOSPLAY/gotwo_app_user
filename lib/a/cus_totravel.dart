@@ -17,7 +17,7 @@ class CusTotravel extends StatefulWidget {
 }
 
 class _CusTotravelState extends State<CusTotravel> {
-  late Map<String, dynamic> item; // Data received from the previous screen
+  late Map<String, dynamic> item;
   final border = OutlineInputBorder(
     borderRadius: BorderRadius.circular(18),
     borderSide: const BorderSide(color: Color(0xff1a1c43)),
@@ -33,7 +33,7 @@ class _CusTotravelState extends State<CusTotravel> {
       emails = savedEmail;
     });
     if (emails != null) {
-      fetchUserId(emails!); // Call API to get user ID
+      fetchUserId(emails!); 
     }
   }
 
@@ -41,14 +41,14 @@ class _CusTotravelState extends State<CusTotravel> {
     final String url = "http://10.0.2.2:80/gotwo/getUserId.php"; // API URL
     try {
       final response = await http.post(Uri.parse(url), body: {
-        'email': email, // Send email to find user ID
+        'email': email,
       });
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success']) {
           setState(() {
-            userId = data['user_id']; // Store the retrieved user ID
+            userId = data['user_id'];
           });
         } else {
           print('Error: ${data['message']}');
@@ -61,21 +61,15 @@ class _CusTotravelState extends State<CusTotravel> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    item = widget.data; // Initialize item with data from the previous screen
-    loadLoginInfo();
-  }
-
   final url = Uri.parse('http://10.0.2.2:80/gotwo/status_totravel.php');
 
   // Updated update_review function
-  Future<void> update_review(
-      String customer_id, String review, String comment, String status) async {
+  Future<void> update_review(String status_post_id, String pay, String review,
+      String comment, String status) async {
     try {
       var request = await http.post(url, body: {
-        "customer_id": customer_id,
+        "status_post_id": status_post_id,
+        "pay": pay,
         'review': review,
         'comment': comment,
         'status': status,
@@ -84,7 +78,7 @@ class _CusTotravelState extends State<CusTotravel> {
       if (request.statusCode == 200) {
         // Data sent successfully
         print('Success: ${request.body}');
-        print('Customer ID: $customer_id');
+        print('Customer ID: $status_post_id');
       } else {
         // There was a problem sending data
         print('Error: ${request.statusCode}, Body: ${request.body}');
@@ -92,6 +86,33 @@ class _CusTotravelState extends State<CusTotravel> {
     } catch (e) {
       print('Error: $e');
     }
+  }
+
+  Future<void> update_cancel(
+    String status_post_id,
+    String status,
+    String comment,
+    String pay,
+  ) async {
+    var request = await http.post(url, body: {
+      "status_post_id": status_post_id,
+      'status': status,
+      'comment': comment,
+      "pay": pay,
+    });
+    if (request.statusCode == 200) {
+      print('Success: ${request.body}');
+      print('Id Be ${userId}');
+    } else {
+      print('Error: ${request.statusCode}, Body: ${request.body}');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    item = widget.data;
+    loadLoginInfo();
   }
 
   String formatDate(String date) {
@@ -103,8 +124,11 @@ class _CusTotravelState extends State<CusTotravel> {
     }
   }
 
+  TextEditingController commentController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    int _currentRating = int.parse(item['review']);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -176,23 +200,20 @@ class _CusTotravelState extends State<CusTotravel> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Rate ',
-                      style: TextStyle(
-                        color: Color(0xFF1A1C43),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                    const Text("Rate",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 5),
+                    for (var i = 1; i <= 5; i++)
+                      Icon(
+                        Icons.star,
+                        size: 12,
+                        color:
+                            i <= _currentRating ? Colors.yellow : Colors.grey,
                       ),
-                    ),
-                    SizedBox(width: 5),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -433,7 +454,8 @@ class _CusTotravelState extends State<CusTotravel> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            String review = "1"; // Start with value 1
+                            // ignore: unused_local_variable
+                            String review = "1";
                             TextEditingController commentController =
                                 TextEditingController();
 
@@ -459,9 +481,9 @@ class _CusTotravelState extends State<CusTotravel> {
                                           allowHalfRating: false,
                                           itemSize: 25,
                                           itemCount: 5,
-                                          itemPadding: EdgeInsets.symmetric(
+                                          itemPadding:const EdgeInsets.symmetric(
                                               horizontal: 1),
-                                          itemBuilder: (context, _) => Icon(
+                                          itemBuilder: (context, _) =>const Icon(
                                             Icons.star,
                                             color: Colors.amber,
                                           ),
@@ -499,24 +521,28 @@ class _CusTotravelState extends State<CusTotravel> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
+                                          String? status_post_id = userId;
                                           String comment =
                                               commentController.text;
+                                          String pay = '1';
                                           String status = '4';
-                                          print(
-                                              'Rating: $review, Comment: $comment, Status: $status');
-                                          print(userId);
+                                          String review = '';
 
                                           // Call the update_review function
-                                          if (userId != null) {
-                                            update_review(userId!, review,
-                                                comment, status);
-                                          }
+                                          update_review(
+                                            status_post_id!,
+                                            pay,
+                                            review,
+                                            comment,
+                                            status,
+                                          );
 
                                           Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      TabbarCus()),);
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TabbarCus()),
+                                          );
                                         },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.blue,
@@ -540,9 +566,10 @@ class _CusTotravelState extends State<CusTotravel> {
                                           Navigator.of(context)
                                               .pop(); // Close dialog
                                         },
-                                        child: const Text('Close',
-                                            style:
-                                                TextStyle(color: Colors.red)),
+                                        child: const Text(
+                                          'Close',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -569,15 +596,80 @@ class _CusTotravelState extends State<CusTotravel> {
                       ),
                     ),
                     const SizedBox(width: 10),
+                    ///////////////////////////////////
                     // Cancel Button
                     ElevatedButton(
                       onPressed: () {
-                        // Handle cancel action
-                        String status =
-                            'cancelled'; // Define status for cancellation
-                        if (userId != null) {
-                          update_review(userId!, '', '', status);
-                        }
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text(
+                                'Why did you cancel?',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                              content: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: SizedBox(
+                                  width: 270,
+                                  height: 60,
+                                  child: TextField(
+                                    controller: commentController,
+                                    decoration: InputDecoration(
+                                      enabledBorder: border,
+                                      focusedBorder: border,
+                                      border: const OutlineInputBorder(),
+                                      hintText: 'What is your opinion?',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    String status = '5';
+                                    String pay = "0";
+                                    if (item['pay'].toString() == "1") {
+                                      pay = "2";
+                                    } else if (item['pay'].toString() == "0") {
+                                      pay = "0";
+                                    }
+                                    String cancelReason =
+                                        commentController.text;
+                                    String status_post_id =
+                                        '${item['status_post_id'] ?? 'Unknown'}';
+
+                                    update_cancel(
+                                      status_post_id,
+                                      status,
+                                      cancelReason,
+                                      pay,
+                                    );
+                                    print(status_post_id);
+                                    print(cancelReason);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TabbarCus()),
+                                    );
+                                  },
+                                  child: const Text('OK',
+                                      style: TextStyle(color: Colors.green)),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Close',
+                                      style: TextStyle(color: Colors.red)),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,

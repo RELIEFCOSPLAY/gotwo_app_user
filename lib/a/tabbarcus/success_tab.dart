@@ -124,6 +124,7 @@ class _SuccessTabState extends State<SuccessTab> {
                               'comment_pick': item['comment_pick'],
                               'at_drop': item['at_drop'],
                               'comment_drop': item['comment_drop'],
+                               'review': item['review'],
                             },
                           ),
                         ),

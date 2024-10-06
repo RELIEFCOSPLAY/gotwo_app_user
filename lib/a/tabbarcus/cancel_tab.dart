@@ -79,10 +79,10 @@ class _CancelTabState extends State<CancelTab> {
 
   String getStatusLabel(String pay) {
     int payCode =
-        int.tryParse(pay) ?? -1; // แปลงเป็น int หรือคืนค่า -1 หากแปลงไม่สำเร็จ
-    return payCode == 2
+        int.tryParse(pay) ?? -1; 
+    return payCode == 1
         ? "Refun"
-        : (payCode == 3 ? "Compled" : "Unknown"); // ตรวจสอบสถานะ
+        : (payCode == 4 ? "Compled" : "Unknown"); // ตรวจสอบสถานะ
   }
 
   String formatDate(String date) {

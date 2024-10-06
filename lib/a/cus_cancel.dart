@@ -64,6 +64,7 @@ class _CusCancelState extends State<CusCancel> {
   void initState() {
     super.initState();
     item = widget.data;
+
     loadLoginInfo();
   }
 
@@ -86,6 +87,7 @@ class _CusCancelState extends State<CusCancel> {
 
   @override
   Widget build(BuildContext context) {
+    int _currentRating = int.parse(item['review']);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -141,23 +143,20 @@ class _CusCancelState extends State<CusCancel> {
                   ],
                 ),
                 const SizedBox(height: 5),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Rate ',
-                      style: TextStyle(
-                        color: Color(0xFF1A1C43),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                    const Text("Rate",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 5),
+                    for (var i = 1; i <= 5; i++)
+                      Icon(
+                        Icons.star,
+                        size: 12,
+                        color:
+                            i <= _currentRating ? Colors.yellow : Colors.grey,
                       ),
-                    ),
-                    SizedBox(width: 5),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
-                    Icon(Icons.star, color: Colors.yellow, size: 15),
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -208,17 +207,37 @@ class _CusCancelState extends State<CusCancel> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      widget.data['pay'] == '2' ? 'Refun' : 'Compled',
+                      item['pay'] == '1' || item['pay'] == 1
+                          ? "Refun"
+                          : item['pay'] == '0' || item['pay'] == 0
+                              ? "Unpaid"
+                              : item['pay'] == '2' || item['pay'] == 2
+                                  ? "Refund"
+                                  : item['pay'] == '3' || item['pay'] == 3
+                                      ? "Pending"
+                                      : item['pay'] == '4' || item['pay'] == 4
+                                          ? "Completed"
+                                          : "Unknown",
                       style: TextStyle(
-                        color: widget.data['pay'] == '2'
-                            ? Colors.amber
-                            : Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 15,
+                        color: item['pay'] == '1' || item['pay'] == 1
+                            ? Colors.orange 
+                            : item['pay'] == '0' || item['pay'] == 0
+                                ? Colors.red 
+                                : item['pay'] == '2' || item['pay'] == 2
+                                    ? Colors.orange 
+                                    : item['pay'] == '3' || item['pay'] == 3
+                                        ? Colors.blue 
+                                        : item['pay'] == '4' || item['pay'] == 4
+                                            ? Colors
+                                                .grey 
+                                            : Colors
+                                                .black, 
                       ),
-                    ),
+                    )
                   ],
                 ),
+
                 ElevatedButton(
                   onPressed: () {
                     showDialog(
@@ -273,7 +292,7 @@ class _CusCancelState extends State<CusCancel> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 5),
+                // const SizedBox(height: 5),
                 Container(
                   width: 300,
                   height: 180,
@@ -400,30 +419,73 @@ class _CusCancelState extends State<CusCancel> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Rate ',
-                      style: TextStyle(
-                        color: Color(0xFF1A1C43),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 11,
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     const Text(
+                //       'Rate ',
+                //       style: TextStyle(
+                //         color: Color(0xFF1A1C43),
+                //         fontWeight: FontWeight.bold,
+                //         fontSize: 15,
+                //       ),
+                //     ),
+                //     const SizedBox(width: 5),
+                //     RatingBarIndicator(
+                //       rating: double.parse(
+                //           item['review'] ?? '0'),
+                //       itemBuilder: (context, index) => const Icon(
+                //         Icons.star,
+                //         color: Colors.yellow,
+                //       ),
+                //       itemCount: 5,
+                //       itemSize: 15.0,
+                //       direction: Axis.horizontal,
+                //     ),
+                //   ],
+                // ),
+                SizedBox(
+                  height: 8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Reason',
+                        style: TextStyle(
+                          color: Color(0xFF1A1C43),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 5),
-                    RatingBarIndicator(
-                      rating: double.parse(
-                          item['review'] ?? '0'), 
-                      itemBuilder: (context, index) => const Icon(
-                        Icons.star,
-                        color: Colors.yellow,
+                      SizedBox(
+                        height: 5,
                       ),
-                      itemCount: 5,
-                      itemSize: 15.0,
-                      direction: Axis.horizontal,
-                    ),
-                  ],
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5, horizontal: 7),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                        child: Text(
+                          '${item['comment']}',
+                          textAlign: TextAlign.left, // จัดข้อความให้อยู่ทางซ้าย
+                          style: const TextStyle(
+                            color: Color(0xFF1A1C43),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
