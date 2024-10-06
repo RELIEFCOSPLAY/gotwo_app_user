@@ -33,12 +33,13 @@ class _CusTotravelState extends State<CusTotravel> {
       emails = savedEmail;
     });
     if (emails != null) {
-      fetchUserId(emails!); 
+      fetchUserId(emails!);
     }
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_8080}/gotwo/getUserId.php";  // API URL
+    final String url =
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // API URL
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -78,7 +79,6 @@ class _CusTotravelState extends State<CusTotravel> {
       if (request.statusCode == 200) {
         // Data sent successfully
         print('Success: ${request.body}');
-
       } else {
         // There was a problem sending data
         print('Error: ${request.statusCode}, Body: ${request.body}');
@@ -88,17 +88,14 @@ class _CusTotravelState extends State<CusTotravel> {
     }
   }
 
-  Future<void> update_cancel(
-    String status_post_id,
-    String status,
-    String comment,
-    String pay,
-  ) async {
+  Future<void> update_cancel(String status_post_id, String pay, String review,
+      String comment, String status) async {
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
-      'status': status,
-      'comment': comment,
       "pay": pay,
+      'review': review,
+      'comment': comment,
+      'status': status,
     });
     if (request.statusCode == 200) {
       print('Success: ${request.body}');
@@ -455,7 +452,7 @@ class _CusTotravelState extends State<CusTotravel> {
                           context: context,
                           builder: (BuildContext context) {
                             // ignore: unused_local_variable
-                            String review = "1";
+                            String reviewR = "1";
                             TextEditingController commentController =
                                 TextEditingController();
 
@@ -481,14 +478,16 @@ class _CusTotravelState extends State<CusTotravel> {
                                           allowHalfRating: false,
                                           itemSize: 25,
                                           itemCount: 5,
-                                          itemPadding:const EdgeInsets.symmetric(
-                                              horizontal: 1),
-                                          itemBuilder: (context, _) =>const Icon(
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 1),
+                                          itemBuilder: (context, _) =>
+                                              const Icon(
                                             Icons.star,
                                             color: Colors.amber,
                                           ),
                                           onRatingUpdate: (newRating) {
-                                            review =
+                                             reviewR =
                                                 newRating.toInt().toString();
                                           },
                                         ),
@@ -521,16 +520,18 @@ class _CusTotravelState extends State<CusTotravel> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
-                                          String? status_post_id = userId;
+                                          String status_post_id =
+                                              '${item['status_post_id'] ?? 'Unknown'}';
                                           String comment =
                                               commentController.text;
-                                          String pay = '1';
+                                          String pay = '3';
                                           String status = '4';
-                                          String review = '';
+                                          String review =  reviewR;
 
                                           // Call the update_review function
+
                                           update_review(
-                                            status_post_id!,
+                                            status_post_id,
                                             pay,
                                             review,
                                             comment,
@@ -631,25 +632,25 @@ class _CusTotravelState extends State<CusTotravel> {
                                 TextButton(
                                   onPressed: () {
                                     String status = '5';
+                                    String review = '0';
                                     String pay = "0";
                                     if (item['pay'].toString() == "1") {
                                       pay = "2";
                                     } else if (item['pay'].toString() == "0") {
                                       pay = "0";
                                     }
-                                    String cancelReason =
-                                        commentController.text;
+                                    String comment = commentController.text;
                                     String status_post_id =
                                         '${item['status_post_id'] ?? 'Unknown'}';
 
                                     update_cancel(
                                       status_post_id,
-                                      status,
-                                      cancelReason,
                                       pay,
+                                      review,
+                                      comment,
+                                      status,
                                     );
-                                    print(status_post_id);
-                                    print(cancelReason);
+
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(

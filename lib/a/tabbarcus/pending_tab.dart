@@ -29,7 +29,7 @@ class _ConfirmTabState extends State<PendingTab> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://${Global.ip_8080}/gotwo/getUserId.php"; // URL API
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -179,12 +179,7 @@ class _ConfirmTabState extends State<PendingTab> {
                                   style: const TextStyle(
                                       fontSize: 12, color: Color(0xff1a1c43)),
                                 ),
-                                Text(
-                                  "Status: ${getStatusLabel(item['pay'])}",
-                                  textAlign: TextAlign.start,
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Color(0xff1a1c43)),
-                                ),
+                                
                               ],
                             ),
                           ),

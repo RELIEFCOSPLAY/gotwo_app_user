@@ -43,7 +43,7 @@ class _CusConfirmState extends State<CusConfirm> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://10.0.2.2:8080/gotwo/getUserId_cus.php";
+    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -66,16 +66,18 @@ class _CusConfirmState extends State<CusConfirm> {
     }
   }
 
-  final url = Uri.parse('http://10.0.2.2:8080/gotwo/status_confirme.php');
+  final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_confirme.php');
   Future<void> update_pay(
     String status_post_id,
     String pay,
+    String status,
   ) async {
     String comment = "No comment";
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
       "pay": pay,
       'comment': comment,
+      'status': status,
     });
     if (request.statusCode == 200) {
       print('Success: ${request.body}');
@@ -88,11 +90,13 @@ class _CusConfirmState extends State<CusConfirm> {
     String status_post_id,
     String pay,
     String comment,
+    String status,
   ) async {
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
       "pay": pay,
       'comment': comment,
+      'status': status,
     });
     if (request.statusCode == 200) {
       print('Success: ${request.body}');
@@ -456,9 +460,11 @@ class _CusConfirmState extends State<CusConfirm> {
                                     String status_post_id =
                                         '${item['status_post_id'] ?? 'Unknown'}';
                                     String pay = '1';
+                                    String status = "2";
                                     update_pay(
                                       status_post_id,
                                       pay,
+                                      status,
                                     );
                                     Navigator.pushAndRemoveUntil(
                                       context,
@@ -529,13 +535,14 @@ class _CusConfirmState extends State<CusConfirm> {
                                     } else if (item['pay'].toString() == "0") {
                                       pay = "0";
                                     }
+                                    String status = "5";
                                     String cancelReason =
                                         commentController.text;
                                     String status_post_id =
                                         '${item['status_post_id'] ?? 'Unknown'}';
 
-                                    update_cancel(
-                                        status_post_id, cancelReason, pay);
+                                    update_cancel(status_post_id, cancelReason,
+                                        pay, status);
 
                                     Navigator.pushReplacement(
                                       context,

@@ -31,7 +31,7 @@ class _TotravelTabState extends State<TotravelTab> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_8080}/gotwo/getUserId.php"; 
+    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; 
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,

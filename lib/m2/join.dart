@@ -5,7 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gotwo_app_user/a/cus_logout.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/global_ip.dart';
-import 'package:gotwo_app_user/m2/test2.dart';
+import 'package:gotwo_app_user/m2/joindetail.dart';
 import 'package:http/http.dart' as http;
 
 class Join extends StatefulWidget {
@@ -189,7 +189,8 @@ class _JoinState extends State<Join> {
                 itemBuilder: (context, index) {
                   final item = filteredList[index];
 
-                  // if (userId == item['customer_id'].toString()) {
+                  if (item['check_status'] == '0' ||
+                      item['check_status'] == 0) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: ElevatedButton(
@@ -288,9 +289,9 @@ class _JoinState extends State<Join> {
                         ),
                       ),
                     );
-                  // } else {
-                  //   return const SizedBox.shrink();
-                  // }
+                  } else {
+                    return const SizedBox.shrink();
+                  }
                 },
               ),
       ),

@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         appBarTheme:const AppBarTheme(
     backgroundColor: Colors.white)
       ),
-      home: TabbarCus(),
+      home: Loginpage(),
     );
   }
 }

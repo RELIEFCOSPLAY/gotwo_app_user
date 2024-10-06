@@ -41,7 +41,7 @@ class _CusPendingState extends State<CusPending> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_8080}/gotwo/getUserId.php";
+    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -65,29 +65,12 @@ class _CusPendingState extends State<CusPending> {
   }
 
   final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_confirme.php');
-  Future<void> update_pay(
-    String status_post_id,
-    String pay,
-    String status,
-  ) async {
-    var request = await http.post(url, body: {
-      "status_post_id": status_post_id,
-      "pay": pay,
-      'status': status,
-    });
-    if (request.statusCode == 200) {
-      print('Success: ${request.body}');
-      print('Id Be ${userId}');
-    } else {
-      print('Error: ${request.statusCode}, Body: ${request.body}');
-    }
-  }
 
   Future<void> update_cancel(
     String status_post_id,
-    String status,
     String comment,
     String pay,
+    String status,
   ) async {
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
@@ -415,22 +398,16 @@ class _CusPendingState extends State<CusPending> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    String status = '5';
-                                    String pay = "0";
-                                    if (item['pay'].toString() == "1") {
-                                      pay = "2";
-                                    } else if (item['pay'].toString() == "0") {
-                                      pay = "0";
-                                    }
+                                    String status = "5";
+                                    String pay = "4";
                                     String cancelReason =
                                         commentController.text;
                                     String status_post_id =
                                         '${item['status_post_id'] ?? 'Unknown'}';
 
-                                    update_cancel(status_post_id, status,
-                                        cancelReason, pay);
-                                    print(status_post_id);
-                                    print(cancelReason);
+                                    update_cancel(status_post_id, cancelReason,
+                                        pay, status);
+
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
