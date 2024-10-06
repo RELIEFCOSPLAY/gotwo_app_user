@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:gotwo_app_user/a/tabbarcus/cancel_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -43,7 +42,7 @@ class _CusConfirmState extends State<CusConfirm> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://10.0.2.2:80/gotwo/getUserId.php";
+    final String url = "http://10.0.2.2:8080/gotwo/getUserId_cus.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -66,20 +65,19 @@ class _CusConfirmState extends State<CusConfirm> {
     }
   }
 
-  final url = Uri.parse('http://10.0.2.2:80/gotwo/status_confirme.php');
+  final url = Uri.parse('http://10.0.2.2:8080/gotwo/status_confirme.php');
   Future<void> update_pay(
     String status_post_id,
     String pay,
-    String status,
   ) async {
+    String comment = "No comment";
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
       "pay": pay,
-      'status': status,
+      'comment': comment,
     });
     if (request.statusCode == 200) {
       print('Success: ${request.body}');
-      print('Id Be ${userId}');
     } else {
       print('Error: ${request.statusCode}, Body: ${request.body}');
     }
@@ -87,19 +85,16 @@ class _CusConfirmState extends State<CusConfirm> {
 
   Future<void> update_cancel(
     String status_post_id,
-    String status,
-    String comment,
     String pay,
+    String comment,
   ) async {
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
-      'status': status,
-      'comment': comment,
       "pay": pay,
+      'comment': comment,
     });
     if (request.statusCode == 200) {
       print('Success: ${request.body}');
-      print('Id Be ${userId}');
     } else {
       print('Error: ${request.statusCode}, Body: ${request.body}');
     }
@@ -457,15 +452,19 @@ class _CusConfirmState extends State<CusConfirm> {
                                     isPaid = true;
                                   });
                                   if (item['pay'] == '1' || isPaid == true) {
-                                    String? status_post_id = userId;
+                                    String status_post_id =
+                                        '${item['status_post_id'] ?? 'Unknown'}';
                                     String pay = '1';
-                                    String status = '3';
-                                    print(status_post_id);
-
                                     update_pay(
-                                      status_post_id!,
+                                      status_post_id,
                                       pay,
-                                      status,
+                                    );
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const TabbarCus(),
+                                      ),
+                                      (Route<dynamic> route) => false,
                                     );
                                   }
                                 }
@@ -523,7 +522,6 @@ class _CusConfirmState extends State<CusConfirm> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    String status = '5';
                                     String pay = "0";
                                     if (item['pay'].toString() == "1") {
                                       pay = "2";
@@ -535,10 +533,9 @@ class _CusConfirmState extends State<CusConfirm> {
                                     String status_post_id =
                                         '${item['status_post_id'] ?? 'Unknown'}';
 
-                                    update_cancel(status_post_id, status,
-                                        cancelReason, pay);
-                                    print(status_post_id);
-                                    print(cancelReason);
+                                    update_cancel(
+                                        status_post_id, cancelReason, pay);
+
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(

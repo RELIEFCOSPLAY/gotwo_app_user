@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gotwo_app_user/a/cus_confirm1.dart';
 import 'package:gotwo_app_user/global_ip.dart';
-import 'package:gotwo_app_user/m2/test.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -17,7 +16,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
 
   final storage = const FlutterSecureStorage();
   String? emails;
-  String? userId; 
+  String? userId;
   Future<void> loadLoginInfo() async {
     String? savedEmail = await storage.read(key: 'email');
     setState(() {
@@ -30,7 +29,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://${Global.ip_80}/gotwo/getUserId.php"; // URL API
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -56,7 +55,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          "http://${Global.ip_80}/gotwo/status_pending.php")); // URL API
+          "http://${Global.ip_8080}/gotwo/status_pending.php")); // URL API
 
       if (response.statusCode == 200) {
         setState(() {
@@ -77,13 +76,6 @@ class _ConfirmTabState extends State<ConfirmTab> {
     loadLoginInfo();
   }
 
-  String getStatusLabel(String pay) {
-    int payCode =
-        int.tryParse(pay) ?? -1; // แปลงเป็น int หรือคืนค่า -1 หากแปลงไม่สำเร็จ
-    return payCode == 0
-        ? "Unpaid"
-        : (payCode == 1 ? "Paid" : "Unknown"); // ตรวจสอบสถานะ
-  }
 
   String formatDate(String date) {
     try {
@@ -121,7 +113,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
                         MaterialPageRoute(
                           builder: (context) => CusConfirm(
                             data: {
-                               'status_post_id': item['status_post_id'],
+                              'status_post_id': item['status_post_id'],
                               'rider_id': item['rider_id'],
                               'gender': item['rider_gender'],
                               'date': item['date'],
@@ -132,7 +124,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
                               'comment_drop': item['comment_drop'],
                               'status_helmet': item['status_helmet'],
                               'pay': item['pay'],
-                               'review': item['review'],
+                              'review': item['review'],
                             },
                           ),
                         ),
@@ -173,7 +165,6 @@ class _ConfirmTabState extends State<ConfirmTab> {
                                     ),
                                   ],
                                 ),
-                               
                                 Text(
                                   "Date: ${formatDate(item['date'])}",
                                   textAlign: TextAlign.start,
@@ -181,10 +172,42 @@ class _ConfirmTabState extends State<ConfirmTab> {
                                       fontSize: 12, color: Color(0xff1a1c43)),
                                 ),
                                 Text(
-                                  "Status: ${getStatusLabel(item['pay'])}",
-                                  textAlign: TextAlign.start,
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Color(0xff1a1c43)),
+                                  item['pay'] == '1' || item['pay'] == 1
+                                      ? "Paid"
+                                      : item['pay'] == '0' || item['pay'] == 0
+                                          ? "Unpaid"
+                                          : item['pay'] == '2' ||
+                                                  item['pay'] == 2
+                                              ? "Refund"
+                                              : item['pay'] == '3' ||
+                                                      item['pay'] == 3
+                                                  ? "Pending"
+                                                  : item['pay'] == '4' ||
+                                                          item['pay'] == 4
+                                                      ? "Completed"
+                                                      : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: item['pay'] == '1' ||
+                                            item['pay'] == 1
+                                        ? Colors.green // Green for "Paid"
+                                        : item['pay'] == '0' || item['pay'] == 0
+                                            ? Colors.red // Red for "Unpaid"
+                                            : item['pay'] == '2' ||
+                                                    item['pay'] == 2
+                                                ? Colors
+                                                    .orange // Orange for "Refund"
+                                                : item['pay'] == '3' ||
+                                                        item['pay'] == 3
+                                                    ? Colors
+                                                        .blue // Blue for "Pending"
+                                                    : item['pay'] == '4' ||
+                                                            item['pay'] == 4
+                                                        ? Colors.green[
+                                                            300] // Grey for "Completed"
+                                                        : Colors
+                                                            .black, // Black for "Unknown"
+                                  ),
                                 ),
                               ],
                             ),
