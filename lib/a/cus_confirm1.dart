@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:gotwo_app_user/a/tabbarcus/cancel_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:gotwo_app_user/global_ip.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -43,7 +43,7 @@ class _CusConfirmState extends State<CusConfirm> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://10.0.2.2:80/gotwo/getUserId.php";
+    final String url = "http://${Global.ip_8080}/gotwo/getUserId.php"; 
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -66,7 +66,7 @@ class _CusConfirmState extends State<CusConfirm> {
     }
   }
 
-  final url = Uri.parse('http://10.0.2.2:80/gotwo/status_confirme.php');
+  final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_confirme.php');
   Future<void> update_pay(
     String status_post_id,
     String pay,
@@ -542,7 +542,8 @@ class _CusConfirmState extends State<CusConfirm> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => TabbarCus()),
+                                        builder: (context) => const TabbarCus(),
+                                      ),
                                     );
                                   },
                                   child: const Text('OK',

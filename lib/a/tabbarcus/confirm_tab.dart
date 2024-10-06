@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gotwo_app_user/a/cus_confirm1.dart';
 import 'package:gotwo_app_user/global_ip.dart';
-import 'package:gotwo_app_user/m2/test.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';

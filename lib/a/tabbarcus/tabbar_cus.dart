@@ -20,32 +20,33 @@ class _TabbarCusState extends State<TabbarCus> {
       length: 5,
       child: Scaffold(
         appBar: AppBar(
-          title: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                       child: _backButton(context),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 80),
-                      child: Text(
-                        "Status",
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Color(0xff1a1c43),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
+          automaticallyImplyLeading: false, // ปิดการแสดงลูกศรย้อนกลับอัตโนมัติ
+          title: Stack(
+            children: [
+             const Center(
+                child: Text(
+                  "Status",
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Color(0xff1a1c43),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ],
-            ),
+              ),
+              Positioned(
+                left: 0,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Color(0xff1a1c43)),
+                  onPressed: () {
+                   Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) =>const Join()), // หน้าที่คุณต้องการย้อนกลับไป
+      (Route<dynamic> route) => false,
+    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
         body: Column(
@@ -66,7 +67,7 @@ class _TabbarCusState extends State<TabbarCus> {
                   text: "Confirm",
                 ),
                 Tab(
-                  text: "ToTravel ",
+                  text: "ToTravel",
                 ),
                 Tab(
                   text: "Success",
@@ -80,31 +81,26 @@ class _TabbarCusState extends State<TabbarCus> {
               child: TabBarView(
                 children: [
                   Column(
-                    //Request
                     children: [
                       PendingTab(),
                     ],
                   ),
                   Column(
-                    //Confirm
                     children: [
                       ConfirmTab(),
                     ],
                   ),
                   Column(
-                    //To travel
                     children: [
                       TotravelTab(),
                     ],
                   ),
                   Column(
-                    //Success
                     children: [
                       SuccessTab(),
                     ],
                   ),
                   Column(
-                    //Cancel
                     children: [
                       CancelTab(),
                     ],
@@ -116,28 +112,5 @@ class _TabbarCusState extends State<TabbarCus> {
         ),
       ),
     );
-  }Widget _backButton(BuildContext context) {
-  return IconButton(
-    icon: Icon(Icons.arrow_back, color: Color(0xff1a1c43)),
-    onPressed: () {
-   Navigator.push(context, MaterialPageRoute(builder: (context) => Join())); // นำทางไปยังหน้าชื่อ Status
-    },
-  );
-}
-
-}
-
-  Widget _backButton() {
-    return GestureDetector(
-      onTap: () {
-        debugPrint("back");
-      },
-      child: const Icon(
-        Icons.arrow_back_ios,
-        size: 30,
-        color: Color(0xff1a1c43),
-      ),
-    );
-    
   }
-
+}

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:gotwo_app_user/a/tabbarcus/success_tab.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
+import 'package:gotwo_app_user/global_ip.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
@@ -38,7 +38,7 @@ class _CusTotravelState extends State<CusTotravel> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://10.0.2.2:80/gotwo/getUserId.php"; // API URL
+    final String url = "http://${Global.ip_8080}/gotwo/getUserId.php";  // API URL
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -61,7 +61,7 @@ class _CusTotravelState extends State<CusTotravel> {
     }
   }
 
-  final url = Uri.parse('http://10.0.2.2:80/gotwo/status_totravel.php');
+  final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_totravel.php');
 
   // Updated update_review function
   Future<void> update_review(String status_post_id, String pay, String review,

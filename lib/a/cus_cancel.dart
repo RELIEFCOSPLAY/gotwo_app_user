@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:gotwo_app_user/global_ip.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -37,7 +35,7 @@ class _CusCancelState extends State<CusCancel> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://10.0.2.2:80/gotwo/getUserId.php"; // URL API
+    final String url = "http://${Global.ip_8080}/gotwo/getUserId.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
