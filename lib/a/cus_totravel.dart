@@ -78,7 +78,7 @@ class _CusTotravelState extends State<CusTotravel> {
       if (request.statusCode == 200) {
         // Data sent successfully
         print('Success: ${request.body}');
-        print('Customer ID: $status_post_id');
+
       } else {
         // There was a problem sending data
         print('Error: ${request.statusCode}, Body: ${request.body}');

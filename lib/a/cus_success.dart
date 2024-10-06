@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:gotwo_app_user/global_ip.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -188,6 +187,34 @@ class _CusSuccessState extends State<CusSuccess> {
                       ),
                     ),
                   ],
+                ),
+                Text(
+                  item['pay'] == '1' || item['pay'] == 1
+                      ? "Paid"
+                      : item['pay'] == '0' || item['pay'] == 0
+                          ? "Unpaid"
+                          : item['pay'] == '2' || item['pay'] == 2
+                              ? "Refund"
+                              : item['pay'] == '3' || item['pay'] == 3
+                                  ? "Pending"
+                                  : item['pay'] == '4' || item['pay'] == 4
+                                      ? "Completed"
+                                      : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: item['pay'] == '1' || item['pay'] == 1
+                        ? Colors.green // Green for "Paid"
+                        : item['pay'] == '0' || item['pay'] == 0
+                            ? Colors.red // Red for "Unpaid"
+                            : item['pay'] == '2' || item['pay'] == 2
+                                ? Colors.orange // Orange for "Refund"
+                                : item['pay'] == '3' || item['pay'] == 3
+                                    ? Colors.blue // Blue for "Pending"
+                                    : item['pay'] == '4' || item['pay'] == 4
+                                        ? Colors
+                                            .green[300] // Grey for "Completed"
+                                        : Colors.black, // Black for "Unknown"
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Container(

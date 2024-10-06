@@ -12,14 +12,14 @@ class TotravelTab extends StatefulWidget {
 }
 
 class _TotravelTabState extends State<TotravelTab> {
- List<dynamic> testData = []; // สร้าง List สำหรับเก็บข้อมูลที่ดึงมา
+  List<dynamic> testData = []; // สร้าง List สำหรับเก็บข้อมูลที่ดึงมา
 
   bool isLoading = true;
   Map<String, dynamic>? item;
 
   final storage = const FlutterSecureStorage();
   String? emails;
-  String? userId; 
+  String? userId;
   Future<void> loadLoginInfo() async {
     String? savedEmail = await storage.read(key: 'email');
     setState(() {
@@ -41,7 +41,7 @@ class _TotravelTabState extends State<TotravelTab> {
         final data = json.decode(response.body);
         if (data['success']) {
           setState(() {
-            userId = data['user_id']; 
+            userId = data['user_id'];
           });
         } else {
           print('Error: ${data['message']}');
@@ -78,12 +78,10 @@ class _TotravelTabState extends State<TotravelTab> {
     loadLoginInfo();
   }
 
-
-String getStatusLabel(String pay) {
-  int payCode = int.tryParse(pay) ?? -1; 
-  return payCode == 1 ? "Paid" : ""; 
-}
-
+  String getStatusLabel(String pay) {
+    int payCode = int.tryParse(pay) ?? -1;
+    return payCode == 1 ? "Paid" : "";
+  }
 
   String formatDate(String date) {
     try {
@@ -121,7 +119,7 @@ String getStatusLabel(String pay) {
                         MaterialPageRoute(
                           builder: (context) => CusTotravel(
                             data: {
-                                'status_post_id': item['status_post_id'],
+                              'status_post_id': item['status_post_id'],
                               'rider_id': item['rider_id'],
                               'gender': item['rider_gender'],
                               'date': item['date'],
@@ -133,7 +131,7 @@ String getStatusLabel(String pay) {
                               'status_helmet': item['status_helmet'],
                               'pay': item['pay'],
                               'rider_tel': item['rider_tel'],
-                               'review': item['review'],
+                              'review': item['review'],
                             },
                           ),
                         ),
@@ -174,7 +172,7 @@ String getStatusLabel(String pay) {
                                     ),
                                   ],
                                 ),
-                                  Text(
+                                Text(
                                   "Date: ${formatDate(item['date'])}",
                                   textAlign: TextAlign.start,
                                   style: const TextStyle(
@@ -187,11 +185,33 @@ String getStatusLabel(String pay) {
                                       fontSize: 12, color: Color(0xff1a1c43)),
                                 ),
                                 Text(
-                                  "Status: ${getStatusLabel(item['pay'])}",
-                                  textAlign: TextAlign.start,
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Color(0xff1a1c43)),
-                                ),
+                  item['pay'] == '1' || item['pay'] == 1
+                      ? "Paid"
+                      : item['pay'] == '0' || item['pay'] == 0
+                          ? "Unpaid"
+                          : item['pay'] == '2' || item['pay'] == 2
+                              ? "Refund"
+                              : item['pay'] == '3' || item['pay'] == 3
+                                  ? "Pending"
+                                  : item['pay'] == '4' || item['pay'] == 4
+                                      ? "Completed"
+                                      : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: item['pay'] == '1' || item['pay'] == 1
+                        ? Colors.green // Green for "Paid"
+                        : item['pay'] == '0' || item['pay'] == 0
+                            ? Colors.red // Red for "Unpaid"
+                            : item['pay'] == '2' || item['pay'] == 2
+                                ? Colors.orange // Orange for "Refund"
+                                : item['pay'] == '3' || item['pay'] == 3
+                                    ? Colors.blue // Blue for "Pending"
+                                    : item['pay'] == '4' || item['pay'] == 4
+                                        ? Colors
+                                            .green[300] // Grey for "Completed"
+                                        : Colors.black, // Black for "Unknown"
+                  ),
+                ),
                               ],
                             ),
                           ),
@@ -221,7 +241,10 @@ String getStatusLabel(String pay) {
                                       ),
                                     ),
                                   ],
-                                ),SizedBox(height: 10,),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

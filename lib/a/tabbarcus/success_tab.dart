@@ -75,11 +75,6 @@ class _SuccessTabState extends State<SuccessTab> {
     loadLoginInfo();
   }
 
-  String getStatusLabel(String pay) {
-    int payCode = int.tryParse(pay) ?? -1;
-    return payCode == 1 ? "Paid" : "";
-  }
-
   String formatDate(String date) {
     try {
       DateTime parsedDate = DateTime.parse(date);
@@ -124,7 +119,8 @@ class _SuccessTabState extends State<SuccessTab> {
                               'comment_pick': item['comment_pick'],
                               'at_drop': item['at_drop'],
                               'comment_drop': item['comment_drop'],
-                               'review': item['review'],
+                              'review': item['review'],
+                              'pay': item['pay'],
                             },
                           ),
                         ),
@@ -172,11 +168,43 @@ class _SuccessTabState extends State<SuccessTab> {
                                       fontSize: 12, color: Color(0xff1a1c43)),
                                 ),
                                 Text(
-                                  "Status: ${getStatusLabel(item['pay'])}",
-                                  textAlign: TextAlign.start,
-                                  style: const TextStyle(
-                                      fontSize: 12, color: Color(0xff1a1c43)),
-                                ),
+                                  item['pay'] == '1' || item['pay'] == 1
+                                      ? "Paid"
+                                      : item['pay'] == '0' || item['pay'] == 0
+                                          ? "Unpaid"
+                                          : item['pay'] == '2' ||
+                                                  item['pay'] == 2
+                                              ? "Refund"
+                                              : item['pay'] == '3' ||
+                                                      item['pay'] == 3
+                                                  ? "Pending"
+                                                  : item['pay'] == '4' ||
+                                                          item['pay'] == 4
+                                                      ? "Completed"
+                                                      : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: item['pay'] == '1' ||
+                                            item['pay'] == 1
+                                        ? Colors.green // Green for "Paid"
+                                        : item['pay'] == '0' || item['pay'] == 0
+                                            ? Colors.red // Red for "Unpaid"
+                                            : item['pay'] == '2' ||
+                                                    item['pay'] == 2
+                                                ? Colors
+                                                    .orange // Orange for "Refund"
+                                                : item['pay'] == '3' ||
+                                                        item['pay'] == 3
+                                                    ? Colors
+                                                        .blue // Blue for "Pending"
+                                                    : item['pay'] == '4' ||
+                                                            item['pay'] == 4
+                                                        ? Colors.green[
+                                                            300] // Grey for "Completed"
+                                                        : Colors
+                                                            .black, // Black for "Unknown"
+                                  ),
+                                )
                               ],
                             ),
                           ),
