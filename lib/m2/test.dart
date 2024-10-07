@@ -373,7 +373,7 @@ class _RegisterState extends State<Register> {
                       // 'number_bank_placeholder', // Placeholder สำหรับเลขบัญชี
                      
                     );
-                    print(regis_customer_id!);
+                    print(regis_customer_id);
                     print(name);
                     Navigator.push(
                       context,
