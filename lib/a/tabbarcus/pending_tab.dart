@@ -132,6 +132,8 @@ class _ConfirmTabState extends State<PendingTab> {
                               'status_helmet': item['status_helmet'],
                               'pay': item['pay'],
                                'review': item['review'],
+                               'post_id': item['post_id'],
+                               'check_status': item['check_status'],
                             },
                           ),
                         ),

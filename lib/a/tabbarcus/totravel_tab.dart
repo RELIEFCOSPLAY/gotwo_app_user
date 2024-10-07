@@ -132,6 +132,8 @@ class _TotravelTabState extends State<TotravelTab> {
                               'pay': item['pay'],
                               'rider_tel': item['rider_tel'],
                               'review': item['review'],
+                              'post_id': item['post_id'],
+                              'check_status': item['check_status'],
                             },
                           ),
                         ),

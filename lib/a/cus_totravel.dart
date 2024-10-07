@@ -105,6 +105,26 @@ class _CusTotravelState extends State<CusTotravel> {
     }
   }
 
+  final url_check_status =
+      Uri.parse('http://${Global.ip_8080}/gotwo/check_status.php');
+  Future<void> check_status(
+    String check_status,
+    String post_id,
+  ) async {
+    var request = await http.post(url_check_status, body: {
+      "check_status": check_status,
+      "post_id": post_id,
+    });
+
+    if (request.statusCode == 200) {
+      // ข้อมูลถูกส่งสำเร็จ
+      print('Success: ${request.body}');
+    } else {
+      // มีปัญหาในการส่งข้อมูล
+      print('Error: ${request.statusCode}, Body: ${request.body}');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -487,7 +507,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                             color: Colors.amber,
                                           ),
                                           onRatingUpdate: (newRating) {
-                                             reviewR =
+                                            reviewR =
                                                 newRating.toInt().toString();
                                           },
                                         ),
@@ -526,7 +546,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                               commentController.text;
                                           String pay = '3';
                                           String status = '4';
-                                          String review =  reviewR;
+                                          String review = reviewR;
 
                                           // Call the update_review function
 
@@ -634,14 +654,18 @@ class _CusTotravelState extends State<CusTotravel> {
                                     String status = '5';
                                     String review = '0';
                                     String pay = "0";
-                                    if (item['pay'].toString() == "1") {
+                                    if (item['pay'].toString() == "1" ||
+                                        item['pay'] == 1) {
                                       pay = "2";
-                                    } else if (item['pay'].toString() == "0") {
-                                      pay = "0";
+                                    } else if (item['pay'].toString() == "0" ||
+                                        item['pay'] == 0) {
+                                      pay = "4";
                                     }
                                     String comment = commentController.text;
                                     String status_post_id =
                                         '${item['status_post_id'] ?? 'Unknown'}';
+                                    String post_id = item['post_id'];
+                                    String checkstatus = '0';
 
                                     update_cancel(
                                       status_post_id,
@@ -649,6 +673,10 @@ class _CusTotravelState extends State<CusTotravel> {
                                       review,
                                       comment,
                                       status,
+                                    );
+                                    check_status(
+                                      checkstatus,
+                                      post_id,
                                     );
 
                                     Navigator.pushReplacement(
