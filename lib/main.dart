@@ -9,6 +9,7 @@ import 'package:gotwo_app_user/m2/login.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/payment.dart';
 import 'package:gotwo_app_user/m2/register.dart';
+import 'package:gotwo_app_user/m2/test.dart';
 
 
 // ignore: unused_import
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         appBarTheme:const AppBarTheme(
     backgroundColor: Colors.white)
       ),
-      home: TabbarCus(),
+      home: ImageUploadPage(),
     );
   }
 }

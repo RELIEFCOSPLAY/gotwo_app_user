@@ -50,7 +50,7 @@ class _LoginpageState extends State<Loginpage> {
 
   // ฟังก์ชันสำหรับเข้าสู่ระบบ
   Future<void> signIn() async {
-    String url = "http://${Global.ip_8080}/gotwo/login.php";
+    String url = "http://${Global.ip_80}/gotwo/login.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email.text,

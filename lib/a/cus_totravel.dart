@@ -33,12 +33,13 @@ class _CusTotravelState extends State<CusTotravel> {
       emails = savedEmail;
     });
     if (emails != null) {
-      fetchUserId(emails!); 
+      fetchUserId(emails!);
     }
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_8080}/gotwo/getUserId.php";  // API URL
+    final String url =
+        "http://${Global.ip_80}/gotwo/getUserId_cus.php"; // API URL
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -61,7 +62,7 @@ class _CusTotravelState extends State<CusTotravel> {
     }
   }
 
-  final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_totravel.php');
+  final url = Uri.parse('http://${Global.ip_80}/gotwo/status_totravel.php');
 
   // Updated update_review function
   Future<void> update_review(String status_post_id, String pay, String review,
@@ -78,7 +79,6 @@ class _CusTotravelState extends State<CusTotravel> {
       if (request.statusCode == 200) {
         // Data sent successfully
         print('Success: ${request.body}');
-
       } else {
         // There was a problem sending data
         print('Error: ${request.statusCode}, Body: ${request.body}');
@@ -454,8 +454,7 @@ class _CusTotravelState extends State<CusTotravel> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            // ignore: unused_local_variable
-                            String review = "1";
+                            double selectedRating = 1.0;
                             TextEditingController commentController =
                                 TextEditingController();
 
@@ -475,23 +474,25 @@ class _CusTotravelState extends State<CusTotravel> {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: RatingBar.builder(
-                                          initialRating: 1,
-                                          minRating: 1,
-                                          direction: Axis.horizontal,
-                                          allowHalfRating: false,
-                                          itemSize: 25,
-                                          itemCount: 5,
-                                          itemPadding:const EdgeInsets.symmetric(
-                                              horizontal: 1),
-                                          itemBuilder: (context, _) =>const Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                          ),
-                                          onRatingUpdate: (newRating) {
-                                            review =
-                                                newRating.toInt().toString();
-                                          },
-                                        ),
+                                            initialRating: 1,
+                                            minRating: 1,
+                                            direction: Axis.horizontal,
+                                            allowHalfRating: false,
+                                            itemSize: 25,
+                                            itemCount: 5,
+                                            itemPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 1),
+                                            itemBuilder: (context, _) =>
+                                                const Icon(
+                                                  Icons.star,
+                                                  color: Colors.amber,
+                                                ),
+                                            onRatingUpdate: (newRating) {
+                                              setState(() {
+                                                selectedRating = newRating;
+                                              });
+                                            },),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -521,16 +522,18 @@ class _CusTotravelState extends State<CusTotravel> {
                                     children: [
                                       ElevatedButton(
                                         onPressed: () {
-                                          String? status_post_id = userId;
+                                          String status_post_id =
+                                              '${item['status_post_id'] ?? 'Unknown'}';
                                           String comment =
                                               commentController.text;
-                                          String pay = '1';
+                                          String pay = '3';
                                           String status = '4';
-                                          String review = '';
+                                          String review =
+                                              selectedRating.toInt().toString();
 
                                           // Call the update_review function
                                           update_review(
-                                            status_post_id!,
+                                            status_post_id,
                                             pay,
                                             review,
                                             comment,
@@ -541,7 +544,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    TabbarCus()),
+                                                    const TabbarCus()),
                                           );
                                         },
                                         style: ElevatedButton.styleFrom(

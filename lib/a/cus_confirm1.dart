@@ -43,7 +43,7 @@ class _CusConfirmState extends State<CusConfirm> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://10.0.2.2:8080/gotwo/getUserId_cus.php";
+    final String url = "http://${Global.ip_80}/gotwo/getUserId_cus.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -66,7 +66,7 @@ class _CusConfirmState extends State<CusConfirm> {
     }
   }
 
-  final url = Uri.parse('http://10.0.2.2:8080/gotwo/status_confirme.php');
+  final url = Uri.parse('http://${Global.ip_80}/gotwo/status_confirme.php');
   Future<void> update_pay(
     String status_post_id,
     String pay,
@@ -91,6 +91,7 @@ class _CusConfirmState extends State<CusConfirm> {
   ) async {
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
+      
       "pay": pay,
       'comment': comment,
     });

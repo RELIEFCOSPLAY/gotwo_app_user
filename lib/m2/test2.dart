@@ -32,13 +32,13 @@
 //     }
 //   }
 
-  Future<void> fetchUserId(String email) async {
-    final String url =
-        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
-    try {
-      final response = await http.post(Uri.parse(url), body: {
-        'email': email, // ส่ง email เพื่อค้นหา user id
-      });
+  // Future<void> fetchUserId(String email) async {
+  //   final String url =
+  //       "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
+  //   try {
+  //     final response = await http.post(Uri.parse(url), body: {
+  //       'email': email, // ส่ง email เพื่อค้นหา user id
+  //     });
 
 //       if (response.statusCode == 200) {
 //         final data = json.decode(response.body);
@@ -66,27 +66,27 @@
 //     loadLoginInfo();
 //   }
 
-  final url =
-      Uri.parse('http://${Global.ip_8080}/gotwo/join_post_customer.php');
-  Future<void> join_post(
-      String status,
-      String reason,
-      String post_id,
-      String customer_id,
-      String pay,
-      String review,
-      String comment,
-      String rider_id) async {
-    var request = await http.post(url, body: {
-      "status": status,
-      "reason": reason,
-      "post_id": post_id,
-      "customer_id": customer_id,
-      "pay": pay,
-      "review": review,
-      "comment": comment,
-      "rider_id": rider_id,
-    });
+  // final url =
+  //     Uri.parse('http://${Global.ip_8080}/gotwo/join_post_customer.php');
+  // Future<void> join_post(
+  //     String status,
+  //     String reason,
+  //     String post_id,
+  //     String customer_id,
+  //     String pay,
+  //     String review,
+  //     String comment,
+  //     String rider_id) async {
+  //   var request = await http.post(url, body: {
+  //     "status": status,
+  //     "reason": reason,
+  //     "post_id": post_id,
+  //     "customer_id": customer_id,
+  //     "pay": pay,
+  //     "review": review,
+  //     "comment": comment,
+  //     "rider_id": rider_id,
+  //   });
 
 //     if (request.statusCode == 200) {
 //       // ข้อมูลถูกส่งสำเร็จ

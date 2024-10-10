@@ -41,7 +41,7 @@ class _CusPendingState extends State<CusPending> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_8080}/gotwo/getUserId.php";
+    final String url = "http://${Global.ip_80}/gotwo/getUserId_cus.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -64,25 +64,8 @@ class _CusPendingState extends State<CusPending> {
     }
   }
 
-  final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_confirme.php');
-  Future<void> update_pay(
-    String status_post_id,
-    String pay,
-    String status,
-  ) async {
-    var request = await http.post(url, body: {
-      "status_post_id": status_post_id,
-      "pay": pay,
-      'status': status,
-    });
-    if (request.statusCode == 200) {
-      print('Success: ${request.body}');
-      print('Id Be ${userId}');
-    } else {
-      print('Error: ${request.statusCode}, Body: ${request.body}');
-    }
-  }
-
+  final url = Uri.parse('http://${Global.ip_80}/gotwo/status_confirme.php');
+ 
   Future<void> update_cancel(
     String status_post_id,
     String status,
@@ -416,12 +399,8 @@ class _CusPendingState extends State<CusPending> {
                                 TextButton(
                                   onPressed: () {
                                     String status = '5';
-                                    String pay = "0";
-                                    if (item['pay'].toString() == "1") {
-                                      pay = "2";
-                                    } else if (item['pay'].toString() == "0") {
-                                      pay = "0";
-                                    }
+                                    String pay = "4";
+                               
                                     String cancelReason =
                                         commentController.text;
                                     String status_post_id =
