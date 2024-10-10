@@ -88,22 +88,39 @@ class _CusTotravelState extends State<CusTotravel> {
     }
   }
 
-  Future<void> update_cancel(
-    String status_post_id,
-    String status,
-    String comment,
-    String pay,
-  ) async {
+  Future<void> update_cancel(String status_post_id, String pay, String review,
+      String comment, String status) async {
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
-      'status': status,
-      'comment': comment,
       "pay": pay,
+      'review': review,
+      'comment': comment,
+      'status': status,
     });
     if (request.statusCode == 200) {
       print('Success: ${request.body}');
       print('Id Be ${userId}');
     } else {
+      print('Error: ${request.statusCode}, Body: ${request.body}');
+    }
+  }
+
+  final url_check_status =
+      Uri.parse('http://${Global.ip_8080}/gotwo/check_status.php');
+  Future<void> check_status(
+    String check_status,
+    String post_id,
+  ) async {
+    var request = await http.post(url_check_status, body: {
+      "check_status": check_status,
+      "post_id": post_id,
+    });
+
+    if (request.statusCode == 200) {
+      // ข้อมูลถูกส่งสำเร็จ
+      print('Success: ${request.body}');
+    } else {
+      // มีปัญหาในการส่งข้อมูล
       print('Error: ${request.statusCode}, Body: ${request.body}');
     }
   }
@@ -454,7 +471,8 @@ class _CusTotravelState extends State<CusTotravel> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            double selectedRating = 1.0;
+                            // ignore: unused_local_variable
+                            String reviewR = "1";
                             TextEditingController commentController =
                                 TextEditingController();
 
@@ -474,25 +492,25 @@ class _CusTotravelState extends State<CusTotravel> {
                                       Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: RatingBar.builder(
-                                            initialRating: 1,
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            allowHalfRating: false,
-                                            itemSize: 25,
-                                            itemCount: 5,
-                                            itemPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 1),
-                                            itemBuilder: (context, _) =>
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                ),
-                                            onRatingUpdate: (newRating) {
-                                              setState(() {
-                                                selectedRating = newRating;
-                                              });
-                                            },),
+                                          initialRating: 1,
+                                          minRating: 1,
+                                          direction: Axis.horizontal,
+                                          allowHalfRating: false,
+                                          itemSize: 25,
+                                          itemCount: 5,
+                                          itemPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 1),
+                                          itemBuilder: (context, _) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
+                                          ),
+                                          onRatingUpdate: (newRating) {
+                                            reviewR =
+                                                newRating.toInt().toString();
+                                          },
+                                        ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.only(
@@ -528,10 +546,10 @@ class _CusTotravelState extends State<CusTotravel> {
                                               commentController.text;
                                           String pay = '3';
                                           String status = '4';
-                                          String review =
-                                              selectedRating.toInt().toString();
+                                          String review = reviewR;
 
                                           // Call the update_review function
+
                                           update_review(
                                             status_post_id,
                                             pay,
@@ -634,25 +652,33 @@ class _CusTotravelState extends State<CusTotravel> {
                                 TextButton(
                                   onPressed: () {
                                     String status = '5';
+                                    String review = '0';
                                     String pay = "0";
-                                    if (item['pay'].toString() == "1") {
+                                    if (item['pay'].toString() == "1" ||
+                                        item['pay'] == 1) {
                                       pay = "2";
-                                    } else if (item['pay'].toString() == "0") {
-                                      pay = "0";
+                                    } else if (item['pay'].toString() == "0" ||
+                                        item['pay'] == 0) {
+                                      pay = "4";
                                     }
-                                    String cancelReason =
-                                        commentController.text;
+                                    String comment = commentController.text;
                                     String status_post_id =
                                         '${item['status_post_id'] ?? 'Unknown'}';
+                                    String post_id = item['post_id'];
+                                    String checkstatus = '0';
 
                                     update_cancel(
                                       status_post_id,
-                                      status,
-                                      cancelReason,
                                       pay,
+                                      review,
+                                      comment,
+                                      status,
                                     );
-                                    print(status_post_id);
-                                    print(cancelReason);
+                                    check_status(
+                                      checkstatus,
+                                      post_id,
+                                    );
+
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(

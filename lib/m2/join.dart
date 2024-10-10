@@ -189,7 +189,8 @@ class _JoinState extends State<Join> {
                 itemBuilder: (context, index) {
                   final item = filteredList[index];
 
-                  // if (userId == item['customer_id'].toString()) {
+                  if (item['check_status'] == '0' ||
+                      item['check_status'] == 0) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: ElevatedButton(
@@ -288,9 +289,9 @@ class _JoinState extends State<Join> {
                         ),
                       ),
                     );
-                  // } else {
-                  //   return const SizedBox.shrink();
-                  // }
+                  } else {
+                    return const SizedBox.shrink();
+                  }
                 },
               ),
       ),

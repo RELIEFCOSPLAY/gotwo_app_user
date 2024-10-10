@@ -70,12 +70,14 @@ class _CusConfirmState extends State<CusConfirm> {
   Future<void> update_pay(
     String status_post_id,
     String pay,
+    String status,
   ) async {
     String comment = "No comment";
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
       "pay": pay,
       'comment': comment,
+      'status': status,
     });
     if (request.statusCode == 200) {
       print('Success: ${request.body}');
@@ -88,16 +90,38 @@ class _CusConfirmState extends State<CusConfirm> {
     String status_post_id,
     String pay,
     String comment,
+    String status,
   ) async {
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
       
       "pay": pay,
       'comment': comment,
+      'status': status,
     });
     if (request.statusCode == 200) {
       print('Success: ${request.body}');
     } else {
+      print('Error: ${request.statusCode}, Body: ${request.body}');
+    }
+  }
+
+  final url_check_status =
+      Uri.parse('http://${Global.ip_8080}/gotwo/check_status.php');
+  Future<void> check_status(
+    String check_status,
+    String post_id,
+  ) async {
+    var request = await http.post(url_check_status, body: {
+      "check_status": check_status,
+      "post_id": post_id,
+    });
+
+    if (request.statusCode == 200) {
+      // ข้อมูลถูกส่งสำเร็จ
+      print('Success: ${request.body}');
+    } else {
+      // มีปัญหาในการส่งข้อมูล
       print('Error: ${request.statusCode}, Body: ${request.body}');
     }
   }
@@ -457,9 +481,11 @@ class _CusConfirmState extends State<CusConfirm> {
                                     String status_post_id =
                                         '${item['status_post_id'] ?? 'Unknown'}';
                                     String pay = '1';
+                                    String status = "2";
                                     update_pay(
                                       status_post_id,
                                       pay,
+                                      status,
                                     );
                                     Navigator.pushAndRemoveUntil(
                                       context,
@@ -524,19 +550,28 @@ class _CusConfirmState extends State<CusConfirm> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    String pay = "0";
-                                    if (item['pay'].toString() == "1") {
+                                    String pay = "0"; 
+                                    if (item['pay'].toString() == "1" ||
+                                        item['pay'] == 1) {
                                       pay = "2";
-                                    } else if (item['pay'].toString() == "0") {
-                                      pay = "0";
+                                    } else if (item['pay'].toString() == "0" ||
+                                        item['pay'] == 0) {
+                                      pay = "4";
                                     }
+                                    String status = "5";
+                                    String post_id = item['post_id'];
+                                    String checkstatus = '0';
                                     String cancelReason =
                                         commentController.text;
                                     String status_post_id =
                                         '${item['status_post_id'] ?? 'Unknown'}';
 
-                                    update_cancel(
-                                        status_post_id, cancelReason, pay);
+                                    update_cancel(status_post_id, pay,
+                                        cancelReason, status);
+                                    check_status(
+                                      checkstatus,
+                                      post_id,
+                                    );
 
                                     Navigator.pushReplacement(
                                       context,

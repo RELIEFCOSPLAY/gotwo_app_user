@@ -69,14 +69,15 @@ class _JoindetailState extends State<Joindetail> {
    final url =
       Uri.parse('http://${Global.ip_80}/gotwo/join_post_customer.php');
   Future<void> join_post(
-      String status,
-      String reason,
-      String post_id,
-      String customer_id,
-      String pay,
-      String review,
-      String comment,
-      String rider_id) async {
+    String status,
+    String reason,
+    String post_id,
+    String customer_id,
+    String pay,
+    String review,
+    String comment,
+    String rider_id,
+  ) async {
     var request = await http.post(url, body: {
       "status": status,
       "reason": reason,
@@ -93,6 +94,26 @@ class _JoindetailState extends State<Joindetail> {
       // ข้อมูลถูกส่งสำเร็จ
       print('Success: ${request.body}');
       print('Id Be ${userId}');
+    } else {
+      // มีปัญหาในการส่งข้อมูล
+      print('Error: ${request.statusCode}, Body: ${request.body}');
+    }
+  }
+
+  final url_check_status =
+      Uri.parse('http://${Global.ip_8080}/gotwo/check_status.php');
+  Future<void> check_status(
+    String check_status,
+    String post_id,
+  ) async {
+    var request = await http.post(url_check_status, body: {
+      "check_status": check_status,
+      "post_id": post_id,
+    });
+
+    if (request.statusCode == 200) {
+      // ข้อมูลถูกส่งสำเร็จ
+      print('Success: ${request.body}');
     } else {
       // มีปัญหาในการส่งข้อมูล
       print('Error: ${request.statusCode}, Body: ${request.body}');
@@ -366,7 +387,7 @@ class _JoindetailState extends State<Joindetail> {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      String status = 'required';
+                      String status = '1';
                       String reason = 'wait to long';
                       String post_id = item!['post_id'];
                       String? customer_id = userId;
@@ -374,7 +395,7 @@ class _JoindetailState extends State<Joindetail> {
                       String review = '0';
                       String comment = 'cancel';
                       String rider_id = item!['rider_id'];
-
+                      String checkstatus = '1';
                       join_post(
                         status,
                         reason,
@@ -384,6 +405,10 @@ class _JoindetailState extends State<Joindetail> {
                         review,
                         comment,
                         rider_id,
+                      );
+                      check_status(
+                        checkstatus,
+                        post_id,
                       );
 
                       Navigator.pushAndRemoveUntil(
