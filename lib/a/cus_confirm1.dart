@@ -23,6 +23,7 @@ class _CusConfirmState extends State<CusConfirm> {
   List<dynamic> travelData = [];
   bool isPaid = false; // สถานะสำหรับเช็คการจ่ายเงิน
   bool isImageUploaded = false; // สถานะสำหรับเช็คว่ารูปถูกอัปโหลดหรือยัง
+  TextEditingController commentController = TextEditingController();
 
   final storage = const FlutterSecureStorage();
   final border = OutlineInputBorder(
@@ -147,8 +148,6 @@ class _CusConfirmState extends State<CusConfirm> {
     }
   }
 
-  TextEditingController commentController = TextEditingController();
-
   void showQrCodeDialog() {
     showDialog(
       context: context,
@@ -177,27 +176,32 @@ class _CusConfirmState extends State<CusConfirm> {
             ),
             actions: [
               ElevatedButton(
-                onPressed: () async {
-                  final ImagePicker _picker = ImagePicker();
-                  final XFile? image =
-                      await _picker.pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    await uploadImage(File(image.path)); // อัปโหลดรูปภาพ
-                    setState(() {
-                      isImageUploaded = true; // อัปเดตสถานะเป็นรูปถูกอัปโหลด
-                    });
-                  }
-                },
+                onPressed: isImageUploaded
+                    ? null // ถ้าอัปโหลดแล้ว ปุ่มจะปิดการทำงาน
+                    : () async {
+                        final ImagePicker _picker = ImagePicker();
+                        final XFile? image = await _picker.pickImage(
+                            source: ImageSource.gallery);
+                        if (image != null) {
+                          await uploadImage(File(image.path)); // อัปโหลดรูปภาพ
+                          setState(() {
+                            isImageUploaded =
+                                true; // อัปเดตสถานะเป็นรูปถูกอัปโหลด
+                          });
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[300],
+                  backgroundColor: isImageUploaded
+                      ? Colors.grey // เปลี่ยนสีเป็นสีเทาหลังอัปโหลดรูป
+                      : Colors.blue[300],
                   minimumSize: const Size(15, 30),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                child: const Text(
-                  'Attach Image',
-                  style: TextStyle(fontSize: 13, color: Colors.white),
+                child: Text(
+                  isImageUploaded ? 'Image Uploaded' : 'Attach Image',
+                  style: const TextStyle(fontSize: 13, color: Colors.white),
                 ),
               ),
               TextButton(
@@ -257,7 +261,7 @@ class _CusConfirmState extends State<CusConfirm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${item['rider_id']} ',
+                      '${item['gender']} ',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -549,7 +553,7 @@ class _CusConfirmState extends State<CusConfirm> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    String pay = "0"; 
+                                    String pay = "0";
                                     if (item['pay'].toString() == "1" ||
                                         item['pay'] == 1) {
                                       pay = "2";
