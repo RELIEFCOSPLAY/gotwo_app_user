@@ -107,7 +107,7 @@ class _CusConfirmState extends State<CusConfirm> {
   }
 
   final url_check_status =
-      Uri.parse('http://${Global.ip_8080}/gotwo/check_status.php');
+      Uri.parse('http://${Global.ip_80}/gotwo/check_status.php');
   Future<void> check_status(
     String check_status,
     String post_id,
@@ -322,6 +322,28 @@ class _CusConfirmState extends State<CusConfirm> {
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
                         fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),   const SizedBox(height: 5), Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      item['pay'] == '1' || item['pay'] == 1
+                          ? Icons.phone
+                          : null,
+                      color: const Color(0xFF1A1C43),
+                    ),
+                    const SizedBox(width: 5), // Space between icon and text
+                    Text(
+                      item['pay'] == '1' || item['pay'] == 1
+                          ? "${item['rider_tel'] ?? 'Unknown'}"
+                          : "", // ถ้าเป็น 1 แสดง "'rider_email", ถ้าเป็น 0 ไม่แสดง
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF1A1C43), // Red for "Unpaid"
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],

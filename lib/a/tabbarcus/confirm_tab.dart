@@ -120,6 +120,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
                               'pick_up': item['pick_up'],
                               'comment_pick': item['comment_pick'],
                               'at_drop': item['at_drop'],
+                               'rider_tel': item['rider_tel'],
                               'comment_drop': item['comment_drop'],
                               'status_helmet': item['status_helmet'],
                               'pay': item['pay'],

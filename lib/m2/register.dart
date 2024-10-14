@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -6,265 +7,340 @@ import 'package:gotwo_app_user/m2/bank.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Register extends StatefulWidget {
-  const Register({Key? key}) : super(key: key);
+  const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
-  Uint8List? _image;
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController emaiController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController createPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
 
-  void selectImage() async {
-    Uint8List? imageBytes = await pickImage(ImageSource.gallery);
-    if (imageBytes != null) {
-      setState(() {
-        _image = imageBytes;
-      });
-    } else {
-      debugPrint('No image selected');
-    }
+  static const List<String> list = <String>[
+    'Male',
+    'Female',
+  ];
+  String dropdownValue = list.first;
+
+  String? cusCardImagePath;
+  File? cus_card_im_path;
+  final picker = ImagePicker();
+  Future cus_getImageGallery() async {
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
+
+    setState(() {
+      if (pickedFile != null) {
+        cus_card_im_path = File(pickedFile.path);
+        cusCardImagePath = pickedFile.path;
+      } else {
+        print("No Image Picked");
+      }
+    });
   }
 
-  // Dropdown items
-  List<String> _items = ['Female', 'Male'];
-  String? selectedItem;
-
   @override
-  // final formkey = GlobalKey<FormState>();
-
-  // TextEditingController name = TextEditingController();
-  // TextEditingController pass = TextEditingController();
-  // TextEditingController email = TextEditingController();
-
-  // Future sign_up() async {
-  //   String url = "";
-  // }
-
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Register",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 27,
-            color: Color(0xFF1A1C43),
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+          gradient: LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [
+          Colors.white,
+          Colors.white,
+        ],
+      )),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: const Color(0xffffffff),
+          title: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: _backButton(),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 70),
+                      child: Text(
+                        "Register",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 28,
+                            color: Color(0xff1a1c43),
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),automaticallyImplyLeading: false,
         ),
-        backgroundColor: Colors.transparent, // กำหนดสีของ AppBar เป็นโปร่งใส
-        elevation: 0, // ไม่มีเงาใต้ AppBar
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back,
-              color: Colors.black), // ใช้ไอคอนแบ็กสีดำ
-          onPressed: () {
-            Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้านี้
-          },
-        ),
+        body: _page(),
       ),
-      body: Center(
-        child: SingleChildScrollView(
+    );
+  }
+
+  Widget _page() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 32, right: 32, top: 16),
+        child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (_image != null)
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: MemoryImage(_image!),
-                ),
+              _addPhoto(),
+              const SizedBox(height: 20),
+              _inputField("Username", usernameController),
               const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: selectImage,
-                child: const Text('Select Image'),
-              ),
+              _inputField("Email", emaiController),
               const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Name',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Email',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Phone number',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        hint: const Text("Gender"),
-                        value: selectedItem,
-                        items: _items.map((String item) {
-                          return DropdownMenuItem(
-                            value: item,
-                            child: Text(item),
-                          );
-                        }).toList(),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedItem = value;
-                          });
-                        },
-                        icon: const Icon(Icons.arrow_drop_down),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      //  obscureText: true, // ซ่อนรหัส
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Create Password',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      obscureText: true, // ซ่อนรหัส
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Confirm Password',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              _inputField("Phone number", phoneController),
               const SizedBox(height: 10),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const BankAccount()), // ให้ NextPage() เป็นหน้าถัดไป
-                    );
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFF1A1C43)), // background color
-                    minimumSize: MaterialStateProperty.all(
-                        const Size(110, 35)), // Set minimum size here
-                  ),
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
+              _dropdown(),
               const SizedBox(height: 10),
+              _inputField("Create Password", createPasswordController,
+                  isPassword: true),
+              const SizedBox(height: 10),
+              _inputField("Confirm Password", confirmPasswordController,
+                  isPassword: true),
+              const SizedBox(height: 15),
+              _registerBtn(),
             ],
           ),
         ),
       ),
     );
   }
-}
 
-Future<Uint8List?> pickImage(ImageSource source) async {
-  final ImagePicker imagePicker = ImagePicker();
-  try {
-    XFile? file = await imagePicker.pickImage(source: source);
-    if (file != null) {
-      return await file.readAsBytes();
-    }
-  } catch (e) {
-    debugPrint('Error picking image: $e');
+  Widget _backButton() {
+    return GestureDetector(
+      onTap: () {
+        debugPrint("back");
+      },
+      child: const Icon(
+        Icons.arrow_back_ios,
+        size: 30,
+        color: Color(0xff1a1c43),
+      ),
+    );
   }
-  return null;
+
+  Widget _addPhoto() {
+    return Column(
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xffffffff),
+            elevation: 0.0,
+            shadowColor: Colors.transparent,
+          ),
+          onPressed: () {
+            cus_getImageGallery(); // เรียกใช้งานฟังก์ชันเพื่อเลือกรูปภาพ
+          },
+          child: Container(
+            width: 70, // ตั้งขนาดของ Container
+            height: 70, // ตั้งขนาดของ Container
+            decoration: BoxDecoration(
+              color: const Color(0xff1a1c43),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: const Color(0xff1a1c43),
+                width: 3,
+              ),
+            ),
+            child: cus_card_im_path !=
+                    null // ตรวจสอบว่ามีรูปภาพที่เลือกหรือไม่
+                ? ClipOval(
+                    // ใช้ ClipOval เพื่อทำให้รูปเป็นวงกลม
+                    child: Image.file(
+                      File(cusCardImagePath!),
+                      fit: BoxFit.cover, // ปรับขนาดรูปภาพให้พอดีกับ Container
+                      width: 70,
+                      height: 70,
+                    ),
+                  )
+                : const Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _inputField(String hintText, TextEditingController controller,
+      {isPassword = false}) {
+    var border = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30),
+        borderSide: const BorderSide(color: Color(0xff1a1c43)));
+
+    return  ConstrainedBox(
+    constraints: const BoxConstraints(
+      maxHeight: 50, 
+    ),
+    child:TextField(
+      style: const TextStyle(color: Color(0xff1a1c43)),
+      controller: controller,
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: const TextStyle(color: Color(0xff1a1c43)),
+        enabledBorder: border,
+        focusedBorder: border,
+      ),
+      obscureText: isPassword,)
+    );
+  }
+
+  Widget _dropdown() {
+    var border = OutlineInputBorder(
+        borderRadius: BorderRadius.circular(30),
+        borderSide: const BorderSide(color: Color(0xff1a1c43)));
+
+    return 
+     ConstrainedBox(
+    constraints: const BoxConstraints(
+      maxHeight: 50, 
+    ),child:DropdownButtonFormField<String>(
+      hint: const Text('Gender'),
+      decoration: InputDecoration(
+        enabledBorder: border,
+        focusedBorder: border,
+      ),
+      value: dropdownValue,
+      elevation: 16,
+      style: const TextStyle(
+          color: Color(0xff1a1c43), fontWeight: FontWeight.bold),
+      borderRadius: BorderRadius.circular(30),
+      onChanged: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          dropdownValue = value!;
+        });
+      },
+      items: list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+  ) );
+  }
+
+  Widget _registerBtn() {
+    return ElevatedButton(
+      onPressed: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: _snackBarnotification(),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+        );
+        debugPrint("Username : ${usernameController.text}");
+        debugPrint("Emai : ${emaiController.text}");
+        debugPrint("Phone : ${phoneController.text}");
+        debugPrint("Create Password : ${createPasswordController.text}");
+        debugPrint("Confirm Password : ${confirmPasswordController.text}");
+        debugPrint("Gender: ${dropdownValue.toLowerCase()}");
+        debugPrint(cusCardImagePath);
+
+       // Navigate to GotwoInformation and send data
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BankAccount(
+              username: usernameController.text,
+              email: emaiController.text,
+              phone: phoneController.text,
+              createPassword: createPasswordController.text,
+              confirmPassword: confirmPasswordController.text,
+              gender: dropdownValue.toLowerCase(),
+              cusCardImagePath: cusCardImagePath,
+            ),
+          ),
+          (Route<dynamic> route) => false,
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        fixedSize: const Size(120, 34),
+        foregroundColor: Colors.blue,
+        backgroundColor: const Color(0xff1a1c43),
+        shape: const StadiumBorder(),
+        padding: const EdgeInsets.symmetric(vertical: 6),
+      ),
+      child: const SizedBox(
+          width: double.infinity,
+          child: Text(
+            "Next",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          )),
+    );
+  }
+
+  Widget _snackBarnotification() {
+    if (usernameController.text == "" &&
+        emaiController.text == "" &&
+        phoneController.text == "" &&
+        createPasswordController.text == "" &&
+        confirmPasswordController.text == "" &&
+        dropdownValue == "Gender") {
+      return Container(
+        padding: const EdgeInsets.all(8),
+        height: 70,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.redAccent)),
+        child: const Row(
+          children: [
+            SizedBox(
+              width: 48,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Oh snap!",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xff1a1c43),
+                    ),
+                  ),
+                  Text(
+                    "Username or Password is Wrong",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xff1a1c43),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Container();
+  }
 }
