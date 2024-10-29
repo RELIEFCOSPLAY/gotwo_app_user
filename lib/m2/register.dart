@@ -129,7 +129,7 @@ class _RegisterState extends State<Register> {
   Widget _backButton() {
     return GestureDetector(
       onTap: () {
-        debugPrint("back");
+        Navigator.pop(context);
       },
       child: const Icon(
         Icons.arrow_back_ios,

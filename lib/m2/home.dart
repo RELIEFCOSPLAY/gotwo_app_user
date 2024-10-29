@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/m2/login.dart';
+import 'package:gotwo_app_user/m2/term.dart';
 // import 'package:gotwo_app_user/m/login.dart';
 // import 'package:gotwo_app_user/m/register.dart';
 // import 'package:flutter_application_1/m/login.dart';
@@ -105,12 +106,12 @@ class _HomeState extends State<Home> {
                         ),
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //       builder: (context) =>
-                            //            Register()), // ให้ NextPage() เป็นหน้าถัดไป
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                       Term()), // ให้ NextPage() เป็นหน้าถัดไป
+                            );
                           },
                           style: ButtonStyle(
                             backgroundColor: WidgetStateProperty.all<Color>(
