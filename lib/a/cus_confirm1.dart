@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/global_ip.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -19,10 +19,12 @@ class CusConfirm extends StatefulWidget {
 }
 
 class _CusConfirmState extends State<CusConfirm> {
+  String? qr_pay;
   late Map<String, dynamic> item;
   List<dynamic> travelData = [];
   bool isPaid = false; // สถานะสำหรับเช็คการจ่ายเงิน
   bool isImageUploaded = false; // สถานะสำหรับเช็คว่ารูปถูกอัปโหลดหรือยัง
+  TextEditingController commentController = TextEditingController();
 
   final storage = const FlutterSecureStorage();
   final border = OutlineInputBorder(
@@ -31,6 +33,7 @@ class _CusConfirmState extends State<CusConfirm> {
   );
   String? emails;
   String? userId; // เก็บ ID ของผู้ใช้หลังจากดึงมา
+  // เก็บ qr
 
   Future<void> loadLoginInfo() async {
     String? savedEmail = await storage.read(key: 'email');
@@ -131,6 +134,37 @@ class _CusConfirmState extends State<CusConfirm> {
     await Future.delayed(Duration(seconds: 2));
   }
 
+  final url_qr = Uri.parse('http://${Global.ip_8080}/gotwo/qr_gre.php');
+
+  Future<void> qrCode_view(String price, String promptPay) async {
+    try {
+      var request = await http.post(url_qr, body: {
+        "action": "PAY",
+        "price": price,
+        "promptPay": promptPay,
+      });
+
+      if (request.statusCode == 200) {
+        final responseData = json.decode(request.body);
+
+        if (responseData['status'] == 'success') {
+          setState(() {
+            qr_pay = responseData['qr_code'];
+          });
+          print(
+              "QR Code base64: $qr_pay"); 
+          showQrCodeDialog();
+        } else {
+          print('Error: ${responseData['message']}');
+        }
+      } else {
+        print('Error: ${request.statusCode}, Body: ${request.body}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -147,8 +181,6 @@ class _CusConfirmState extends State<CusConfirm> {
       return "";
     }
   }
-
-  TextEditingController commentController = TextEditingController();
 
   void showQrCodeDialog() {
     showDialog(
@@ -167,38 +199,46 @@ class _CusConfirmState extends State<CusConfirm> {
               height: 250.0,
               child: Column(
                 children: [
-                  QrImageView(
-                    data: '${item['price']}', // ข้อมูลสำหรับ QR Code
-                    version: QrVersions.auto,
-                    size: 220.0,
-                  ),
+                  if (qr_pay != null && qr_pay!.startsWith("iVBORw0KGgo"))
+                    Image.memory(
+                      base64Decode(qr_pay!),
+                      width: 200,
+                      height: 200,
+                    )
+                  else
+                    const CircularProgressIndicator(),
                   const SizedBox(height: 10),
                 ],
               ),
             ),
             actions: [
               ElevatedButton(
-                onPressed: () async {
-                  final ImagePicker _picker = ImagePicker();
-                  final XFile? image =
-                      await _picker.pickImage(source: ImageSource.gallery);
-                  if (image != null) {
-                    await uploadImage(File(image.path)); // อัปโหลดรูปภาพ
-                    setState(() {
-                      isImageUploaded = true; // อัปเดตสถานะเป็นรูปถูกอัปโหลด
-                    });
-                  }
-                },
+                onPressed: isImageUploaded
+                    ? null // ถ้าอัปโหลดแล้ว ปุ่มจะปิดการทำงาน
+                    : () async {
+                        final ImagePicker _picker = ImagePicker();
+                        final XFile? image = await _picker.pickImage(
+                            source: ImageSource.gallery);
+                        if (image != null) {
+                          await uploadImage(File(image.path)); // อัปโหลดรูปภาพ
+                          setState(() {
+                            isImageUploaded =
+                                true; // อัปเดตสถานะเป็นรูปถูกอัปโหลด
+                          });
+                        }
+                      },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[300],
+                  backgroundColor: isImageUploaded
+                      ? Colors.grey // เปลี่ยนสีเป็นสีเทาหลังอัปโหลดรูป
+                      : Colors.blue[300],
                   minimumSize: const Size(15, 30),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                 ),
-                child: const Text(
-                  'Attach Image',
-                  style: TextStyle(fontSize: 13, color: Colors.white),
+                child: Text(
+                  isImageUploaded ? 'Image Uploaded' : 'Attach Image',
+                  style: const TextStyle(fontSize: 13, color: Colors.white),
                 ),
               ),
               TextButton(
@@ -258,7 +298,7 @@ class _CusConfirmState extends State<CusConfirm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${item['rider_id']} ',
+                      '${item['gender']} ',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
@@ -519,7 +559,11 @@ class _CusConfirmState extends State<CusConfirm> {
                                   }
                                 }
                               : () {
-                                  showQrCodeDialog();
+                                  String price = item['price'];
+                                  String promptPay = '0923198198';
+
+                                  qrCode_view(price, promptPay);
+                                  // showQrCodeDialog();
                                 },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: item['pay'] == '1' || isPaid
@@ -572,7 +616,7 @@ class _CusConfirmState extends State<CusConfirm> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    String pay = "0"; 
+                                    String pay = "0";
                                     if (item['pay'].toString() == "1" ||
                                         item['pay'] == 1) {
                                       pay = "2";

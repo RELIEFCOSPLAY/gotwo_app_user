@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/home.dart';
@@ -8,6 +9,7 @@ import 'package:gotwo_app_user/m2/join.dart';
 import 'package:gotwo_app_user/m2/login.dart';
 // ignore: unused_import
 import 'package:gotwo_app_user/m2/payment.dart';
+// ignore: unused_import
 import 'package:gotwo_app_user/m2/register.dart';
 import 'package:gotwo_app_user/m2/test.dart';
 
