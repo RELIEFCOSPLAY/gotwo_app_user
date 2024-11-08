@@ -101,7 +101,7 @@ class _JoindetailState extends State<Joindetail> {
   }
 
   final url_check_status =
-      Uri.parse('http://${Global.ip_8080}/gotwo/check_status.php');
+      Uri.parse('http://${Global.ip_80}/gotwo/check_status.php');
   Future<void> check_status(
     String check_status,
     String post_id,
