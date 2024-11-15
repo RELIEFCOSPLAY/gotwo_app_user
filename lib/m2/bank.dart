@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:gotwo_app_user/global_ip.dart';
 import 'package:gotwo_app_user/m2/login.dart';
 import 'package:gotwo_app_user/m2/register.dart';
-import 'package:gotwo_app_user/m2/test.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
@@ -67,7 +66,7 @@ class _BankAccountState extends State<BankAccount> {
   }
 
   //===============================================
-  Uri url = Uri.parse('http://${Global.ip_80}/gotwo/regis.php');
+  Uri url = Uri.parse('http://${Global.ip_8080}/gotwo/regis.php');
   Future<void> insert_Register(
     String imgProfile,
     String name,
