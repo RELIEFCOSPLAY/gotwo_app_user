@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/global_ip.dart';
+import 'package:gotwo_app_user/m2/home.dart';
 import 'package:gotwo_app_user/m2/join.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Import secure storage
@@ -50,7 +51,7 @@ class _LoginpageState extends State<Loginpage> {
 
   // ฟังก์ชันสำหรับเข้าสู่ระบบ
   Future<void> signIn() async {
-    String url = "http://${Global.ip_8080}/gotwo/login_cus.php";
+    String url = "http://${Global.ip_80}/gotwo/login.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email.text,
@@ -98,7 +99,10 @@ class _LoginpageState extends State<Loginpage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context); // ย้อนกลับไปยังหน้าก่อนหน้านี้
+            Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()), 
+      );
           },
         ),
       ),

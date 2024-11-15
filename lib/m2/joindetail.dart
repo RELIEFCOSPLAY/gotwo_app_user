@@ -34,7 +34,7 @@ class _JoindetailState extends State<Joindetail> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
+        "http://${Global.ip_80}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -66,8 +66,8 @@ class _JoindetailState extends State<Joindetail> {
     loadLoginInfo();
   }
 
-  final url =
-      Uri.parse('http://${Global.ip_8080}/gotwo/join_post_customer.php');
+   final url =
+      Uri.parse('http://${Global.ip_80}/gotwo/join_post_customer.php');
   Future<void> join_post(
     String status,
     String reason,
@@ -89,6 +89,7 @@ class _JoindetailState extends State<Joindetail> {
       "rider_id": rider_id,
     });
 
+
     if (request.statusCode == 200) {
       // ข้อมูลถูกส่งสำเร็จ
       print('Success: ${request.body}');
@@ -100,7 +101,7 @@ class _JoindetailState extends State<Joindetail> {
   }
 
   final url_check_status =
-      Uri.parse('http://${Global.ip_8080}/gotwo/check_status.php');
+      Uri.parse('http://${Global.ip_80}/gotwo/check_status.php');
   Future<void> check_status(
     String check_status,
     String post_id,

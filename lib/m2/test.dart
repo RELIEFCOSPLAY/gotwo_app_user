@@ -1,420 +1,346 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:gotwo_app_user/m2/bank.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
+// import 'dart:async';
+// import 'dart:io';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter/widgets.dart';
+// import 'package:gotwo_app_user/m2/bank.dart';
+// import 'package:image_picker/image_picker.dart';
 
-class Register extends StatefulWidget {
-  final Map<String, dynamic> data;
-  const Register({Key? key, required this.data}) : super(key: key);
+// class Register extends StatefulWidget {
+//   const Register({super.key});
 
-  @override
-  State<Register> createState() => _RegisterState();
-}
+//   @override
+//   State<Register> createState() => _RegisterState();
+// }
 
-class _RegisterState extends State<Register> {
-  Uint8List? _image;
-  late Map<String, dynamic> item;
-  final border = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(18),
-    borderSide: const BorderSide(color: Color(0xff1a1c43)),
-  );
-  String? emails;
-  String? userId;
+// class _RegisterState extends State<Register> {
+//   TextEditingController usernameController = TextEditingController();
+//   TextEditingController emaiController = TextEditingController();
+//   TextEditingController phoneController = TextEditingController();
+//   TextEditingController createPasswordController = TextEditingController();
+//   TextEditingController confirmPasswordController = TextEditingController();
 
-  final storage = const FlutterSecureStorage();
+//   static const List<String> list = <String>[
+//     'Male',
+//     'Female',
+//   ];
+//   String dropdownValue = list.first;
 
-  Future<void> loadLoginInfo() async {
-    String? savedEmail = await storage.read(key: 'email');
-    setState(() {
-      emails = savedEmail;
-    });
-    if (emails != null) {
-      fetchUserId(emails!);
-    }
-  }
+//   String? cusCardImagePath;
+//   File? cus_card_im_path;
+//   final picker = ImagePicker();
+//   Future cus_getImageGallery() async {
+//     final pickedFile = await picker.pickImage(
+//       source: ImageSource.gallery,
+//       imageQuality: 80,
+//     );
 
-  Future<void> fetchUserId(String email) async {
-    final String url = "http://10.0.2.2:80/gotwo/getUserId.php"; // API URL
-    try {
-      final response = await http.post(Uri.parse(url), body: {
-        'email': email,
-      });
+//     setState(() {
+//       if (pickedFile != null) {
+//         cus_card_im_path = File(pickedFile.path);
+//         cusCardImagePath = pickedFile.path;
+//       } else {
+//         print("No Image Picked");
+//       }
+//     });
+//   }
 
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['success']) {
-          setState(() {
-            userId = data['user_id'];
-          });
-        } else {
-          print('Error: ${data['message']}');
-        }
-      } else {
-        print("Failed to fetch user ID");
-      }
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: const BoxDecoration(
+//           gradient: LinearGradient(
+//         begin: Alignment.topRight,
+//         end: Alignment.bottomLeft,
+//         colors: [
+//           Colors.white,
+//           Colors.white,
+//         ],
+//       )),
+//       child: Scaffold(
+//         backgroundColor: Colors.transparent,
+//         appBar: AppBar(
+//           backgroundColor: const Color(0xffffffff),
+//           title: Center(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.start,
+//                   children: [
+//                     Padding(
+//                       padding: const EdgeInsets.only(left: 10),
+//                       child: _backButton(),
+//                     ),
+//                     const Padding(
+//                       padding: EdgeInsets.only(left: 70),
+//                       child: Text(
+//                         "Register",
+//                         textAlign: TextAlign.center,
+//                         style: TextStyle(
+//                             fontSize: 28,
+//                             color: Color(0xff1a1c43),
+//                             fontWeight: FontWeight.bold),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ),automaticallyImplyLeading: false,
+//         ),
+//         body: _page(),
+//       ),
+//     );
+//   }
 
-  final url = Uri.parse('http://10.0.2.2:80/gotwo/regis.php');
+//   Widget _page() {
+//     return SingleChildScrollView(
+//       child: Padding(
+//         padding: const EdgeInsets.only(left: 32, right: 32, top: 16),
+//         child: Center(
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               _addPhoto(),
+//               const SizedBox(height: 20),
+//               _inputField("Username", usernameController),
+//               const SizedBox(height: 10),
+//               _inputField("Email", emaiController),
+//               const SizedBox(height: 10),
+//               _inputField("Phone number", phoneController),
+//               const SizedBox(height: 10),
+//               _dropdown(),
+//               const SizedBox(height: 10),
+//               _inputField("Create Password", createPasswordController,
+//                   isPassword: true),
+//               const SizedBox(height: 10),
+//               _inputField("Confirm Password", confirmPasswordController,
+//                   isPassword: true),
+//               const SizedBox(height: 15),
+//               _registerBtn(),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
-  // Updated update_review function
-  Future<void> update_regis(
-    String regis_customer_id,
-    // String img_profile,
-    String name,
-    String email,
-    String tel,
-    String gender,
-    String password,
-    // String img_id_card,
-    String bank,
-    String name_account,
-    String number_bank,
-    String status_customer,
-  ) async {
-    try {
-      var request = await http.post(url, body: {
-        "regis_customer_id": regis_customer_id,
-        // "img_profile": img_profile,
-        'name': name,
-        'email': email,
-        'tel': tel,
-        'gender': gender,
-        'password': password,
-        // 'img_id_card': img_id_card,
-        'bank': bank,
-        'name_account': name_account,
-        'number_bank': number_bank,
-        'status_customer': status_customer,
-      });
+//   Widget _backButton() {
+//     return GestureDetector(
+//       onTap: () {
+//         debugPrint("back");
+//       },
+//       child: const Icon(
+//         Icons.arrow_back_ios,
+//         size: 30,
+//         color: Color(0xff1a1c43),
+//       ),
+//     );
+//   }
 
-      if (request.statusCode == 200) {
-        // Data sent successfully
-        print('Success: ${request.body}');
-        print('Customer ID: $regis_customer_id');
-      } else {
-        // There was a problem sending data
-        print('Error: ${request.statusCode}, Body: ${request.body}');
-      }
-    } catch (e) {
-      print('Error: $e');
-    }
-  }
+//   Widget _addPhoto() {
+//     return Column(
+//       children: [
+//         ElevatedButton(
+//           style: ElevatedButton.styleFrom(
+//             backgroundColor: const Color(0xffffffff),
+//             elevation: 0.0,
+//             shadowColor: Colors.transparent,
+//           ),
+//           onPressed: () {
+//             cus_getImageGallery(); // เรียกใช้งานฟังก์ชันเพื่อเลือกรูปภาพ
+//           },
+//           child: Container(
+//             width: 70, // ตั้งขนาดของ Container
+//             height: 70, // ตั้งขนาดของ Container
+//             decoration: BoxDecoration(
+//               color: const Color(0xff1a1c43),
+//               shape: BoxShape.circle,
+//               border: Border.all(
+//                 color: const Color(0xff1a1c43),
+//                 width: 3,
+//               ),
+//             ),
+//             child: cus_card_im_path !=
+//                     null // ตรวจสอบว่ามีรูปภาพที่เลือกหรือไม่
+//                 ? ClipOval(
+//                     // ใช้ ClipOval เพื่อทำให้รูปเป็นวงกลม
+//                     child: Image.file(
+//                       File(cusCardImagePath!),
+//                       fit: BoxFit.cover, // ปรับขนาดรูปภาพให้พอดีกับ Container
+//                       width: 70,
+//                       height: 70,
+//                     ),
+//                   )
+//                 : const Icon(
+//                     Icons.person,
+//                     color: Colors.white,
+//                     size: 25,
+//                   ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
 
-  void selectImage() async {
-    Uint8List? imageBytes = await pickImage(ImageSource.gallery);
-    if (imageBytes != null) {
-      setState(() {
-        _image = imageBytes;
-      });
-    } else {
-      debugPrint('No image selected');
-    }
-  }
+//   Widget _inputField(String hintText, TextEditingController controller,
+//       {isPassword = false}) {
+//     var border = OutlineInputBorder(
+//         borderRadius: BorderRadius.circular(30),
+//         borderSide: const BorderSide(color: Color(0xff1a1c43)));
 
-  @override
-  void initState() {
-    super.initState();
-    item = widget.data;
-    loadLoginInfo();
-  }
+//     return  ConstrainedBox(
+//     constraints: const BoxConstraints(
+//       maxHeight: 50, 
+//     ),
+//     child:TextField(
+//       style: const TextStyle(color: Color(0xff1a1c43)),
+//       controller: controller,
+//       decoration: InputDecoration(
+//         hintText: hintText,
+//         hintStyle: const TextStyle(color: Color(0xff1a1c43)),
+//         enabledBorder: border,
+//         focusedBorder: border,
+//       ),
+//       obscureText: isPassword,)
+//     );
+//   }
 
-  // Dropdown items
-  List<String> _items = ['Female', 'Male'];
-  String? selectedItem;
+//   Widget _dropdown() {
+//     var border = OutlineInputBorder(
+//         borderRadius: BorderRadius.circular(30),
+//         borderSide: const BorderSide(color: Color(0xff1a1c43)));
 
-  // Controllers for TextFields
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController telController = TextEditingController();
-  TextEditingController confirmPassController = TextEditingController();
-  TextEditingController name_accountController = TextEditingController();
-  TextEditingController number_bankController = TextEditingController();
+//     return 
+//      ConstrainedBox(
+//     constraints: const BoxConstraints(
+//       maxHeight: 50, 
+//     ),child:DropdownButtonFormField<String>(
+//       hint: const Text('Gender'),
+//       decoration: InputDecoration(
+//         enabledBorder: border,
+//         focusedBorder: border,
+//       ),
+//       value: dropdownValue,
+//       elevation: 16,
+//       style: const TextStyle(
+//           color: Color(0xff1a1c43), fontWeight: FontWeight.bold),
+//       borderRadius: BorderRadius.circular(30),
+//       onChanged: (String? value) {
+//         // This is called when the user selects an item.
+//         setState(() {
+//           dropdownValue = value!;
+//         });
+//       },
+//       items: list.map<DropdownMenuItem<String>>((String value) {
+//         return DropdownMenuItem<String>(
+//           value: value,
+//           child: Text(value),
+//         );
+//       }).toList(),
+//   ) );
+//   }
 
-  // Widget build
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Register",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 27,
-            color: Color(0xFF1A1C43),
-          ),
-        ),
-        backgroundColor: Colors.transparent, // กำหนดสีของ AppBar เป็นโปร่งใส
-        elevation: 0, // ไม่มีเงาใต้ AppBar
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back,
-              color: Colors.black), // ใช้ไอคอนแบ็กสีดำ
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              if (_image != null)
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: MemoryImage(_image!),
-                ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                onPressed: selectImage,
-                child: const Text('Select Image'),
-              ),
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Name',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      controller: emailController,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Email',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      controller: telController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Phone number',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        hint: const Text("Gender"),
-                        value: selectedItem,
-                        items: _items.map((String item) {
-                          return DropdownMenuItem(
-                            value: item,
-                            child: Text(item),
-                          );
-                        }).toList(),
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedItem = value;
-                          });
-                        },
-                        icon: const Icon(Icons.arrow_drop_down),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      controller: passController,
-                      obscureText: true, // ซ่อนรหัส
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Create Password',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xFF1A1C43), width: 1),
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0),
-                    child: TextField(
-                      controller: confirmPassController,
-                      obscureText: true, // ซ่อนรหัส
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'Confirm Password',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () async {
-                    String? regis_customer_id = userId;
-                    String name = nameController.text;
-                    String email = emailController.text;
-                    String tel = telController.text;
-                    String gender = selectedItem ?? '';
-                    String password = passController.text;
-                    String confirmPassword = confirmPassController.text;
-                    String bank = selectedItem ?? '';
-                    String name_account = name_accountController.text;
-                    String number_bank = number_bankController.text;
-                    // String status_customer = '1';
-                    // // ตรวจสอบรหัสผ่านและยืนยันรหัสผ่าน
-                    // if (password != confirmPassword) {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     const SnackBar(
-                    //         content: Text(
-                    //             'Password and confirm password do not match')),
-                    //   );
-                    //   return;
-                    // }
+//   Widget _registerBtn() {
+//     return ElevatedButton(
+//       onPressed: () {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(
+//             content: _snackBarnotification(),
+//             behavior: SnackBarBehavior.floating,
+//             backgroundColor: Colors.transparent,
+//             elevation: 0,
+//           ),
+//         );
+//         debugPrint("Username : ${usernameController.text}");
+//         debugPrint("Emai : ${emaiController.text}");
+//         debugPrint("Phone : ${phoneController.text}");
+//         debugPrint("Create Password : ${createPasswordController.text}");
+//         debugPrint("Confirm Password : ${confirmPasswordController.text}");
+//         debugPrint("Gender: ${dropdownValue.toLowerCase()}");
+//         debugPrint(cusCardImagePath);
 
-                    // // ตรวจสอบว่าได้เลือกรูปภาพหรือยัง
-                    // if (_image == null) {
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     const SnackBar(
-                    //         content: TeFxt('Please select an image')),
-                    //   );
-                    //   return;
-                    // }
+//        // Navigate to GotwoInformation and send data
+//         Navigator.pushAndRemoveUntil(
+//           context,
+//           MaterialPageRoute(
+//             builder: (context) => BankAccount(
+//               username: usernameController.text,
+//               email: emaiController.text,
+//               phone: phoneController.text,
+//               createPassword: createPasswordController.text,
+//               confirmPassword: confirmPasswordController.text,
+//               gender: dropdownValue.toLowerCase(),
+//               cusCardImagePath: cusCardImagePath,
+//             ),
+//           ),
+//           (Route<dynamic> route) => false,
+//         );
+//       },
+//       style: ElevatedButton.styleFrom(
+//         fixedSize: const Size(120, 34),
+//         foregroundColor: Colors.blue,
+//         backgroundColor: const Color(0xff1a1c43),
+//         shape: const StadiumBorder(),
+//         padding: const EdgeInsets.symmetric(vertical: 6),
+//       ),
+//       child: const SizedBox(
+//           width: double.infinity,
+//           child: Text(
+//             "Next",
+//             textAlign: TextAlign.center,
+//             style: TextStyle(fontSize: 20, color: Colors.white),
+//           )),
+//     );
+//   }
 
-                    update_regis(
-                      regis_customer_id!,
-                      name,
-                      email,
-                      tel,
-                      gender,
-                      password,
-                      confirmPassword,
-                      // 'img_id_card_placeholder', // Placeholder สำหรับบัตรประชาชน
-                      bank, // Placeholder สำหรับธนาคาร
-                      name_account, 
-                      number_bank, // Placeholder สำหรับชื่อบัญชี
-                      // 'number_bank_placeholder', // Placeholder สำหรับเลขบัญชี
-                     
-                    );
-                    print(regis_customer_id);
-                    print(name);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BankAccount()),
-                    );
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color(0xFF1A1C43)), // background color
-                    minimumSize: MaterialStateProperty.all(
-                        const Size(110, 35)), // Set minimum size here
-                  ),
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-Future<Uint8List?> pickImage(ImageSource source) async {
-  final ImagePicker imagePicker = ImagePicker();
-  try {
-    XFile? file = await imagePicker.pickImage(source: source);
-    if (file != null) {
-      return await file.readAsBytes();
-    }
-  } catch (e) {
-    debugPrint('Error picking image: $e');
-  }
-  return null;
-}
+//   Widget _snackBarnotification() {
+//     if (usernameController.text == "" &&
+//         emaiController.text == "" &&
+//         phoneController.text == "" &&
+//         createPasswordController.text == "" &&
+//         confirmPasswordController.text == "" &&
+//         dropdownValue == "Gender") {
+//       return Container(
+//         padding: const EdgeInsets.all(8),
+//         height: 70,
+//         decoration: BoxDecoration(
+//             color: Colors.white,
+//             borderRadius: BorderRadius.circular(20),
+//             border: Border.all(color: Colors.redAccent)),
+//         child: const Row(
+//           children: [
+//             SizedBox(
+//               width: 48,
+//             ),
+//             Expanded(
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     "Oh snap!",
+//                     style: TextStyle(
+//                       fontSize: 14,
+//                       color: Color(0xff1a1c43),
+//                     ),
+//                   ),
+//                   Text(
+//                     "Username or Password is Wrong",
+//                     style: TextStyle(
+//                       fontSize: 12,
+//                       color: Color(0xff1a1c43),
+//                     ),
+//                     maxLines: 2,
+//                     overflow: TextOverflow.ellipsis,
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       );
+//     }
+//     return Container();
+//   }
+// }
