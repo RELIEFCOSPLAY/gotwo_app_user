@@ -124,7 +124,7 @@ class _CusCancelState extends State<CusCancel> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '${item['rider_id']} ',
+                      '${item['gender']} ',
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
