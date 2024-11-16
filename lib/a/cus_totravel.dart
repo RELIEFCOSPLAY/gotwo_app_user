@@ -39,7 +39,7 @@ class _CusTotravelState extends State<CusTotravel> {
 
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://${Global.ip_80}/gotwo/getUserId_cus.php"; // API URL
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // API URL
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -62,7 +62,7 @@ class _CusTotravelState extends State<CusTotravel> {
     }
   }
 
-  final url = Uri.parse('http://${Global.ip_80}/gotwo/status_totravel.php');
+  final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_totravel.php');
 
   // Updated update_review function
   Future<void> update_review(String status_post_id, String pay, String review,

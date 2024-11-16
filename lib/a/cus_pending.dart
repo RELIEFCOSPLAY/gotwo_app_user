@@ -41,7 +41,7 @@ class _CusPendingState extends State<CusPending> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_80}/gotwo/getUserId_cus.php";
+    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -64,7 +64,7 @@ class _CusPendingState extends State<CusPending> {
     }
   }
 
-  final url = Uri.parse('http://${Global.ip_80}/gotwo/status_confirme.php');
+  final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_confirme.php');
  
   Future<void> update_cancel(
     String status_post_id,

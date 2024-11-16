@@ -71,7 +71,7 @@ class _JoinState extends State<Join> {
 
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
-    final String url = "http://${Global.ip_80}/gotwo/join.php";
+    final String url = "http://${Global.ip_8080}/gotwo/join.php";
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -89,7 +89,7 @@ class _JoinState extends State<Join> {
   }
   Future<void> fetchUserId(String email) async {
     final String url =
-        "http://${Global.ip_80}/gotwo/getUserId_cus.php"; // URL API
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id

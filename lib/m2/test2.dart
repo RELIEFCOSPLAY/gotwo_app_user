@@ -14,7 +14,7 @@ class _GotwoTotravel extends State<GotwoTotravel> {
   TextEditingController rejectComment = TextEditingController();
 
   final url =
-      Uri.parse('http://${Global.ip_80}/gotwo/update_statusRaider.php');
+      Uri.parse('http://${Global.ip_8080}/gotwo/update_statusRaider.php');
   final formKey = GlobalKey<FormState>();
   Future<void> update_status_Cancel(
     String status,
