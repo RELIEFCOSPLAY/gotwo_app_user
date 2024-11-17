@@ -13,7 +13,6 @@ import 'package:gotwo_app_user/m2/payment.dart';
 import 'package:gotwo_app_user/m2/register.dart';
 
 
-
 // ignore: unused_import
 
 // import 'package:gotwo_app_user/m/bank.dart';
