@@ -69,7 +69,7 @@ class _CusConfirmState extends State<CusConfirm> {
     }
   }
 
-  final url = Uri.parse('http://${Global.ip_80}/gotwo/status_confirme.php');
+  final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_confirme.php');
   Future<void> update_pay(
     String status_post_id,
     String pay,

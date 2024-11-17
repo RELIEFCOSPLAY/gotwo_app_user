@@ -28,7 +28,7 @@ class _SuccessTabState extends State<SuccessTab> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_80}/gotwo/getUserId_cus.php"; // URL API
+    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -54,7 +54,7 @@ class _SuccessTabState extends State<SuccessTab> {
   Future<void> fetchData() async {
     try {
       final response = await http.get(Uri.parse(
-          "http://${Global.ip_80}/gotwo/status_pending.php")); // URL API
+          "http://${Global.ip_8080}/gotwo/status_pending.php")); // URL API
 
       if (response.statusCode == 200) {
         setState(() {
