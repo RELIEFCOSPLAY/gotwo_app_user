@@ -125,7 +125,7 @@ class _LoginpageState extends State<Loginpage> {
                     color: Color(0xFF1A1C43),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
 
                 // Email textformfield
                 Padding(
@@ -203,7 +203,7 @@ class _LoginpageState extends State<Loginpage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
                 // Login button
                 Center(
