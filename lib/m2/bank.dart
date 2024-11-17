@@ -101,12 +101,19 @@ class _BankAccountState extends State<BankAccount> {
       if (response.statusCode == 200) {
         // Check for success message from PHP
         var jsonResponse = json.decode(response.body);
-        print("Insert success: $jsonResponse");
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Loginpage(),
+          ),
+          (Route<dynamic> route) => false,
+        );
+        debugPrint("Insert success: $jsonResponse");
       } else {
-        print("Failed to insert: ${response.statusCode}");
+        debugPrint("Failed to insert: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error occurred: $e");
+      debugPrint("Error occurred: $e");
     }
   }
 
@@ -191,23 +198,24 @@ class _BankAccountState extends State<BankAccount> {
     );
   }
 
-Widget _backButton() {
-  return GestureDetector(
-    onTap: () {
-      // นำผู้ใช้ไปยังหน้าที่ต้องการ
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Register()), // เปลี่ยน TargetPage เป็นหน้าที่ต้องการ
-      );
-    },
-    child: const Icon(
-      Icons.arrow_back_ios,
-      size: 30,
-      color: Color(0xff1a1c43),
-    ),
-  );
-}
-
+  Widget _backButton() {
+    return GestureDetector(
+      onTap: () {
+        // นำผู้ใช้ไปยังหน้าที่ต้องการ
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Register()), // เปลี่ยน TargetPage เป็นหน้าที่ต้องการ
+        );
+      },
+      child: const Icon(
+        Icons.arrow_back_ios,
+        size: 30,
+        color: Color(0xff1a1c43),
+      ),
+    );
+  }
 
   Widget _inputField(String hintText, TextEditingController controller,
       {isPassword = false}) {
@@ -216,51 +224,51 @@ Widget _backButton() {
       borderSide: const BorderSide(color: Color(0xff1a1c43)),
     );
 
-    
-  return SizedBox(
-    child: TextField(
-      style: const TextStyle(
-        color: Color(0xff1a1c43),
+    return SizedBox(
+      child: TextField(
+        style: const TextStyle(
+          color: Color(0xff1a1c43),
+        ),
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(color: Color(0xff1a1c43)),
+          enabledBorder: border,
+          focusedBorder: border,
+        ),
+        obscureText: isPassword,
       ),
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(color: Color(0xff1a1c43)),
-        enabledBorder: border,
-        focusedBorder: border,
-      ),
-      obscureText: isPassword,
-    ),
-  );
+    );
   }
 
-Widget _inputField2(String hintText, TextEditingController controller,
-    {isPassword = false}) {
-  var border = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(18),
-    borderSide: const BorderSide(color: Color(0xff1a1c43)),
-  );
+  Widget _inputField2(String hintText, TextEditingController controller,
+      {isPassword = false}) {
+    var border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(18),
+      borderSide: const BorderSide(color: Color(0xff1a1c43)),
+    );
 
-  return SizedBox(
-    child: TextField(
-      style: const TextStyle(
-        color: Color(0xff1a1c43),
+    return SizedBox(
+      child: TextField(
+        style: const TextStyle(
+          color: Color(0xff1a1c43),
+        ),
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(color: Color(0xff1a1c43)),
+          enabledBorder: border,
+          focusedBorder: border,
+        ),
+        obscureText: isPassword,
+        keyboardType: TextInputType.number, // กำหนดประเภทคีย์บอร์ดเป็นตัวเลข
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
+        ],
       ),
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(color: Color(0xff1a1c43)),
-        enabledBorder: border,
-        focusedBorder: border,
-      ),
-      obscureText: isPassword,
-      keyboardType: TextInputType.number, // กำหนดประเภทคีย์บอร์ดเป็นตัวเลข
-      inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly, // ยอมรับเฉพาะตัวเลข
-      ],
-    ),
-  );
-}
+    );
+  }
+
   Widget _bText() {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start, // จัดให้อยู่ชิดซ้าย
@@ -351,14 +359,6 @@ Widget _inputField2(String hintText, TextEditingController controller,
           namebankAccountController.text,
           accountNumberController.text,
           statusCustomer0,
-        );
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Loginpage(),
-          ),
-          (Route<dynamic> route) => false,
         );
       },
       style: ElevatedButton.styleFrom(
