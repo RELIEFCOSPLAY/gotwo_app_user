@@ -7,7 +7,9 @@ import 'package:gotwo_app_user/global_ip.dart';
 import 'package:gotwo_app_user/m2/login.dart';
 import 'package:gotwo_app_user/m2/register.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class BankAccount extends StatefulWidget {
   final String username;
@@ -45,24 +47,50 @@ class _BankAccountState extends State<BankAccount> {
   String dropdownValue = list.first;
 
 //==========================================================================
-  String? idCardImagePath;
-  bool isImageSelected_idcardBtn = false;
-  File? id_card_im_path;
-  final picker = ImagePicker();
-  Future id_getImageGallery() async {
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
 
-    setState(() {
-      if (pickedFile != null) {
-        id_card_im_path = File(pickedFile.path);
-        idCardImagePath = pickedFile.path;
+  bool isImageSelected_idcardBtn = false;
+  File? _image; // เก็บภาพที่เลือก
+  String? _uploadedImageUrl; // เก็บ URL รูปภาพที่อัปโหลด
+
+  Future<void> pickAndUploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      // เปลี่ยนชื่อไฟล์เป็น "GP_timestamp"
+      final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      final directory = await getTemporaryDirectory();
+      final newFileName = "GP_$timestamp${path.extension(pickedFile.path)}";
+      final newFilePath = path.join(directory.path, newFileName);
+
+      final renamedFile = await File(pickedFile.path).copy(newFilePath);
+
+      setState(() {
+        _image = renamedFile; // ใช้ไฟล์ที่เปลี่ยนชื่อ
+      });
+
+      // อัปโหลดไฟล์
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://${Global.ip_8080}/gotwo/upload_p.php'),
+      );
+      request.files
+          .add(await http.MultipartFile.fromPath('image', _image!.path));
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final res = await http.Response.fromStream(response);
+        final data = json.decode(res.body);
+
+        if (data['file'] != null) {
+          setState(() {
+            _uploadedImageUrl = data['file']; // ดึง URL ไฟล์ที่อัปโหลด
+          });
+        }
       } else {
-        print("No Image Picked");
+        print('File upload failed');
       }
-    });
+    }
   }
 
   //===============================================
@@ -326,14 +354,25 @@ class _BankAccountState extends State<BankAccount> {
   Widget _nextBtn() {
     return ElevatedButton(
       onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: _snackBarnotification(),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ),
-        );
+        // ตรวจสอบว่าข้อมูลครบถ้วนหรือไม่
+        if (_uploadedImageUrl == null ||
+            namebankAccountController.text.isEmpty ||
+            accountNumberController.text.isEmpty ||
+            dropdownValue == list.first) {
+          // แสดงข้อความแจ้งเตือน
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Please complete all fields before proceeding!",
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return; // หยุดการทำงานหากข้อมูลไม่ครบ
+        }
+
         String statusCustomer0 = "0";
         debugPrint("imgProfile: ${widget.cusCardImagePath}");
         debugPrint("Username: ${widget.username}");
@@ -341,12 +380,13 @@ class _BankAccountState extends State<BankAccount> {
         debugPrint("Phone: ${widget.phone}");
         debugPrint("Gender: ${widget.gender}");
         debugPrint("password : ${widget.createPassword}");
-        debugPrint("imgIdCard : $idCardImagePath");
+        debugPrint("imgIdCard : $_uploadedImageUrl");
         debugPrint("bank : ${dropdownValue.toString()}");
         debugPrint("nameAccount : ${namebankAccountController.text}");
         debugPrint("numberBank : ${accountNumberController.text}");
         debugPrint("statusCustumer : $statusCustomer0");
 
+        // ส่งข้อมูลไปยังฟังก์ชัน insert_Register
         insert_Register(
           widget.cusCardImagePath.toString(),
           widget.username,
@@ -354,7 +394,7 @@ class _BankAccountState extends State<BankAccount> {
           widget.phone,
           widget.gender,
           widget.createPassword,
-          idCardImagePath.toString(),
+          _uploadedImageUrl.toString(),
           dropdownValue.toString(),
           namebankAccountController.text,
           accountNumberController.text,
@@ -386,9 +426,9 @@ class _BankAccountState extends State<BankAccount> {
         children: [
           ElevatedButton(
             onPressed: () {
-              print(id_card_im_path);
-              id_getImageGallery().then((_) {
-                if (id_card_im_path != null) {
+              print(_uploadedImageUrl);
+              pickAndUploadImage().then((_) {
+                if (_uploadedImageUrl != null) {
                   setState(() {
                     isImageSelected_idcardBtn =
                         true; // เปลี่ยนสถานะเมื่อเลือกรูปภาพสำเร็จ
@@ -408,9 +448,9 @@ class _BankAccountState extends State<BankAccount> {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            id_card_im_path != null
-                                ? Image.file(
-                                    id_card_im_path!) // แสดงรูปภาพที่อัปโหลด
+                            _uploadedImageUrl != null
+                                ? Image.network(_uploadedImageUrl!,
+                                    height: 200) // แสดงรูปภาพที่อัปโหลด
                                 : const Text("No image selected"),
                           ],
                         ),
@@ -418,7 +458,7 @@ class _BankAccountState extends State<BankAccount> {
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pop();
-                              print(id_card_im_path);
+                              print(_uploadedImageUrl);
                             },
                             child: const Text(
                               "Close",

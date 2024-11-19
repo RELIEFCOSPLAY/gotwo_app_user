@@ -1,10 +1,15 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:gotwo_app_user/global_ip.dart';
 import 'package:gotwo_app_user/m2/bank.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -25,24 +30,48 @@ class _RegisterState extends State<Register> {
     'Female',
   ];
   String dropdownValue = list.first;
+  File? _image; // เก็บภาพที่เลือก
+  String? _uploadedImageUrl; // เก็บ URL รูปภาพที่อัปโหลด
 
-  String? cusCardImagePath;
-  File? cus_card_im_path;
-  final picker = ImagePicker();
-  Future cus_getImageGallery() async {
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 80,
-    );
+  Future<void> pickAndUploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    setState(() {
-      if (pickedFile != null) {
-        cus_card_im_path = File(pickedFile.path);
-        cusCardImagePath = pickedFile.path;
+    if (pickedFile != null) {
+      // เปลี่ยนชื่อไฟล์เป็น "GP_timestamp"
+      final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      final directory = await getTemporaryDirectory();
+      final newFileName = "GP_$timestamp${path.extension(pickedFile.path)}";
+      final newFilePath = path.join(directory.path, newFileName);
+
+      final renamedFile = await File(pickedFile.path).copy(newFilePath);
+
+      setState(() {
+        _image = renamedFile; // ใช้ไฟล์ที่เปลี่ยนชื่อ
+      });
+
+      // อัปโหลดไฟล์
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://${Global.ip_8080}/gotwo/upload_p.php'),
+      );
+      request.files
+          .add(await http.MultipartFile.fromPath('image', _image!.path));
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final res = await http.Response.fromStream(response);
+        final data = json.decode(res.body);
+
+        if (data['file'] != null) {
+          setState(() {
+            _uploadedImageUrl = data['file']; // ดึง URL ไฟล์ที่อัปโหลด
+          });
+        }
       } else {
-        print("No Image Picked");
+        print('File upload failed');
       }
-    });
+    }
   }
 
   @override
@@ -87,7 +116,8 @@ class _RegisterState extends State<Register> {
                 ),
               ],
             ),
-          ),automaticallyImplyLeading: false,
+          ),
+          automaticallyImplyLeading: false,
         ),
         body: _page(),
       ),
@@ -149,7 +179,7 @@ class _RegisterState extends State<Register> {
             shadowColor: Colors.transparent,
           ),
           onPressed: () {
-            cus_getImageGallery(); // เรียกใช้งานฟังก์ชันเพื่อเลือกรูปภาพ
+            pickAndUploadImage(); // เรียกใช้งานฟังก์ชันเพื่อเลือกรูปภาพ
           },
           child: Container(
             width: 70, // ตั้งขนาดของ Container
@@ -162,22 +192,19 @@ class _RegisterState extends State<Register> {
                 width: 3,
               ),
             ),
-            child: cus_card_im_path !=
-                    null // ตรวจสอบว่ามีรูปภาพที่เลือกหรือไม่
-                ? ClipOval(
-                    // ใช้ ClipOval เพื่อทำให้รูปเป็นวงกลม
-                    child: Image.file(
-                      File(cusCardImagePath!),
-                      fit: BoxFit.cover, // ปรับขนาดรูปภาพให้พอดีกับ Container
-                      width: 70,
-                      height: 70,
-                    ),
-                  )
-                : const Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: 25,
-                  ),
+            child:
+                _uploadedImageUrl != null // ตรวจสอบว่ามีรูปภาพที่เลือกหรือไม่
+                    ? ClipOval(
+                        // ใช้ ClipOval เพื่อทำให้รูปเป็นวงกลม
+                        child: _uploadedImageUrl != null
+                            ? Image.network(_uploadedImageUrl!, height: 200)
+                            : const Text('No uploaded image'),
+                      )
+                    : const Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 25,
+                      ),
           ),
         ),
       ],
@@ -190,21 +217,21 @@ class _RegisterState extends State<Register> {
         borderRadius: BorderRadius.circular(30),
         borderSide: const BorderSide(color: Color(0xff1a1c43)));
 
-    return  ConstrainedBox(
-    constraints: const BoxConstraints(
-      maxHeight: 50, 
-    ),
-    child:TextField(
-      style: const TextStyle(color: Color(0xff1a1c43)),
-      controller: controller,
-      decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(color: Color(0xff1a1c43)),
-        enabledBorder: border,
-        focusedBorder: border,
-      ),
-      obscureText: isPassword,)
-    );
+    return ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 50,
+        ),
+        child: TextField(
+          style: const TextStyle(color: Color(0xff1a1c43)),
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: const TextStyle(color: Color(0xff1a1c43)),
+            enabledBorder: border,
+            focusedBorder: border,
+          ),
+          obscureText: isPassword,
+        ));
   }
 
   Widget _dropdown() {
@@ -212,56 +239,77 @@ class _RegisterState extends State<Register> {
         borderRadius: BorderRadius.circular(30),
         borderSide: const BorderSide(color: Color(0xff1a1c43)));
 
-    return 
-     ConstrainedBox(
-    constraints: const BoxConstraints(
-      maxHeight: 50, 
-    ),child:DropdownButtonFormField<String>(
-      hint: const Text('Gender'),
-      decoration: InputDecoration(
-        enabledBorder: border,
-        focusedBorder: border,
-      ),
-      value: dropdownValue,
-      elevation: 16,
-      style: const TextStyle(
-          color: Color(0xff1a1c43), fontWeight: FontWeight.bold),
-      borderRadius: BorderRadius.circular(30),
-      onChanged: (String? value) {
-        // This is called when the user selects an item.
-        setState(() {
-          dropdownValue = value!;
-        });
-      },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-  ) );
+    return ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 50,
+        ),
+        child: DropdownButtonFormField<String>(
+          hint: const Text('Gender'),
+          decoration: InputDecoration(
+            enabledBorder: border,
+            focusedBorder: border,
+          ),
+          value: dropdownValue,
+          elevation: 16,
+          style: const TextStyle(
+              color: Color(0xff1a1c43), fontWeight: FontWeight.bold),
+          borderRadius: BorderRadius.circular(30),
+          onChanged: (String? value) {
+            // This is called when the user selects an item.
+            setState(() {
+              dropdownValue = value!;
+            });
+          },
+          items: list.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ));
   }
 
   Widget _registerBtn() {
     return ElevatedButton(
       onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: _snackBarnotification(),
-            behavior: SnackBarBehavior.floating,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ),
-        );
-        debugPrint("Username : ${usernameController.text}");
-        debugPrint("Emai : ${emaiController.text}");
-        debugPrint("Phone : ${phoneController.text}");
-        debugPrint("Create Password : ${createPasswordController.text}");
-        debugPrint("Confirm Password : ${confirmPasswordController.text}");
-        debugPrint("Gender: ${dropdownValue.toLowerCase()}");
-        debugPrint(cusCardImagePath);
+        // ตรวจสอบว่าข้อมูลครบถ้วนหรือไม่
+        if (usernameController.text.isEmpty ||
+            emaiController.text.isEmpty ||
+            phoneController.text.isEmpty ||
+            createPasswordController.text.isEmpty ||
+            confirmPasswordController.text.isEmpty ||
+            _uploadedImageUrl == null ||
+            dropdownValue == list.first) {
+          // แสดงข้อความแจ้งเตือน
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Please complete all fields before proceeding!",
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return;
+        }
 
-       // Navigate to GotwoInformation and send data
+        // ตรวจสอบว่ารหัสผ่านตรงกันหรือไม่
+        if (createPasswordController.text != confirmPasswordController.text) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                "Passwords do not match!",
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return;
+        }
+
+        // ถ้าผ่านการตรวจสอบทั้งหมด ให้ไปยังหน้าถัดไป
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
@@ -272,11 +320,18 @@ class _RegisterState extends State<Register> {
               createPassword: createPasswordController.text,
               confirmPassword: confirmPasswordController.text,
               gender: dropdownValue.toLowerCase(),
-              cusCardImagePath: cusCardImagePath,
+              cusCardImagePath: _uploadedImageUrl,
             ),
           ),
           (Route<dynamic> route) => false,
         );
+        debugPrint("Username : ${usernameController.text}");
+        debugPrint("Emai : ${emaiController.text}");
+        debugPrint("Phone : ${phoneController.text}");
+        debugPrint("Create Password : ${createPasswordController.text}");
+        debugPrint("Confirm Password : ${confirmPasswordController.text}");
+        debugPrint("Gender: ${dropdownValue.toLowerCase()}");
+        debugPrint(_uploadedImageUrl);
       },
       style: ElevatedButton.styleFrom(
         fixedSize: const Size(120, 34),
@@ -286,12 +341,13 @@ class _RegisterState extends State<Register> {
         padding: const EdgeInsets.symmetric(vertical: 6),
       ),
       child: const SizedBox(
-          width: double.infinity,
-          child: Text(
-            "Next",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20, color: Colors.white),
-          )),
+        width: double.infinity,
+        child: Text(
+          "Next",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      ),
     );
   }
 

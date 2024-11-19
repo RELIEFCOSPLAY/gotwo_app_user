@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/global_ip.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 class UploadImageScreen extends StatefulWidget {
   @override
@@ -14,40 +16,46 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   File? _image; // เก็บภาพที่เลือก
   String? _uploadedImageUrl; // เก็บ URL รูปภาพที่อัปโหลด
 
-  // ฟังก์ชันเลือกภาพจากแกลเลอรี่
-  Future<void> pickImage() async {
+  // ฟังก์ชันเลือกและอัปโหลดภาพ
+  Future<void> pickAndUploadImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
+      // เปลี่ยนชื่อไฟล์เป็น "GP_timestamp"
+      final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      final directory = await getTemporaryDirectory();
+      final newFileName = "GP_$timestamp${path.extension(pickedFile.path)}";
+      final newFilePath = path.join(directory.path, newFileName);
+
+      final renamedFile = await File(pickedFile.path).copy(newFilePath);
+
       setState(() {
-        _image = File(pickedFile.path);
+        _image = renamedFile; // ใช้ไฟล์ที่เปลี่ยนชื่อ
       });
-    }
-  }
 
-  // ฟังก์ชันอัปโหลดไฟล์ไปยัง Backend
-  Future<void> uploadImage() async {
-    if (_image == null) return;
+      // อัปโหลดไฟล์
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://${Global.ip_8080}/gotwo/upload_p.php'),
+      );
+      request.files
+          .add(await http.MultipartFile.fromPath('image', _image!.path));
 
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('http://${Global.ip_8080}/gotwo/upload_p.php'),
-    );
-    request.files.add(await http.MultipartFile.fromPath('image', _image!.path));
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final res = await http.Response.fromStream(response);
+        final data = json.decode(res.body);
 
-    var response = await request.send();
-    if (response.statusCode == 200) {
-      final res = await http.Response.fromStream(response);
-      final data = json.decode(res.body);
-
-      if (data['file'] != null) {
-        setState(() {
-          _uploadedImageUrl = data['file']; // ดึง URL ไฟล์ที่อัปโหลด
-        });
+        if (data['file'] != null) {
+          setState(() {
+            _uploadedImageUrl = data['file']; // ดึง URL ไฟล์ที่อัปโหลด
+            debugPrint(_uploadedImageUrl);
+          });
+        }
+      } else {
+        print('File upload failed');
       }
-    } else {
-      print('File upload failed');
     }
   }
 
@@ -74,12 +82,10 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
             SizedBox(height: 20),
 
             ElevatedButton(
-              onPressed: pickImage,
-              child: Text('Pick Image'),
-            ),
-            ElevatedButton(
-              onPressed: uploadImage,
-              child: Text('Upload Image'),
+              onPressed: () {
+                pickAndUploadImage();
+              },
+              child: Text('Pick and Upload Image'),
             ),
           ],
         ),
