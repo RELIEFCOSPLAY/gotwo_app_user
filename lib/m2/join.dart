@@ -20,38 +20,12 @@ class _JoinState extends State<Join> {
   List<dynamic> listData = [];
   List<dynamic> listCusId = [];
   List<dynamic> filteredList = []; // เก็บข้อมูลที่กรองแล้ว
+  List<dynamic> listlocation = [];
 
   // ตัวแปรสำหรับ DropdownButton
   String? selectedPickup; // เก็บค่าที่เลือกจาก Pickup
   String? selectedDrop; // เก็บค่าที่เลือกจาก Drop
   String? selectedOption; // ตัวเลือกเพศ
-
-  // ข้อมูลตัวเลือกสำหรับ Dropdown
-  final List<String> pickupLocations = [
-    'F1',
-    'Central',
-    'Airport',
-    'Station',
-    'Mall',
-    'Park',
-    'University',
-    'Downtown',
-    'Hotel',
-    'Restaurant'
-  ];
-
-  final List<String> dropLocations = [
-    'F1',
-    'Central',
-    'Airport',
-    'Station',
-    'Mall',
-    'Park',
-    'University',
-    'Downtown',
-    'Hotel',
-    'Restaurant'
-  ];
 
   final List<String> selectOptions = ['male', 'female'];
 
@@ -69,6 +43,23 @@ class _JoinState extends State<Join> {
     }
   }
 
+  Future<void> fetchLocation() async {
+    final String url = "http://${Global.ip_8080}/gotwo/get_location.php";
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          listlocation = json.decode(response.body); // แปลง JSON เป็น List
+        });
+      } else {
+        print("Failed to load data");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
   // ฟังก์ชันดึงข้อมูลจากเซิร์ฟเวอร์
   Future<void> fetchData() async {
     final String url = "http://${Global.ip_8080}/gotwo/join.php";
@@ -78,7 +69,12 @@ class _JoinState extends State<Join> {
       if (response.statusCode == 200) {
         setState(() {
           listData = json.decode(response.body); // แปลง JSON เป็น List
-          filteredList = listData;
+          // จัดเรียงข้อมูลตามวันที่ที่ใหม่ที่สุด
+          listData.sort((a, b) {
+            return DateTime.parse(b['date'])
+                .compareTo(DateTime.parse(a['date']));
+          });
+          filteredList = listData; // กำหนดค่าเริ่มต้น
         });
       } else {
         print("Failed to load data");
@@ -87,6 +83,7 @@ class _JoinState extends State<Join> {
       print("Error: $e");
     }
   }
+
   Future<void> fetchUserId(String email) async {
     final String url =
         "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
@@ -94,7 +91,6 @@ class _JoinState extends State<Join> {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
       });
-
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -117,6 +113,7 @@ class _JoinState extends State<Join> {
   void initState() {
     super.initState();
     fetchData(); // ดึงข้อมูลเมื่อเริ่มแอป
+    fetchLocation();
     loadLoginInfo();
   }
 
@@ -135,6 +132,11 @@ class _JoinState extends State<Join> {
         return matchesPickup && matchesDrop && matchesGender;
       }).toList();
 
+      // จัดเรียง filteredList ตามวันที่ที่ใหม่ที่สุด
+      filteredList.sort((a, b) {
+        return DateTime.parse(b['date']).compareTo(DateTime.parse(a['date']));
+      });
+
       // แสดงข้อความแจ้งเตือนเมื่อไม่พบข้อมูล
       if (filteredList.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -142,6 +144,62 @@ class _JoinState extends State<Join> {
         );
       }
     });
+  }
+
+  Widget _genderFilterButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _genderButton('All', Icons.all_inclusive, null), // ปุ่มสำหรับ "All"
+          _genderButton('Male', Icons.male, 'male'), // ปุ่มสำหรับ "Male"
+          _genderButton(
+              'Female', Icons.female, 'female'), // ปุ่มสำหรับ "Female"
+        ],
+      ),
+    );
+  }
+
+// ฟังก์ชันสำหรับสร้างปุ่มแต่ละเพศ
+  Widget _genderButton(String label, IconData icon, String? genderValue) {
+    // กำหนดสีเฉพาะสำหรับ Male และ Female
+    Color? iconColor = genderValue == 'male'
+        ? Colors.blue // สีฟ้าสำหรับ Male
+        : genderValue == 'female'
+            ? Colors.pink // สีชมพูสำหรับ Female
+            : Colors.green; // สีเทาสำหรับ All หรือค่าเริ่มต้น
+
+    return ElevatedButton.icon(
+      onPressed: () {
+        setState(() {
+          selectedOption = genderValue; // ตั้งค่าเพศที่เลือก
+          filterData(); // เรียกฟังก์ชันกรองข้อมูล
+        });
+      },
+      icon: Icon(
+        icon,
+        color: selectedOption == genderValue
+            ? iconColor
+            : Colors.grey, // เปลี่ยนสีตามเงื่อนไข
+      ),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: selectedOption == genderValue ? Colors.white : Colors.grey,
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: selectedOption == genderValue
+            ? const Color(0xFF1A1C43) // สีเข้มเมื่อเลือก
+            : Colors.white, // สีขาวเมื่อไม่ได้เลือก
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: const BorderSide(color: Color(0xFF1A1C43)),
+        ),
+        elevation: 1,
+      ),
+    );
   }
 
   @override
@@ -177,6 +235,9 @@ class _JoinState extends State<Join> {
       const SizedBox(height: 5),
       _dropdown_p(), // Dropdown สำหรับการเลือก Pickup และ Drop
       const SizedBox(height: 8),
+      // แถวฟิลเตอร์เพศ
+      _genderFilterButtons(),
+      const SizedBox(height: 8),
       Expanded(
         child: filteredList.isEmpty
             ? const Center(
@@ -188,7 +249,6 @@ class _JoinState extends State<Join> {
                 itemCount: filteredList.length,
                 itemBuilder: (context, index) {
                   final item = filteredList[index];
-
                   if (item['check_status'] == '0' ||
                       item['check_status'] == 0) {
                     return Padding(
@@ -304,7 +364,7 @@ class _JoinState extends State<Join> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center, // Center vertically
         children: [
-          // Dropdown for Pickup
+          // Dropdown for Pickup and Drop
           Padding(
             padding: const EdgeInsets.only(left: 20, right: 20),
             child: Row(
@@ -316,7 +376,9 @@ class _JoinState extends State<Join> {
                       popupProps: PopupProps.dialog(
                         showSearchBox: true,
                       ),
-                      items: pickupLocations,
+                      items: listlocation
+                          .map((location) => location['LocationList'] as String)
+                          .toList(),
                       onChanged: (value) {
                         setState(() {
                           selectedPickup = value;
@@ -334,8 +396,7 @@ class _JoinState extends State<Join> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                    width: 10), // Add some space between the dropdowns
+                const SizedBox(width: 10), // Add space between dropdowns
                 Expanded(
                   child: Container(
                     height: 50,
@@ -343,7 +404,9 @@ class _JoinState extends State<Join> {
                       popupProps: PopupProps.dialog(
                         showSearchBox: true,
                       ),
-                      items: dropLocations,
+                      items: listlocation
+                          .map((location) => location['LocationList'] as String)
+                          .toList(),
                       onChanged: (value) {
                         setState(() {
                           selectedDrop = value;
@@ -365,14 +428,12 @@ class _JoinState extends State<Join> {
             ),
           ),
           const SizedBox(height: 10),
-          // ปุ่มค้นหา
+          // Search Button
           Container(
-            margin:
-                const EdgeInsets.only(left: 110, right: 110), // กำหนด padding
+            margin: const EdgeInsets.only(left: 110, right: 110),
             decoration: BoxDecoration(
-              color: const Color(0xFF1A1C43), // สีพื้นหลัง
-              borderRadius:
-                  BorderRadius.circular(20), // ทำให้มุมของ container โค้ง
+              color: const Color(0xFF1A1C43),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -380,7 +441,7 @@ class _JoinState extends State<Join> {
                 TextButton(
                   onPressed: () {
                     if (selectedPickup != null && selectedDrop != null) {
-                      filterData(); // กรองข้อมูลใน listData
+                      filterData(); // Filter the data
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -404,62 +465,15 @@ class _JoinState extends State<Join> {
                 IconButton(
                   onPressed: () {
                     setState(() {
-                      selectedPickup = null; // รีเซ็ต Pickup
-                      selectedDrop = null; // รีเซ็ต Drop
-                      selectedOption = null; // รีเซ็ตเพศ
-                      filteredList = listData; // แสดงข้อมูลทั้งหมดอีกครั้ง
+                      selectedPickup = null; // Reset Pickup
+                      selectedDrop = null; // Reset Drop
+                      selectedOption = null; // Reset Gender
+                      filteredList = listData; // Reset filtered list
                     });
                   },
-                  icon: const Icon(Icons.refresh), // ใช้ไอคอนแทนข้อความ
-                  color: Colors.red, // สีของไอคอน
-                  tooltip: 'Reset', // ข้อความแสดงเมื่อ hover หรือกดปุ่มค้างไว้
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 8,
-          ),
-          // Dropdown สำหรับการเลือกเพศ
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  width: 110,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Color(0xFF1A1C43), // สีของเส้นขอบ
-                      width: 1, // ความหนาของเส้นขอบ
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: DropdownButton<String>(
-                      isExpanded: true,
-                      value:
-                          selectedOption, // Set the value to the current selected option
-                      hint: const Text('Gender'), // Placeholder text
-                      items: selectOptions.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedOption =
-                              newValue; // Update selected value for the Select dropdown
-                          filterData(); // เรียกใช้ฟังก์ชันกรองข้อมูลเมื่อเลือกเพศ
-                        });
-                      },
-                      underline: Container(), // Hide underline
-                    ),
-                  ),
+                  icon: const Icon(Icons.refresh),
+                  color: Colors.red,
+                  tooltip: 'Reset',
                 ),
               ],
             ),
