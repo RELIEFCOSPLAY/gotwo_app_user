@@ -28,7 +28,8 @@ class _SuccessTabState extends State<SuccessTab> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
+    final String url =
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -59,6 +60,12 @@ class _SuccessTabState extends State<SuccessTab> {
       if (response.statusCode == 200) {
         setState(() {
           succData = json.decode(response.body);
+          succData.sort((a, b) {
+            // รวม date และ time เพื่อเปรียบเทียบ
+            DateTime dateTimeA = DateTime.parse('${a['date']} ${a['time']}');
+            DateTime dateTimeB = DateTime.parse('${b['date']} ${b['time']}');
+            return dateTimeB.compareTo(dateTimeA);
+          });
         });
       } else {
         print("Failed to load data");

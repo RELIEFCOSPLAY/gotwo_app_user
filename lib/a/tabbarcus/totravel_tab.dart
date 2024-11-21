@@ -31,7 +31,7 @@ class _TotravelTabState extends State<TotravelTab> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; 
+    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php";
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email,
@@ -56,12 +56,18 @@ class _TotravelTabState extends State<TotravelTab> {
 
   Future<void> fetchData() async {
     try {
-      final response = await http.get(Uri.parse(
-          "http://${Global.ip_8080}/gotwo/status_pending.php")); 
+      final response = await http
+          .get(Uri.parse("http://${Global.ip_8080}/gotwo/status_pending.php"));
 
       if (response.statusCode == 200) {
         setState(() {
           testData = json.decode(response.body);
+          testData.sort((a, b) {
+            // รวม date และ time เพื่อเปรียบเทียบ
+            DateTime dateTimeA = DateTime.parse('${a['date']} ${a['time']}');
+            DateTime dateTimeB = DateTime.parse('${b['date']} ${b['time']}');
+            return dateTimeB.compareTo(dateTimeA);
+          });
         });
       } else {
         print("Failed to load data");
@@ -187,33 +193,43 @@ class _TotravelTabState extends State<TotravelTab> {
                                       fontSize: 12, color: Color(0xff1a1c43)),
                                 ),
                                 Text(
-                  item['pay'] == '1' || item['pay'] == 1
-                      ? "Paid"
-                      : item['pay'] == '0' || item['pay'] == 0
-                          ? "Unpaid"
-                          : item['pay'] == '2' || item['pay'] == 2
-                              ? "Refund"
-                              : item['pay'] == '3' || item['pay'] == 3
-                                  ? "Pending"
-                                  : item['pay'] == '4' || item['pay'] == 4
-                                      ? "Completed"
-                                      : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: item['pay'] == '1' || item['pay'] == 1
-                        ? Colors.green // Green for "Paid"
-                        : item['pay'] == '0' || item['pay'] == 0
-                            ? Colors.red // Red for "Unpaid"
-                            : item['pay'] == '2' || item['pay'] == 2
-                                ? Colors.orange // Orange for "Refund"
-                                : item['pay'] == '3' || item['pay'] == 3
-                                    ? Colors.blue // Blue for "Pending"
-                                    : item['pay'] == '4' || item['pay'] == 4
-                                        ? Colors
-                                            .green[300] // Grey for "Completed"
-                                        : Colors.black, // Black for "Unknown"
-                  ),
-                ),
+                                  item['pay'] == '1' || item['pay'] == 1
+                                      ? "Paid"
+                                      : item['pay'] == '0' || item['pay'] == 0
+                                          ? "Unpaid"
+                                          : item['pay'] == '2' ||
+                                                  item['pay'] == 2
+                                              ? "Refund"
+                                              : item['pay'] == '3' ||
+                                                      item['pay'] == 3
+                                                  ? "Pending"
+                                                  : item['pay'] == '4' ||
+                                                          item['pay'] == 4
+                                                      ? "Completed"
+                                                      : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: item['pay'] == '1' ||
+                                            item['pay'] == 1
+                                        ? Colors.green // Green for "Paid"
+                                        : item['pay'] == '0' || item['pay'] == 0
+                                            ? Colors.red // Red for "Unpaid"
+                                            : item['pay'] == '2' ||
+                                                    item['pay'] == 2
+                                                ? Colors
+                                                    .orange // Orange for "Refund"
+                                                : item['pay'] == '3' ||
+                                                        item['pay'] == 3
+                                                    ? Colors
+                                                        .blue // Blue for "Pending"
+                                                    : item['pay'] == '4' ||
+                                                            item['pay'] == 4
+                                                        ? Colors.green[
+                                                            300] // Grey for "Completed"
+                                                        : Colors
+                                                            .black, // Black for "Unknown"
+                                  ),
+                                ),
                               ],
                             ),
                           ),

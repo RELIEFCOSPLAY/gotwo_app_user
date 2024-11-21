@@ -183,20 +183,27 @@ class _CusTotravelState extends State<CusTotravel> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Icon(
+                      item['gender'] == 'male'
+                          ? Icons.male // Icon for Male
+                          : item['gender'] == 'female'
+                              ? Icons.female // Icon for Female
+                              : Icons
+                                  .help_outline, // Default icon if gender is unknown or other
+                      color: item['gender'] == 'male'
+                          ? Colors.blue
+                          : item['gender'] == 'female'
+                              ? Colors.pink
+                              : Colors.grey,
+                    ),
+                    const SizedBox(width: 5), // Space between icon and text
                     Text(
-                      '${item['gender']} ',
+                      "${item['gender'] ?? 'Unknown'}",
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
-                    ),
-                    Icon(
-                      (item['gender']?.toLowerCase() == 'male')
-                          ? Icons.male
-                          : Icons.female,
-                      color: const Color(0xFF1A1C43),
-                      size: 15,
                     ),
                   ],
                 ),

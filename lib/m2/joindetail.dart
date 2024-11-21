@@ -66,7 +66,7 @@ class _JoindetailState extends State<Joindetail> {
     loadLoginInfo();
   }
 
-   final url =
+  final url =
       Uri.parse('http://${Global.ip_8080}/gotwo/join_post_customer.php');
   Future<void> join_post(
     String status,
@@ -88,7 +88,6 @@ class _JoindetailState extends State<Joindetail> {
       "comment": comment,
       "rider_id": rider_id,
     });
-
 
     if (request.statusCode == 200) {
       // ข้อมูลถูกส่งสำเร็จ
@@ -181,25 +180,32 @@ class _JoindetailState extends State<Joindetail> {
                       fontSize: 20,
                     ),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        item!['rider_gender'] == 'Male'
-                            ? Icons.male
-                            : Icons.female,
-                        color: const Color(0xFF1A1C43),
-                        size: 15,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        '${item!['rider_gender']} ',
-                        style: const TextStyle(
-                          color: Color(0xFF1A1C43),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
+                      Row(
+                        children: [
+                          Icon(
+                            item!['rider_gender'] == 'male'
+                                ? Icons.male // Icon for Male
+                                : item!['rider_gender'] == 'female'
+                                    ? Icons.female // Icon for Female
+                                    : Icons
+                                        .help_outline, // Default icon if gender is unknown or other
+                            color: item!['rider_gender'] == 'male'
+                                ? Colors.blue
+                                : item!['rider_gender'] == 'female'
+                                    ? Colors.pink
+                                    : Colors.grey,
+                          ),
+                          const SizedBox(
+                              width: 5), // Space between icon and text
+                          Text(
+                            "${item!['rider_gender'] ?? 'Unknown'}",
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -387,37 +393,7 @@ class _JoindetailState extends State<Joindetail> {
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      String status = '1';
-                      String reason = 'wait to long';
-                      String post_id = item!['post_id'];
-                      String? customer_id = userId;
-                      String pay = '0';
-                      String review = '0';
-                      String comment = 'cancel';
-                      String rider_id = item!['rider_id'];
-                      String checkstatus = '1';
-                      join_post(
-                        status,
-                        reason,
-                        post_id,
-                        customer_id!,
-                        pay,
-                        review,
-                        comment,
-                        rider_id,
-                      );
-                      check_status(
-                        checkstatus,
-                        post_id,
-                      );
-
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Join(),
-                        ),
-                        (Route<dynamic> route) => false,
-                      );
+                      _showDialog();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
@@ -442,6 +418,80 @@ class _JoindetailState extends State<Joindetail> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> _showDialog() async {
+    final item = widget.item;
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Join'),
+          content: const Text('Are you sure to join?'),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    String status = '1';
+                    String reason = 'wait to long';
+                    String post_id = item['post_id'];
+                    String? customer_id = userId;
+                    String pay = '0';
+                    String review = '0';
+                    String comment = 'cancel';
+                    String rider_id = item['rider_id'];
+                    String checkstatus = '1';
+                    join_post(
+                      status,
+                      reason,
+                      post_id,
+                      customer_id!,
+                      pay,
+                      review,
+                      comment,
+                      rider_id,
+                    );
+                    check_status(
+                      checkstatus,
+                      post_id,
+                    );
+
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Join(),
+                      ),
+                      (Route<dynamic> route) => false,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0),
+                      )),
+                  child:
+                      const Text("Yes", style: TextStyle(color: Colors.white)),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0),
+                      )),
+                  child:
+                      const Text("back", style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

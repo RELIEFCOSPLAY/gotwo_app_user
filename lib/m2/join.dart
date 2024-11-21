@@ -221,7 +221,7 @@ class _JoinState extends State<Join> {
   // ฟังก์ชันสร้างหน้าจอหลัก
   Widget _buildScreen() {
     return Column(children: [
-      const SizedBox(height: 30),
+      const SizedBox(height: 5),
       const Center(
         child: Text(
           'Join',
@@ -234,10 +234,10 @@ class _JoinState extends State<Join> {
       ),
       const SizedBox(height: 5),
       _dropdown_p(), // Dropdown สำหรับการเลือก Pickup และ Drop
-      const SizedBox(height: 8),
+      const SizedBox(height: 5),
       // แถวฟิลเตอร์เพศ
       _genderFilterButtons(),
-      const SizedBox(height: 8),
+      const SizedBox(height: 5),
       Expanded(
         child: filteredList.isEmpty
             ? const Center(
@@ -427,10 +427,12 @@ class _JoinState extends State<Join> {
               ],
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           // Search Button
           Container(
             margin: const EdgeInsets.only(left: 110, right: 110),
+            height: 40,
+            width: 300,
             decoration: BoxDecoration(
               color: const Color(0xFF1A1C43),
               borderRadius: BorderRadius.circular(20),

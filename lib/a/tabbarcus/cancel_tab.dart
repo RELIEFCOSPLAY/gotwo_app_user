@@ -29,7 +29,8 @@ class _CancelTabState extends State<CancelTab> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
+    final String url =
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -60,6 +61,12 @@ class _CancelTabState extends State<CancelTab> {
       if (response.statusCode == 200) {
         setState(() {
           cancelData = json.decode(response.body);
+          cancelData.sort((a, b) {
+            // รวม date และ time เพื่อเปรียบเทียบ
+            DateTime dateTimeA = DateTime.parse('${a['date']} ${a['time']}');
+            DateTime dateTimeB = DateTime.parse('${b['date']} ${b['time']}');
+            return dateTimeB.compareTo(dateTimeA);
+          });
         });
       } else {
         print("Failed to load data");
@@ -189,7 +196,7 @@ class _CancelTabState extends State<CancelTab> {
                                                   ? "Pending"
                                                   : item['pay'] == '4' ||
                                                           item['pay'] == 4
-                                                      ? "Completed"
+                                                      ? "Cencel"
                                                       : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
                                   style: TextStyle(
                                     fontSize: 12,
@@ -197,7 +204,7 @@ class _CancelTabState extends State<CancelTab> {
                                             item['pay'] == 1
                                         ? Colors.green // Green for "Paid"
                                         : item['pay'] == '0' || item['pay'] == 0
-                                            ? Colors.red // Red for "Unpaid"
+                                            ? Colors.grey // Red for "Unpaid"
                                             : item['pay'] == '2' ||
                                                     item['pay'] == 2
                                                 ? Colors
@@ -208,8 +215,8 @@ class _CancelTabState extends State<CancelTab> {
                                                         .blue // Blue for "Pending"
                                                     : item['pay'] == '4' ||
                                                             item['pay'] == 4
-                                                        ? Colors.green[
-                                                            300] // Grey for "Completed"
+                                                        ? Colors
+                                                            .red // Grey for "Completed"
                                                         : Colors
                                                             .black, // Black for "Unknown"
                                   ),

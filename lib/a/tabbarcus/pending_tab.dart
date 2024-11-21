@@ -60,6 +60,12 @@ class _ConfirmTabState extends State<PendingTab> {
       if (response.statusCode == 200) {
         setState(() {
           travelData = json.decode(response.body);
+          travelData.sort((a, b) {
+            // รวม date และ time เพื่อเปรียบเทียบ
+            DateTime dateTimeA = DateTime.parse('${a['date']} ${a['time']}');
+            DateTime dateTimeB = DateTime.parse('${b['date']} ${b['time']}');
+            return dateTimeB.compareTo(dateTimeA);
+          });
         });
       } else {
         print("Failed to load data");

@@ -60,6 +60,12 @@ class _ConfirmTabState extends State<ConfirmTab> {
       if (response.statusCode == 200) {
         setState(() {
           travelData = json.decode(response.body);
+          travelData.sort((a, b) {
+            // รวม date และ time เพื่อเปรียบเทียบ
+            DateTime dateTimeA = DateTime.parse('${a['date']} ${a['time']}');
+            DateTime dateTimeB = DateTime.parse('${b['date']} ${b['time']}');
+            return dateTimeB.compareTo(dateTimeA);
+          });
         });
       } else {
         print("Failed to load data");
@@ -120,7 +126,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
                               'pick_up': item['pick_up'],
                               'comment_pick': item['comment_pick'],
                               'at_drop': item['at_drop'],
-                               'rider_tel': item['rider_tel'],
+                              'rider_tel': item['rider_tel'],
                               'comment_drop': item['comment_drop'],
                               'status_helmet': item['status_helmet'],
                               'pay': item['pay'],

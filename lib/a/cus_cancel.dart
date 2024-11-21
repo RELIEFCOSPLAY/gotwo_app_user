@@ -35,7 +35,8 @@ class _CusCancelState extends State<CusCancel> {
   }
 
   Future<void> fetchUserId(String email) async {
-    final String url = "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
+    final String url =
+        "http://${Global.ip_8080}/gotwo/getUserId_cus.php"; // URL API
     try {
       final response = await http.post(Uri.parse(url), body: {
         'email': email, // ส่ง email เพื่อค้นหา user id
@@ -123,20 +124,27 @@ class _CusCancelState extends State<CusCancel> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Icon(
+                      item['gender'] == 'male'
+                          ? Icons.male // Icon for Male
+                          : item['gender'] == 'female'
+                              ? Icons.female // Icon for Female
+                              : Icons
+                                  .help_outline, // Default icon if gender is unknown or other
+                      color: item['gender'] == 'male'
+                          ? Colors.blue
+                          : item['gender'] == 'female'
+                              ? Colors.pink
+                              : Colors.grey,
+                    ),
+                    const SizedBox(width: 5), // Space between icon and text
                     Text(
-                      '${item['gender']} ',
+                      "${item['gender'] ?? 'Unknown'}",
                       style: const TextStyle(
                         color: Color(0xFF1A1C43),
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
-                    ),
-                    Icon(
-                      (item['gender']?.toLowerCase() == 'male')
-                          ? Icons.male
-                          : Icons.female,
-                      color: const Color(0xFF1A1C43),
-                      size: 15,
                     ),
                   ],
                 ),
@@ -214,23 +222,21 @@ class _CusCancelState extends State<CusCancel> {
                                   : item['pay'] == '3' || item['pay'] == 3
                                       ? "Pending"
                                       : item['pay'] == '4' || item['pay'] == 4
-                                          ? "Completed"
+                                          ? "Cencel"
                                           : "Unknown",
                       style: TextStyle(
                         fontSize: 15,
                         color: item['pay'] == '1' || item['pay'] == 1
-                            ? Colors.orange 
+                            ? Colors.orange
                             : item['pay'] == '0' || item['pay'] == 0
-                                ? Colors.red 
+                                ? Colors.grey
                                 : item['pay'] == '2' || item['pay'] == 2
-                                    ? Colors.orange 
+                                    ? Colors.orange
                                     : item['pay'] == '3' || item['pay'] == 3
-                                        ? Colors.blue 
+                                        ? Colors.blue
                                         : item['pay'] == '4' || item['pay'] == 4
-                                            ? Colors
-                                                .grey 
-                                            : Colors
-                                                .black, 
+                                            ? Colors.red
+                                            : Colors.black,
                       ),
                     )
                   ],
