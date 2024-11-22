@@ -43,8 +43,26 @@ class _BankAccountState extends State<BankAccount> {
     'Bank 1',
     'Bank 2',
   ];
-
   String dropdownValue = list.first;
+
+  List<dynamic> listlBank = [];
+  Future<void> fetchBank() async {
+    final String url = "http://${Global.ip_8080}/gotwo/get_bank.php";
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        setState(() {
+          listlBank = json.decode(response.body); // แปลง JSON เป็น List
+          // ไม่เปลี่ยนค่า dropdownPickup และ dropdownDrop ที่ตั้งค่าเป็น "Select Location"
+        });
+      } else {
+        print("Failed to load data");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 
 //==========================================================================
 
@@ -143,6 +161,12 @@ class _BankAccountState extends State<BankAccount> {
     } catch (e) {
       debugPrint("Error occurred: $e");
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBank();
   }
 
   @override
@@ -320,16 +344,16 @@ class _BankAccountState extends State<BankAccount> {
 
   Widget _dropdown() {
     var border = OutlineInputBorder(
-        borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(color: Color(0xff1a1c43)));
+      borderRadius: BorderRadius.circular(18),
+      borderSide: const BorderSide(color: Color(0xff1a1c43)),
+    );
 
     return DropdownButtonFormField<String>(
-      hint: const Text('Gender'),
       decoration: InputDecoration(
         enabledBorder: border,
         focusedBorder: border,
       ),
-      value: dropdownValue,
+      value: dropdownValue, // ค่าเริ่มต้นของ Dropdown
       elevation: 16,
       style: const TextStyle(
         color: Color(0xff1a1c43),
@@ -337,17 +361,26 @@ class _BankAccountState extends State<BankAccount> {
       ),
       borderRadius: BorderRadius.circular(18),
       onChanged: (String? value) {
-        // This is called when the user selects an item.
         setState(() {
           dropdownValue = value!;
         });
       },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+      items: [
+        const DropdownMenuItem<String>(
+          value: 'Bank Select',
+          child: Text(
+            'Bank Select',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ),
+        ...listlBank.map<DropdownMenuItem<String>>((dynamic bank) {
+          return DropdownMenuItem<String>(
+            value: bank[
+                'bank_List'], // สมมติว่า `bank_List` คือชื่อธนาคารในข้อมูลที่ดึงมา
+            child: Text(bank['bank_List']),
+          );
+        }).toList(),
+      ],
     );
   }
 

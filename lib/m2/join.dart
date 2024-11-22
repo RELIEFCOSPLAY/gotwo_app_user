@@ -71,8 +71,10 @@ class _JoinState extends State<Join> {
           listData = json.decode(response.body); // แปลง JSON เป็น List
           // จัดเรียงข้อมูลตามวันที่ที่ใหม่ที่สุด
           listData.sort((a, b) {
-            return DateTime.parse(b['date'])
-                .compareTo(DateTime.parse(a['date']));
+            // รวม date และ time เพื่อเปรียบเทียบ
+            DateTime dateTimeA = DateTime.parse('${a['date']} ${a['time']}');
+            DateTime dateTimeB = DateTime.parse('${b['date']} ${b['time']}');
+            return dateTimeB.compareTo(dateTimeA);
           });
           filteredList = listData; // กำหนดค่าเริ่มต้น
         });
