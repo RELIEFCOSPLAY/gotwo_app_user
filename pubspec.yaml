@@ -46,6 +46,7 @@ dependencies:
   dio: ^5.7.0
   fluttertoast: ^8.2.8
   path: ^1.9.0
+  crypto: ^3.0.0
   
 
 dev_dependencies:
