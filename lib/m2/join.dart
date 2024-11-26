@@ -283,9 +283,22 @@ class _JoinState extends State<Join> {
                             Flexible(
                               child: Row(
                                 children: [
-                                  Image.asset(
-                                    'assets/images/profile.png',
-                                    height: 40,
+                                  CircleAvatar(
+                                    minRadius: 25,
+                                    maxRadius: 40,
+                                    backgroundColor: Colors.white,
+                                    child: item['img_profile'] != null
+                                        ? ClipOval(
+                                            // ใช้ ClipOval เพื่อครอบภาพให้เป็นวงกลม
+                                            child: Image.network(
+                                              item['img_profile']!,
+                                              fit: BoxFit
+                                                  .cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
+                                              width: 70, // กำหนดขนาดความกว้าง
+                                              height: 70, // กำหนดขนาดความสูง
+                                            ),
+                                          )
+                                        : const Icon(Icons.person),
                                   ),
                                   const SizedBox(width: 10),
                                   Flexible(

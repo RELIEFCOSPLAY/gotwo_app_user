@@ -159,17 +159,21 @@ class _JoindetailState extends State<Joindetail> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 5),
-                  Image.network(
-                    item!['image'] ??
-                        'https://your-default-image-url.com/default.png', // ใช้ Image.network สำหรับโหลดภาพจาก URL
-                    width: 50,
-                    height: 50,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Image.asset('assets/images/profile.png',
-                          width: 50,
-                          height:
-                              50); // ใช้ภาพเริ่มต้นในกรณีที่ไม่สามารถโหลดภาพได้
-                    },
+                  CircleAvatar(
+                    minRadius: 25,
+                    maxRadius: 40,
+                    backgroundColor: Colors.white,
+                    child: item!['img_profile'] != null
+                        ? ClipOval(
+                            // ใช้ ClipOval เพื่อครอบภาพให้เป็นวงกลม
+                            child: Image.network(
+                              item!['img_profile'],
+                              fit: BoxFit.cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
+                              width: 80, // กำหนดขนาดความกว้าง
+                              height: 80, // กำหนดขนาดความสูง
+                            ),
+                          )
+                        : const Icon(Icons.person),
                   ),
                   const SizedBox(height: 5),
                   Text(
