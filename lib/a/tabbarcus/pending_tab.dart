@@ -16,7 +16,7 @@ class _ConfirmTabState extends State<PendingTab> {
 
   final storage = const FlutterSecureStorage();
   String? emails;
-  String? userId; 
+  String? userId;
   Future<void> loadLoginInfo() async {
     String? savedEmail = await storage.read(key: 'email');
     setState(() {
@@ -126,8 +126,9 @@ class _ConfirmTabState extends State<PendingTab> {
                         MaterialPageRoute(
                           builder: (context) => CusPending(
                             data: {
-                               'status_post_id': item['status_post_id'],
+                              'status_post_id': item['status_post_id'],
                               'rider_id': item['rider_id'],
+                              'img_profile': item['img_profile'],
                               'gender': item['rider_gender'],
                               'date': item['date'],
                               'price': item['price'],
@@ -137,9 +138,9 @@ class _ConfirmTabState extends State<PendingTab> {
                               'comment_drop': item['comment_drop'],
                               'status_helmet': item['status_helmet'],
                               'pay': item['pay'],
-                               'review': item['review'],
-                               'post_id': item['post_id'],
-                               'check_status': item['check_status'],
+                              'review': item['review'],
+                              'post_id': item['post_id'],
+                              'check_status': item['check_status'],
                             },
                           ),
                         ),
@@ -180,14 +181,12 @@ class _ConfirmTabState extends State<PendingTab> {
                                     ),
                                   ],
                                 ),
-                               
                                 Text(
                                   "Date: ${formatDate(item['date'])}",
                                   textAlign: TextAlign.start,
                                   style: const TextStyle(
                                       fontSize: 12, color: Color(0xff1a1c43)),
                                 ),
-                             
                               ],
                             ),
                           ),

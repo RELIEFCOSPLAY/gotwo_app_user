@@ -120,6 +120,7 @@ class _SuccessTabState extends State<SuccessTab> {
                             data: {
                               'rider_id': item['rider_id'],
                               'gender': item['rider_gender'],
+                              'img_profile': item['img_profile'],
                               'date': item['date'],
                               'price': item['price'],
                               'pick_up': item['pick_up'],

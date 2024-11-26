@@ -128,6 +128,7 @@ class _CancelTabState extends State<CancelTab> {
                             data: {
                               'rider_id': item['rider_id'],
                               'gender': item['rider_gender'],
+                              'img_profile': item['img_profile'],
                               'date': item['date'],
                               'pay': item['pay'],
                               'price': item['price'],

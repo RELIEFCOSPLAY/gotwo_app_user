@@ -115,10 +115,21 @@ class _CusCancelState extends State<CusCancel> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 5),
-                Image.asset(
-                  item['image'] ?? 'assets/images/profile.png',
-                  width: 50,
-                  height: 50,
+                CircleAvatar(
+                  minRadius: 25,
+                  maxRadius: 40,
+                  backgroundColor: Colors.white,
+                  child: item['img_profile'] != null
+                      ? ClipOval(
+                          // ใช้ ClipOval เพื่อครอบภาพให้เป็นวงกลม
+                          child: Image.network(
+                            item['img_profile'],
+                            fit: BoxFit.cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
+                            width: 80, // กำหนดขนาดความกว้าง
+                            height: 80, // กำหนดขนาดความสูง
+                          ),
+                        )
+                      : const Icon(Icons.person),
                 ),
                 const SizedBox(height: 5),
                 Row(

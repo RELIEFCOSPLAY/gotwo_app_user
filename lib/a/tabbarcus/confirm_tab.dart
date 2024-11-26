@@ -120,6 +120,7 @@ class _ConfirmTabState extends State<ConfirmTab> {
                             data: {
                               'status_post_id': item['status_post_id'],
                               'rider_id': item['rider_id'],
+                              'img_profile': item['img_profile'],
                               'gender': item['rider_gender'],
                               'date': item['date'],
                               'price': item['price'],
