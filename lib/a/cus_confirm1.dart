@@ -5,9 +5,12 @@ import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/global_ip.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 
 class CusConfirm extends StatefulWidget {
   final Map<String, dynamic> data; // รับค่าที่ส่งมาจาก ConfirmTab
@@ -163,6 +166,50 @@ class _CusConfirmState extends State<CusConfirm> {
     }
   }
 
+  File? _image; // เก็บภาพที่เลือก
+  String? _uploadedImageUrl; // เก็บ URL รูปภาพที่อัปโหลด
+
+  Future<void> pickAndUploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      // เปลี่ยนชื่อไฟล์เป็น "GP_timestamp"
+      final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+      final directory = await getTemporaryDirectory();
+      final newFileName = "GUQRP_$timestamp${path.extension(pickedFile.path)}";
+      final newFilePath = path.join(directory.path, newFileName);
+
+      final renamedFile = await File(pickedFile.path).copy(newFilePath);
+
+      setState(() {
+        _image = renamedFile; // ใช้ไฟล์ที่เปลี่ยนชื่อ
+      });
+
+      // อัปโหลดไฟล์
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('http://${Global.ip_8080}/gotwo/upload_p.php'),
+      );
+      request.files
+          .add(await http.MultipartFile.fromPath('image', _image!.path));
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final res = await http.Response.fromStream(response);
+        final data = json.decode(res.body);
+
+        if (data['file'] != null) {
+          setState(() {
+            _uploadedImageUrl = data['file']; // ดึง URL ไฟล์ที่อัปโหลด
+          });
+        }
+      } else {
+        print('File upload failed');
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -214,11 +261,8 @@ class _CusConfirmState extends State<CusConfirm> {
                 onPressed: isImageUploaded
                     ? null // ถ้าอัปโหลดแล้ว ปุ่มจะปิดการทำงาน
                     : () async {
-                        final ImagePicker _picker = ImagePicker();
-                        final XFile? image = await _picker.pickImage(
-                            source: ImageSource.gallery);
-                        if (image != null) {
-                          await uploadImage(File(image.path)); // อัปโหลดรูปภาพ
+                        pickAndUploadImage();
+                        if (_uploadedImageUrl != null) {
                           setState(() {
                             isImageUploaded =
                                 true; // อัปเดตสถานะเป็นรูปถูกอัปโหลด
@@ -250,6 +294,25 @@ class _CusConfirmState extends State<CusConfirm> {
         );
       },
     );
+  }
+
+  final urlup = Uri.parse('http://${Global.ip_8080}/gotwo/update_imgPay.php');
+  Future<void> update_imgPay(
+    String status_post_id,
+    String imgPay,
+  ) async {
+    var request = await http.post(urlup, body: {
+      "status_post_id": status_post_id,
+      "imgPay": imgPay,
+    });
+
+    if (request.statusCode == 200) {
+      // ข้อมูลถูกส่งสำเร็จ
+      print('Success: ${request.body}');
+    } else {
+      // มีปัญหาในการส่งข้อมูล
+      print('Error: ${request.statusCode}, Body: ${request.body}');
+    }
   }
 
   @override
@@ -565,6 +628,12 @@ class _CusConfirmState extends State<CusConfirm> {
                                       pay,
                                       status,
                                     );
+
+                                    update_imgPay(
+                                      status_post_id,
+                                      _uploadedImageUrl!,
+                                    );
+
                                     Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
