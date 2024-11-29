@@ -121,6 +121,7 @@ class _JoindetailState extends State<Joindetail> {
 
   @override
   Widget build(BuildContext context) {
+    String imgShow = 'http://${Global.ip_8080}/${item!['img_profile']}';
     if (isLoading) {
       return const Scaffold(
         body: Center(
@@ -167,7 +168,7 @@ class _JoindetailState extends State<Joindetail> {
                         ? ClipOval(
                             // ใช้ ClipOval เพื่อครอบภาพให้เป็นวงกลม
                             child: Image.network(
-                              item!['img_profile'],
+                              imgShow,
                               fit: BoxFit.cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
                               width: 80, // กำหนดขนาดความกว้าง
                               height: 80, // กำหนดขนาดความสูง

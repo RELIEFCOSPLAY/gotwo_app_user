@@ -251,6 +251,8 @@ class _JoinState extends State<Join> {
                 itemCount: filteredList.length,
                 itemBuilder: (context, index) {
                   final item = filteredList[index];
+                  String imgShow =
+                      'http://${Global.ip_8080}/${item['img_profile']}';
                   if (item['check_status'] == '0' ||
                       item['check_status'] == 0) {
                     return Padding(
@@ -291,7 +293,7 @@ class _JoinState extends State<Join> {
                                         ? ClipOval(
                                             // ใช้ ClipOval เพื่อครอบภาพให้เป็นวงกลม
                                             child: Image.network(
-                                              item['img_profile']!,
+                                              imgShow,
                                               fit: BoxFit
                                                   .cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
                                               width: 70, // กำหนดขนาดความกว้าง

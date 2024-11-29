@@ -444,7 +444,7 @@ class _BankAccountState extends State<BankAccount> {
       child: const SizedBox(
           width: double.infinity,
           child: Text(
-            "Next",
+            "Register",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: Colors.white),
           )),
@@ -465,45 +465,47 @@ class _BankAccountState extends State<BankAccount> {
                   setState(() {
                     isImageSelected_idcardBtn =
                         true; // เปลี่ยนสถานะเมื่อเลือกรูปภาพสำเร็จ
+                    String imgShow =
+                        'http://${Global.ip_8080}/$_uploadedImageUrl';
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text(
+                            "Id card",
+                            style: TextStyle(
+                              color: Color(0xff1a1c43),
+                            ),
+                          ),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _uploadedImageUrl != null
+                                  ? Image.network(
+                                      imgShow) // แสดงรูปภาพที่อัปโหลด
+                                  : const Text("No image selected"),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                debugPrint(imgShow);
+                              },
+                              child: const Text(
+                                "Close",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   });
 
                   // แสดงไดอะล็อกพร้อมรูปภาพที่อัปโหลด
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text(
-                          "Id card",
-                          style: TextStyle(
-                            color: Color(0xff1a1c43),
-                          ),
-                        ),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _uploadedImageUrl != null
-                                ? Image.network(_uploadedImageUrl!,
-                                    height: 200) // แสดงรูปภาพที่อัปโหลด
-                                : const Text("No image selected"),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              print(_uploadedImageUrl);
-                            },
-                            child: const Text(
-                              "Close",
-                              style: TextStyle(
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
                 }
               });
             },

@@ -202,6 +202,9 @@ class _CusConfirmState extends State<CusConfirm> {
         if (data['file'] != null) {
           setState(() {
             _uploadedImageUrl = data['file']; // ดึง URL ไฟล์ที่อัปโหลด
+            if (_uploadedImageUrl != null) {
+              isImageUploaded = true; // อัปเดตสถานะเป็นรูปถูกอัปโหลด
+            }
           });
         }
       } else {
@@ -258,20 +261,12 @@ class _CusConfirmState extends State<CusConfirm> {
             ),
             actions: [
               ElevatedButton(
-                onPressed: isImageUploaded
-                    ? null // ถ้าอัปโหลดแล้ว ปุ่มจะปิดการทำงาน
-                    : () async {
-                        pickAndUploadImage();
-                        if (_uploadedImageUrl != null) {
-                          setState(() {
-                            isImageUploaded =
-                                true; // อัปเดตสถานะเป็นรูปถูกอัปโหลด
-                          });
-                        }
-                      },
+                onPressed: () async {
+                  pickAndUploadImage();
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: isImageUploaded
-                      ? Colors.grey // เปลี่ยนสีเป็นสีเทาหลังอัปโหลดรูป
+                      ? Colors.green[300] // เปลี่ยนสีเป็นสีเทาหลังอัปโหลดรูป
                       : Colors.blue[300],
                   minimumSize: const Size(15, 30),
                   shape: RoundedRectangleBorder(
@@ -279,7 +274,7 @@ class _CusConfirmState extends State<CusConfirm> {
                   ),
                 ),
                 child: Text(
-                  isImageUploaded ? 'Image Uploaded' : 'Attach Image',
+                  isImageUploaded ? 'Uploaded' : 'Attach Image',
                   style: const TextStyle(fontSize: 13, color: Colors.white),
                 ),
               ),
@@ -318,6 +313,7 @@ class _CusConfirmState extends State<CusConfirm> {
   @override
   Widget build(BuildContext context) {
     int _currentRating = int.parse(item['review']);
+    String imgShow = 'http://${Global.ip_8080}/${item['img_profile']}';
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -357,7 +353,7 @@ class _CusConfirmState extends State<CusConfirm> {
                       ? ClipOval(
                           // ใช้ ClipOval เพื่อครอบภาพให้เป็นวงกลม
                           child: Image.network(
-                            item['img_profile'],
+                            imgShow,
                             fit: BoxFit.cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
                             width: 80, // กำหนดขนาดความกว้าง
                             height: 80, // กำหนดขนาดความสูง

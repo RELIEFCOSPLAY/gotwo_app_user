@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gotwo_app_user/global_ip.dart';
 import 'package:gotwo_app_user/m2/bank.dart';
+import 'package:gotwo_app_user/m2/term.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:http/http.dart' as http;
@@ -159,7 +160,14 @@ class _RegisterState extends State<Register> {
   Widget _backButton() {
     return GestureDetector(
       onTap: () {
-        Navigator.pop(context);
+        debugPrint("back");
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Term(),
+          ),
+          (Route<dynamic> route) => false,
+        );
       },
       child: const Icon(
         Icons.arrow_back_ios,
@@ -170,6 +178,7 @@ class _RegisterState extends State<Register> {
   }
 
   Widget _addPhoto() {
+    String imgShow = 'http://${Global.ip_8080}/$_uploadedImageUrl';
     return Column(
       children: [
         ElevatedButton(
@@ -182,8 +191,8 @@ class _RegisterState extends State<Register> {
             pickAndUploadImage(); // เรียกใช้งานฟังก์ชันเพื่อเลือกรูปภาพ
           },
           child: Container(
-            width: 70, // ตั้งขนาดของ Container
-            height: 70, // ตั้งขนาดของ Container
+            width: 80, // ตั้งขนาดของ Container
+            height: 80, // ตั้งขนาดของ Container
             decoration: BoxDecoration(
               color: const Color(0xff1a1c43),
               shape: BoxShape.circle,
@@ -196,10 +205,12 @@ class _RegisterState extends State<Register> {
                 _uploadedImageUrl != null // ตรวจสอบว่ามีรูปภาพที่เลือกหรือไม่
                     ? ClipOval(
                         // ใช้ ClipOval เพื่อทำให้รูปเป็นวงกลม
-                        child: _uploadedImageUrl != null
-                            ? Image.network(_uploadedImageUrl!, height: 200)
-                            : const Text('No uploaded image'),
-                      )
+                        child: Image.network(
+                        imgShow,
+                        fit: BoxFit.cover, // ปรับขนาดรูปภาพให้พอดีกับ Container
+                        width: 60,
+                        height: 60,
+                      ))
                     : const Icon(
                         Icons.person,
                         color: Colors.white,

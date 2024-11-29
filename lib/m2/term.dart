@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gotwo_app_user/m2/home.dart';
 import 'package:gotwo_app_user/m2/register.dart';
 
 class Term extends StatefulWidget {
@@ -29,7 +30,13 @@ class _TermState extends State<Term> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+          (Route<dynamic> route) => false,
+        );
           },
         ),
       ),

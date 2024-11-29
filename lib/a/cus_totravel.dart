@@ -146,6 +146,7 @@ class _CusTotravelState extends State<CusTotravel> {
   @override
   Widget build(BuildContext context) {
     int _currentRating = int.parse(item['review']);
+    String imgShow = 'http://${Global.ip_8080}/${item['img_profile']}';
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -182,7 +183,7 @@ class _CusTotravelState extends State<CusTotravel> {
                       ? ClipOval(
                           // ใช้ ClipOval เพื่อครอบภาพให้เป็นวงกลม
                           child: Image.network(
-                            item['img_profile'],
+                            imgShow,
                             fit: BoxFit.cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
                             width: 80, // กำหนดขนาดความกว้าง
                             height: 80, // กำหนดขนาดความสูง
