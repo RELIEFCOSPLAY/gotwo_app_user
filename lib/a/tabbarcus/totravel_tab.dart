@@ -128,6 +128,7 @@ class _TotravelTabState extends State<TotravelTab> {
                               'status_post_id': item['status_post_id'],
                               'rider_id': item['rider_id'],
                               'img_profile': item['img_profile'],
+                              'img_car_picture': item['img_car_picture'],
                               'gender': item['rider_gender'],
                               'date': item['date'],
                               'price': item['price'],

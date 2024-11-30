@@ -16,14 +16,14 @@ class TabbarCus extends StatefulWidget {
 class _TabbarCusState extends State<TabbarCus> {
   @override
   Widget build(BuildContext context) {
-     return DefaultTabController(
+    return DefaultTabController(
       length: 5,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false, // ปิดการแสดงลูกศรย้อนกลับอัตโนมัติ
           title: Stack(
             children: [
-             const Center(
+              const Center(
                 child: Text(
                   "Status",
                   style: TextStyle(
@@ -38,17 +38,20 @@ class _TabbarCusState extends State<TabbarCus> {
                 child: IconButton(
                   icon: const Icon(Icons.arrow_back, color: Color(0xff1a1c43)),
                   onPressed: () {
-                   Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) =>const Join()), // หน้าที่คุณต้องการย้อนกลับไป
-      (Route<dynamic> route) => false,
-    );
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const Join()), // หน้าที่คุณต้องการย้อนกลับไป
+                      (Route<dynamic> route) => false,
+                    );
                   },
                 ),
               ),
             ],
           ),
         ),
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             const TabBar(

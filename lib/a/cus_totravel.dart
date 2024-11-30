@@ -1,11 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/global_ip.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 class CusTotravel extends StatefulWidget {
   final Map<String, dynamic> data; // Data from the previous screen
@@ -24,9 +29,11 @@ class _CusTotravelState extends State<CusTotravel> {
   );
   String? emails;
   String? userId;
-
   final storage = const FlutterSecureStorage();
 
+  bool isImageSelected = false;
+
+  String? _imageUrl; // เก็บ URL รูปภาพที่อัปโหลด
   Future<void> loadLoginInfo() async {
     String? savedEmail = await storage.read(key: 'email');
     setState(() {
@@ -65,8 +72,14 @@ class _CusTotravelState extends State<CusTotravel> {
   final url = Uri.parse('http://${Global.ip_8080}/gotwo/status_totravel.php');
 
   // Updated update_review function
-  Future<void> update_review(String status_post_id, String pay, String review,
-      String comment, String status) async {
+  Future<void> update_review(
+    String status_post_id,
+    String pay,
+    String review,
+    String comment,
+    String status,
+    String imgSuccess,
+  ) async {
     try {
       var request = await http.post(url, body: {
         "status_post_id": status_post_id,
@@ -74,6 +87,7 @@ class _CusTotravelState extends State<CusTotravel> {
         'review': review,
         'comment': comment,
         'status': status,
+        'imgSuccess': imgSuccess,
       });
 
       if (request.statusCode == 200) {
@@ -88,14 +102,21 @@ class _CusTotravelState extends State<CusTotravel> {
     }
   }
 
-  Future<void> update_cancel(String status_post_id, String pay, String review,
-      String comment, String status) async {
+  Future<void> update_cancel(
+    String status_post_id,
+    String pay,
+    String review,
+    String comment,
+    String status,
+    String imgSuccess,
+  ) async {
     var request = await http.post(url, body: {
       "status_post_id": status_post_id,
       "pay": pay,
       'review': review,
       'comment': comment,
       'status': status,
+      'imgSuccess': imgSuccess,
     });
     if (request.statusCode == 200) {
       print('Success: ${request.body}');
@@ -287,6 +308,8 @@ class _CusTotravelState extends State<CusTotravel> {
                 // Car Detail Button
                 ElevatedButton(
                   onPressed: () {
+                    String imgShowCar =
+                        'http://${Global.ip_8080}/${item['img_car_picture']}';
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -301,8 +324,7 @@ class _CusTotravelState extends State<CusTotravel> {
                             content: SizedBox(
                               width: 200.0,
                               height: 250.0,
-                              child: Image.asset(
-                                  "assets/images/ninja400-appcarpool.jpg"),
+                              child: Image.network(imgShowCar),
                             ),
                             actions: [
                               Row(
@@ -487,29 +509,29 @@ class _CusTotravelState extends State<CusTotravel> {
                     // Success Button
                     ElevatedButton(
                       onPressed: () {
+                        File? _image;
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            // ignore: unused_local_variable
                             String reviewR = "1";
                             TextEditingController commentController =
                                 TextEditingController();
 
-                            return Center(
-                              child: AlertDialog(
-                                title: const Center(
-                                  child: Text(
-                                    'Review',
-                                    textAlign: TextAlign.center,
+                            return StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return AlertDialog(
+                                  title: const Center(
+                                    child: Text(
+                                      'Review',
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                ),
-                                content: SizedBox(
-                                  height: 150,
-                                  width: 250,
-                                  child: Column(
+                                  content: Column(
                                     children: [
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 5),
+                                        padding:
+                                            const EdgeInsets.only(top: 5),
                                         child: RatingBar.builder(
                                           initialRating: 1,
                                           minRating: 1,
@@ -540,81 +562,167 @@ class _CusTotravelState extends State<CusTotravel> {
                                           child: TextField(
                                             controller: commentController,
                                             decoration: InputDecoration(
-                                              enabledBorder: border,
-                                              focusedBorder: border,
+                                              enabledBorder:
+                                                  OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              focusedBorder:
+                                                  OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
                                               border:
                                                   const OutlineInputBorder(),
-                                              hintText: 'What is your opinion?',
+                                              hintText: 'Your opinion?',
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
                                       ElevatedButton(
-                                        onPressed: () {
-                                          String status_post_id =
-                                              '${item['status_post_id'] ?? 'Unknown'}';
-                                          String comment =
-                                              commentController.text;
-                                          String pay = '3';
-                                          String status = '4';
-                                          String review = reviewR;
-
-                                          // Call the update_review function
-
-                                          update_review(
-                                            status_post_id,
-                                            pay,
-                                            review,
-                                            comment,
-                                            status,
+                                        onPressed: () async {
+                                          final picker = ImagePicker();
+                                          final pickedFile =
+                                              await picker.pickImage(
+                                            source: ImageSource.gallery,
                                           );
-
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const TabbarCus()),
-                                          );
+                                
+                                          if (pickedFile != null) {
+                                            final timestamp = DateTime.now()
+                                                .millisecondsSinceEpoch
+                                                .toString();
+                                            final directory =
+                                                await getTemporaryDirectory();
+                                            final newFileName =
+                                                "GUSUCC_$timestamp${path.extension(pickedFile.path)}";
+                                            final newFilePath = path.join(
+                                                directory.path, newFileName);
+                                
+                                            final renamedFile =
+                                                await File(pickedFile.path)
+                                                    .copy(newFilePath);
+                                
+                                            setState(() {
+                                              _image =
+                                                  renamedFile; // ใช้ไฟล์ที่เปลี่ยนชื่อ
+                                            });
+                                            var request =
+                                                http.MultipartRequest(
+                                              'POST',
+                                              Uri.parse(
+                                                  'http://${Global.ip_8080}/gotwo/upload_p.php'),
+                                            );
+                                            request.files.add(await http
+                                                    .MultipartFile
+                                                .fromPath(
+                                                    'image', _image!.path));
+                                
+                                            var response =
+                                                await request.send();
+                                            if (response.statusCode == 200) {
+                                              final res = await http.Response
+                                                  .fromStream(response);
+                                              final data =
+                                                  json.decode(res.body);
+                                
+                                              if (data['file'] != null) {
+                                                setState(() {
+                                                  _imageUrl = data[
+                                                      'file']; // ดึง URL ไฟล์ที่อัปโหลด
+                                                });
+                                              }
+                                            } else {
+                                              debugPrint(
+                                                  'File upload failed');
+                                            }
+                                          }
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.blue,
-                                          minimumSize: const Size(15, 29),
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                           ),
                                         ),
-                                        child: const Text(
-                                          'Confirm',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 14,
-                                          ),
-                                        ),
+                                        child: const Text("Select Image",
+                                            style: TextStyle(
+                                                color: Color(0xFF1A1C43))),
                                       ),
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pop(); // Close dialog
-                                        },
-                                        child: const Text(
-                                          'Close',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      ),
+                                      const SizedBox(height: 20),
+                                      _image != null
+                                          ? Image.file(
+                                              _image!,
+                                              width: 200,
+                                              height: 200,
+                                              fit: BoxFit.cover,
+                                            ) // แสดงรูปภาพหากเลือกแล้ว
+                                          : const Text("No image selected"),
                                     ],
                                   ),
-                                ],
-                              ),
+                                  actions: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            String status_post_id =
+                                                '${item['status_post_id'] ?? 'Unknown'}';
+                                            String comment =
+                                                commentController.text;
+                                            String pay = '3';
+                                            String status = '4';
+                                            String review = reviewR;
+                                
+                                            // Call the update_review function
+                                
+                                            update_review(
+                                                status_post_id,
+                                                pay,
+                                                review,
+                                                comment,
+                                                status,
+                                                _imageUrl!);
+                                
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const TabbarCus()),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.green,
+                                            minimumSize: const Size(15, 29),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'Confirm',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .pop(); // Close dialog
+                                          },
+                                          child: const Text(
+                                            'Close',
+                                            style:
+                                                TextStyle(color: Colors.red),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                           },
                         );
@@ -635,6 +743,7 @@ class _CusTotravelState extends State<CusTotravel> {
                         ),
                       ),
                     ),
+
                     const SizedBox(width: 10),
                     ///////////////////////////////////
                     // Cancel Button
@@ -685,14 +794,10 @@ class _CusTotravelState extends State<CusTotravel> {
                                         '${item['status_post_id'] ?? 'Unknown'}';
                                     String post_id = item['post_id'];
                                     String checkstatus = '0';
+                                    String imageUrlNo = 'No imageUrl';
 
-                                    update_cancel(
-                                      status_post_id,
-                                      pay,
-                                      review,
-                                      comment,
-                                      status,
-                                    );
+                                    update_cancel(status_post_id, pay, review,
+                                        comment, status, imageUrlNo);
                                     check_status(
                                       checkstatus,
                                       post_id,
