@@ -241,136 +241,146 @@ class _JoinState extends State<Join> {
       _genderFilterButtons(),
       const SizedBox(height: 5),
       Expanded(
-        child: filteredList.isEmpty
-            ? const Center(
-                child: Text('No data found'),
-              )
-            : ListView.builder(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                itemCount: filteredList.length,
-                itemBuilder: (context, index) {
-                  final item = filteredList[index];
-                  String imgShow =
-                      'http://${Global.ip_8080}/${item['img_profile']}';
-                  if (item['check_status'] == '0' ||
-                      item['check_status'] == 0) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Joindetail(item: item),
-                            ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF1A1C43),
-                          elevation: 2,
-                          minimumSize: const Size(350, 100),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            side: const BorderSide(
-                              color: Color(0xFF1A1C43),
-                              width: 2,
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await fetchData(); // เรียกฟังก์ชันรีเฟรชข้อมูล
+            filterData(); // กรองข้อมูลอีกครั้งหลังจากดึงข้อมูลใหม่
+          },
+          color: const Color(0xff1a1c43), // สีของวงกลม Refresh
+          backgroundColor: Colors.white, // สีพื้นหลังของ RefreshIndicator
+          child: filteredList.isEmpty
+              ? const Center(
+                  child: Text('No data found'),
+                )
+              : ListView.builder(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  itemCount: filteredList.length,
+                  itemBuilder: (context, index) {
+                    final item = filteredList[index];
+                    String imgShow =
+                        'http://${Global.ip_8080}/${item['img_profile']}';
+                    if (item['check_status'] == '0' ||
+                        item['check_status'] == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Joindetail(item: item),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF1A1C43),
+                            elevation: 2,
+                            minimumSize: const Size(350, 100),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              side: const BorderSide(
+                                color: Color(0xFF1A1C43),
+                                width: 2,
+                              ),
                             ),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    minRadius: 25,
-                                    maxRadius: 40,
-                                    backgroundColor: Colors.white,
-                                    child: item['img_profile'] != null
-                                        ? ClipOval(
-                                            // ใช้ ClipOval เพื่อครอบภาพให้เป็นวงกลม
-                                            child: Image.network(
-                                              imgShow,
-                                              fit: BoxFit
-                                                  .cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
-                                              width: 70, // กำหนดขนาดความกว้าง
-                                              height: 70, // กำหนดขนาดความสูง
-                                            ),
-                                          )
-                                        : const Icon(Icons.person),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Flexible(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                'From: ${item['pick_up']}',
-                                                style: const TextStyle(
-                                                  color: Color(0xFF1A1C43),
-                                                  fontSize: 13,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      minRadius: 25,
+                                      maxRadius: 40,
+                                      backgroundColor: Colors.white,
+                                      child: item['img_profile'] != null
+                                          ? ClipOval(
+                                              // ใช้ ClipOval เพื่อครอบภาพให้เป็นวงกลม
+                                              child: Image.network(
+                                                imgShow,
+                                                fit: BoxFit
+                                                    .cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
+                                                width: 70, // กำหนดขนาดความกว้าง
+                                                height: 70, // กำหนดขนาดความสูง
                                               ),
-                                            ),
-                                            const Icon(Icons.arrow_forward),
-                                            const SizedBox(width: 5),
-                                            Expanded(
-                                              child: Text(
-                                                'To: ${item['at_drop']}',
-                                                style: const TextStyle(
-                                                  color: Color(0xFF1A1C43),
-                                                  fontSize: 13,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          'Date: ${item['date']}',
-                                          style:
-                                              const TextStyle(fontSize: 11.5),
-                                        ),
-                                        Text(
-                                          'Time: ${item['time']}',
-                                          style:
-                                              const TextStyle(fontSize: 11.5),
-                                        ),
-                                        Text(
-                                          'Gender: ${item['rider_gender']}',
-                                          style:
-                                              const TextStyle(fontSize: 11.5),
-                                        ),
-                                      ],
+                                            )
+                                          : const Icon(Icons.person),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 10),
+                                    Flexible(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  'From: ${item['pick_up']}',
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF1A1C43),
+                                                    fontSize: 13,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              const Icon(Icons.arrow_forward),
+                                              const SizedBox(width: 5),
+                                              Expanded(
+                                                child: Text(
+                                                  'To: ${item['at_drop']}',
+                                                  style: const TextStyle(
+                                                    color: Color(0xFF1A1C43),
+                                                    fontSize: 13,
+                                                  ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Text(
+                                            'Date: ${item['date']}',
+                                            style:
+                                                const TextStyle(fontSize: 11.5),
+                                          ),
+                                          Text(
+                                            'Time: ${item['time']}',
+                                            style:
+                                                const TextStyle(fontSize: 11.5),
+                                          ),
+                                          Text(
+                                            'Gender: ${item['rider_gender']}',
+                                            style:
+                                                const TextStyle(fontSize: 11.5),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 30),
-                              child: Text(
-                                '${item['price']} THB',
-                                style: const TextStyle(fontSize: 16),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Text(
+                                  '${item['price']} THB',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+        ),
       ),
     ]);
   }
