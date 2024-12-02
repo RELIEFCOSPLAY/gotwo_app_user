@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart'; // Import dropdown_search
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:gotwo_app_user/a/cus_logout.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/global_ip.dart';
+import 'package:gotwo_app_user/m2/gotwo_profileCustomer.dart';
 import 'package:gotwo_app_user/m2/joindetail.dart';
 import 'package:http/http.dart' as http;
 
@@ -595,7 +595,7 @@ class _JoinState extends State<Join> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const LogoutPage()),
+                MaterialPageRoute(builder: (context) => const GotwoProfileCus()),
               );
             },
             child: const Column(
