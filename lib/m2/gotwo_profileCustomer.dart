@@ -152,14 +152,28 @@ class _GotwoProfileCusState extends State<GotwoProfileCus> {
                                     ),
                                     const SizedBox(height: 5),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: List.generate(
-                                        1,
-                                        (index) => const Icon(Icons.star,
-                                            color: Colors.amber),
-                                      ),
-                                    ),
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            item['status_customer'] == 0 ||
+                                                    item['status_customer'] ==
+                                                        '0'
+                                                ? "normal"
+                                                : "unnormal",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: item['status_customer'] ==
+                                                          0 ||
+                                                      item['status_customer'] ==
+                                                          '0'
+                                                  ? Colors.green
+                                                  : Colors
+                                                      .red, // สีต่างกันสำหรับแต่ละสถานะ
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ]),
                                   ],
                                 ),
                               ],
@@ -168,39 +182,39 @@ class _GotwoProfileCusState extends State<GotwoProfileCus> {
                         ),
                         const SizedBox(height: 5),
                         // Wallet Section
-                        Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.account_balance_wallet,
-                                    size: 30, color: Colors.grey),
-                                const SizedBox(width: 10),
-                                const Text(
-                                  'Wallet',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                const Spacer(), // ใช้ Spacer ได้ที่นี่เพราะ Row มีขนาดแน่นอน
-                                Text(
-                                  "${item['wallet'] ?? '0.00'} Baht",
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Card(
+                        //   elevation: 2,
+                        //   shape: RoundedRectangleBorder(
+                        //     borderRadius: BorderRadius.circular(10),
+                        //   ),
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(16),
+                        //     child: Row(
+                        //       children: [
+                        //         const Icon(Icons.account_balance_wallet,
+                        //             size: 30, color: Colors.grey),
+                        //         const SizedBox(width: 10),
+                        //         const Text(
+                        //           'Wallet',
+                        //           style: TextStyle(
+                        //             fontSize: 18,
+                        //             fontWeight: FontWeight.bold,
+                        //             color: Colors.black,
+                        //           ),
+                        //         ),
+                        //         const Spacer(), // ใช้ Spacer ได้ที่นี่เพราะ Row มีขนาดแน่นอน
+                        //         Text(
+                        //           "${item['wallet'] ?? '0.00'} Baht",
+                        //           style: const TextStyle(
+                        //             fontSize: 18,
+                        //             fontWeight: FontWeight.bold,
+                        //             color: Colors.black,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         const SizedBox(height: 5),
                         // Profile Details Section
                         Card(
@@ -237,7 +251,7 @@ class _GotwoProfileCusState extends State<GotwoProfileCus> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 5),
+                        const SizedBox(height: 80),
                         // Logout Button
                         TextButton.icon(
                           onPressed: () {
