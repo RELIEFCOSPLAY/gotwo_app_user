@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:gotwo_app_user/global_ip.dart';
+import 'package:gotwo_app_user/m2/gotwo_profileCustomer.dart';
 import 'package:gotwo_app_user/m2/home.dart';
 import 'package:gotwo_app_user/m2/join.dart';
 import 'package:http/http.dart' as http;
@@ -53,25 +54,45 @@ class _LoginpageState extends State<Loginpage> {
   Future<void> signIn() async {
     String url = "http://${Global.ip_8080}/gotwo/login_cus.php";
     try {
-      final response = await http.post(Uri.parse(url), body: {
-        'email': email.text,
-        'password': pass.text,
-      });
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'email': email.text,
+          'password': pass.text,
+        },
+      );
+      debugPrint("Response: ${response.body}");
 
       if (response.statusCode == 200) {
         var data = json.decode(response.body);
-        if (data == "Success") {
-          // Login success
+        if (data['status'] == "Success") {
+          // รับค่า status_rider
+          int statusCus = int.parse(data['status_customer'].toString());
+
+          // บันทึกข้อมูลการเข้าสู่ระบบหรือตรวจสอบสถานะเพิ่มเติม
           await saveLoginInfo();
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const Join()),
-          );
+          if (statusCus == 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Join(), // ส่งค่าไปยังหน้าถัดไป
+              ),
+            );
+          } else if (statusCus != 1) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const GotwoProfileCus(), // ส่งค่าไปยังหน้าถัดไป
+              ),
+            );
+          }
         } else {
           // Login failed
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Please enter a correct email or password.'),
+            SnackBar(
+              content: Text(data['message'] ??
+                  'Please enter a correct email or password.'),
             ),
           );
         }
@@ -83,6 +104,9 @@ class _LoginpageState extends State<Loginpage> {
       }
     } catch (e) {
       debugPrint('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An error occurred. Please try again.')),
+      );
     }
   }
 

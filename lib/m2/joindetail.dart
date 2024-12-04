@@ -21,6 +21,41 @@ class _JoindetailState extends State<Joindetail> {
   final storage = const FlutterSecureStorage();
   String? emails;
   String? userId; // เก็บ ID ของผู้ใช้หลังจากดึงมา
+  String? avgReview;
+  int? rating;
+
+  Future<void> fetchAVGRating(String riderid) async {
+    final String url =
+        "http://${Global.ip_8080}/gotwo/avg_RiderRating.php"; // URL API
+    try {
+      final response = await http.post(Uri.parse(url), body: {
+        'userid': riderid, // ส่ง user id เพื่อค้นหา avg
+      });
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success']) {
+          setState(() {
+            avgReview = data['avg_review'].toString();
+            // พยายามแปลงเป็น int
+            try {
+              double avgReviewDouble = double.parse(avgReview!);
+              rating = avgReviewDouble.toInt();
+            } catch (e) {
+              print('Error: Unable to parse avg_review to int.');
+              rating = 0; // กำหนดค่าเริ่มต้น
+            }
+          });
+        } else {
+          print('Error: ${data['message']}');
+        }
+      } else {
+        print("Failed to fetch avg review");
+      }
+    } catch (e) {
+      print("F Error: $e");
+    }
+  }
 
   Future<void> loadLoginInfo() async {
     String? savedEmail = await storage.read(key: 'email');
@@ -45,6 +80,7 @@ class _JoindetailState extends State<Joindetail> {
         if (data['success']) {
           setState(() {
             userId = data['user_id']; // เก็บ user id ที่ได้มา
+            fetchAVGRating(item!['rider_id']);
           });
         } else {
           print('Error: ${data['message']}');
@@ -185,7 +221,23 @@ class _JoindetailState extends State<Joindetail> {
                       fontSize: 20,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (var i = 1; i <= 5; i++)
+                        Icon(
+                          Icons.star,
+                          size: 20,
+                          color: i <=
+                                  (rating ??
+                                      0) // ใช้ ?? เพื่อกำหนดค่าเริ่มต้นหาก rating เป็น null
+                              ? Colors.yellow
+                              : Colors.grey,
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -395,7 +447,7 @@ class _JoindetailState extends State<Joindetail> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       _showDialog();

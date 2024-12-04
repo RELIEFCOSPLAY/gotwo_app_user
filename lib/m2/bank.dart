@@ -406,7 +406,7 @@ class _BankAccountState extends State<BankAccount> {
           return; // หยุดการทำงานหากข้อมูลไม่ครบ
         }
 
-        String statusCustomer0 = "0";
+        String statusCustomer1 = "1";
         debugPrint("imgProfile: ${widget.cusCardImagePath}");
         debugPrint("Username: ${widget.username}");
         debugPrint("Email: ${widget.email}");
@@ -417,7 +417,7 @@ class _BankAccountState extends State<BankAccount> {
         debugPrint("bank : ${dropdownValue.toString()}");
         debugPrint("nameAccount : ${namebankAccountController.text}");
         debugPrint("numberBank : ${accountNumberController.text}");
-        debugPrint("statusCustumer : $statusCustomer0");
+        debugPrint("statusCustumer : $statusCustomer1");
 
         // ส่งข้อมูลไปยังฟังก์ชัน insert_Register
         insert_Register(
@@ -431,7 +431,7 @@ class _BankAccountState extends State<BankAccount> {
           dropdownValue.toString(),
           namebankAccountController.text,
           accountNumberController.text,
-          statusCustomer0,
+          statusCustomer1,
         );
       },
       style: ElevatedButton.styleFrom(

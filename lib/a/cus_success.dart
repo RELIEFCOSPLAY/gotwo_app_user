@@ -22,6 +22,8 @@ class _CusSuccessState extends State<CusSuccess> {
   );
   String? emails;
   String? userId;
+  String? avgReview;
+  int? rating;
 
   final storage = const FlutterSecureStorage();
   Future<void> loadLoginInfo() async {
@@ -56,6 +58,39 @@ class _CusSuccessState extends State<CusSuccess> {
       }
     } catch (e) {
       print("Error: $e");
+    }
+  }
+
+  Future<void> fetchAVGRating(String userid) async {
+    final String url =
+        "http://${Global.ip_8080}/gotwo/avg_RiderRating.php"; // URL API
+    try {
+      final response = await http.post(Uri.parse(url), body: {
+        'userid': userid, // ส่ง user id เพื่อค้นหา avg
+      });
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success']) {
+          setState(() {
+            avgReview = data['avg_review'].toString();
+            // พยายามแปลงเป็น int
+            try {
+              double avgReviewDouble = double.parse(avgReview!);
+              rating = avgReviewDouble.toInt();
+            } catch (e) {
+              print('Error: Unable to parse avg_review to int.');
+              rating = 0; // กำหนดค่าเริ่มต้น
+            }
+          });
+        } else {
+          print('Error: ${data['message']}');
+        }
+      } else {
+        print("Failed to fetch avg review");
+      }
+    } catch (e) {
+      print("F Error: $e");
     }
   }
 

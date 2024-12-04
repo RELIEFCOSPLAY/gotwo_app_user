@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart'; // Import dropdown_search
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:gotwo_app_user/a/cus_logout.dart';
 import 'package:gotwo_app_user/a/tabbarcus/tabbar_cus.dart';
 import 'package:gotwo_app_user/global_ip.dart';
 import 'package:gotwo_app_user/m2/gotwo_profileCustomer.dart';
@@ -32,6 +33,8 @@ class _JoinState extends State<Join> {
   final storage = const FlutterSecureStorage();
   String? emails;
   String? userId; // เก็บ ID ของผู้ใช้หลังจากดึงมา
+  String? imgUrl;
+  String? statusCus;
 
   Future<void> loadLoginInfo() async {
     String? savedEmail = await storage.read(key: 'email');
@@ -99,6 +102,8 @@ class _JoinState extends State<Join> {
         if (data['success']) {
           setState(() {
             userId = data['user_id']; // เก็บ user id ที่ได้มา
+            imgUrl = data['imgUrl'];
+            statusCus = data['statusCustomer'];
           });
         } else {
           print('Error: ${data['message']}');
@@ -207,16 +212,59 @@ class _JoinState extends State<Join> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: statusCus != '1'
+          ? _suspendPage()
+          : statusCus == '1'
+              ? Column(
+                  children: [
+                    Expanded(child: _buildScreen()), // เนื้อหา
+                    Align(
+                      alignment: Alignment.bottomCenter, // ชิดขอบด้านล่าง
+                      child: bar(), // แถบปุ่มด้านล่าง
+                    ),
+                  ],
+                )
+              : const Center(child: CircularProgressIndicator()),
+      backgroundColor: Colors.white, // แสดงหน้าจอตาม index
+    );
+  }
+
+  Widget _suspendPage() {
+    return Container(
+      color: Colors.white, // พื้นหลังสีขาว
+      child: Column(
         children: [
-          Expanded(child: _buildScreen()), // เนื้อหา
-          Align(
-            alignment: Alignment.bottomCenter, // ชิดขอบด้านล่าง
-            child: bar(), // แถบปุ่มด้านล่าง
-          ),
+          if (statusCus == '1')
+            const Center(child: CircularProgressIndicator())
+          else ...[
+            const Spacer(), // เพิ่ม Spacer เพื่อดัน Loader ให้อยู่กลาง
+            const Center(
+                child: CircularProgressIndicator()), // แสดงสถานะโหลดตรงกลาง
+            const Spacer(), // Spacer จะดันปุ่มลงไปล่างสุด
+            Padding(
+              padding:
+                  const EdgeInsets.only(bottom: 16.0), // เพิ่มระยะห่างด้านล่าง
+              child: TextButton.icon(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LogoutPage()),
+                  );
+                },
+                icon: const Icon(Icons.logout, color: Colors.red),
+                label: const Text(
+                  'Exit',
+                  style: TextStyle(color: Colors.red, fontSize: 16),
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.white, // สีพื้นหลังปุ่มเป็นสีขาว
+                  padding: const EdgeInsets.all(12.0), // เพิ่มระยะ Padding
+                ),
+              ),
+            ),
+          ],
         ],
       ),
-      backgroundColor: Colors.white, // แสดงหน้าจอตาม index
     );
   }
 
@@ -595,7 +643,8 @@ class _JoinState extends State<Join> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const GotwoProfileCus()),
+                MaterialPageRoute(
+                    builder: (context) => const GotwoProfileCus()),
               );
             },
             child: const Column(

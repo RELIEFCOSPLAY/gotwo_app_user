@@ -122,7 +122,9 @@ class _GotwoProfileCusState extends State<GotwoProfileCus> {
                                 Positioned(
                                   top: 0,
                                   left: 0,
-                                  child: _backButton(),
+                                  child: item['status_customer'] == '1'
+                                      ? _backButton()
+                                      : const SizedBox(), // ใช้ SizedBox() แทน null เพื่อให้มี Widget ที่ไม่แสดงผล
                                 ),
                                 Column(
                                   children: [
@@ -156,17 +158,17 @@ class _GotwoProfileCusState extends State<GotwoProfileCus> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            item['status_customer'] == 0 ||
+                                            item['status_customer'] == 1 ||
                                                     item['status_customer'] ==
-                                                        '0'
+                                                        '1'
                                                 ? "normal"
-                                                : "unnormal",
+                                                : "Suspend",
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: item['status_customer'] ==
-                                                          0 ||
+                                                          1 ||
                                                       item['status_customer'] ==
-                                                          '0'
+                                                          '1'
                                                   ? Colors.green
                                                   : Colors
                                                       .red, // สีต่างกันสำหรับแต่ละสถานะ
@@ -242,7 +244,7 @@ class _GotwoProfileCusState extends State<GotwoProfileCus> {
                                   value: item['number_bank'],
                                 ),
                                 const Divider(),
-                                ProfileDetailRow(
+                                const ProfileDetailRow(
                                   icon: Icons.admin_panel_settings,
                                   title: 'CONTACT ADMIN',
                                   value: '+66 999 45678',
