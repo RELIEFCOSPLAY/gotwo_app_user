@@ -441,6 +441,44 @@ class _CusConfirmState extends State<CusConfirm> {
                     ),
                   ],
                 ),
+                Text(
+                  item['pay'] == '0'
+                      ? "Unpaid"
+                      : item['pay'] == '1'
+                          ? "Paid"
+                          : item['pay'] == '2'
+                              ? "Verify"
+                              : item['pay'] == '3'
+                                  ? "Pending"
+                                  : item['pay'] == '4'
+                                      ? "Refund"
+                                      : item['pay'] == '5'
+                                          ? "Complete"
+                                          : item['pay'] == '6'
+                                              ? "Cancel"
+                                              : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: item['pay'] == '0'
+                        ? Colors.red // Red for "Unpaid"
+                        : item['pay'] == '1'
+                            ? Colors.green // Green for "Paid"
+                            : item['pay'] == '2'
+                                ? Colors.green[200] // Green[200] for "Verify"
+                                : item['pay'] == '3'
+                                    ? Colors.blue // Blue for "Pending"
+                                    : item['pay'] == '4'
+                                        ? Colors.orange // orange for "Refund"
+                                        : item['pay'] == '5'
+                                            ? Colors.blue[
+                                                200] // Blue[200] for "Complete"
+                                            : item['pay'] == '6'
+                                                ? Colors.red[
+                                                    400] //Red[400] for "Cancel"
+                                                : Colors
+                                                    .grey, // Grey for "Unknown"
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -589,7 +627,7 @@ class _CusConfirmState extends State<CusConfirm> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 Text(
                   item['status_helmet'] == '0'
                       ? 'Bring your own a helmet.'
@@ -602,12 +640,13 @@ class _CusConfirmState extends State<CusConfirm> {
                     fontSize: 10,
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: item['pay'] == '1' || isPaid
+                      onPressed: (item['pay'] == '1' || item['pay'] == '2') ||
+                              isPaid
                           ? null
                           : isImageUploaded
                               ? () async {
@@ -697,13 +736,15 @@ class _CusConfirmState extends State<CusConfirm> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    String pay = "0";
+                                    String pay = "0"; // กำหนดค่าเริ่มต้น
                                     if (item['pay'].toString() == "1" ||
-                                        item['pay'] == 1) {
-                                      pay = "2";
+                                        item['pay'] == 1 ||
+                                        item['pay'].toString() == "2" ||
+                                        item['pay'] == 2) {
+                                      pay = "4";
                                     } else if (item['pay'].toString() == "0" ||
                                         item['pay'] == 0) {
-                                      pay = "4";
+                                      pay = "6";
                                     }
                                     String status = "5";
                                     String post_id = item['post_id'];

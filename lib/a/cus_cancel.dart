@@ -67,14 +67,6 @@ class _CusCancelState extends State<CusCancel> {
     loadLoginInfo();
   }
 
-  // String getStatusLabel(String pay) {
-  //   int payCode =
-  //       int.tryParse(pay) ?? -1; // แปลงเป็น int หรือคืนค่า -1 หากแปลงไม่สำเร็จ
-  //   return payCode == 2
-  //       ? "Refun"
-  //       : (payCode == 3 ? "Compled" : "Unknown"); // ตรวจสอบสถานะ
-  // }
-
   String formatDate(String date) {
     try {
       DateTime parsedDate = DateTime.parse(date);
@@ -88,6 +80,7 @@ class _CusCancelState extends State<CusCancel> {
   Widget build(BuildContext context) {
     int _currentRating = int.parse(item['review']);
     String imgShow = 'http://${Global.ip_8080}/${item['img_profile']}';
+    String imgMoneyslip = 'http://${Global.ip_8080}/${item['img_qr_admin']}';
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -225,32 +218,45 @@ class _CusCancelState extends State<CusCancel> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      item['pay'] == '1' || item['pay'] == 1
-                          ? "Refun"
-                          : item['pay'] == '0' || item['pay'] == 0
-                              ? "Unpaid"
-                              : item['pay'] == '2' || item['pay'] == 2
-                                  ? "Refund"
-                                  : item['pay'] == '3' || item['pay'] == 3
+                      item['pay'] == '0'
+                          ? "Unpaid"
+                          : item['pay'] == '1'
+                              ? "Paid"
+                              : item['pay'] == '2'
+                                  ? "Verify"
+                                  : item['pay'] == '3'
                                       ? "Pending"
-                                      : item['pay'] == '4' || item['pay'] == 4
-                                          ? "Cencel"
-                                          : "Unknown",
+                                      : item['pay'] == '4'
+                                          ? "Refund"
+                                          : item['pay'] == '5'
+                                              ? "Complete"
+                                              : item['pay'] == '6'
+                                                  ? "Cancel"
+                                                  : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
                       style: TextStyle(
-                        fontSize: 15,
-                        color: item['pay'] == '1' || item['pay'] == 1
-                            ? Colors.orange
-                            : item['pay'] == '0' || item['pay'] == 0
-                                ? Colors.grey
-                                : item['pay'] == '2' || item['pay'] == 2
-                                    ? Colors.orange
-                                    : item['pay'] == '3' || item['pay'] == 3
-                                        ? Colors.blue
-                                        : item['pay'] == '4' || item['pay'] == 4
-                                            ? Colors.red
-                                            : Colors.black,
+                        fontSize: 12,
+                        color: item['pay'] == '0'
+                            ? Colors.red // Red for "Unpaid"
+                            : item['pay'] == '1'
+                                ? Colors.green // Green for "Paid"
+                                : item['pay'] == '2'
+                                    ? Colors
+                                        .green[200] // Green[200] for "Verify"
+                                    : item['pay'] == '3'
+                                        ? Colors.blue // Blue for "Pending"
+                                        : item['pay'] == '4'
+                                            ? Colors
+                                                .orange // orange for "Refund"
+                                            : item['pay'] == '5'
+                                                ? Colors.blue[
+                                                    200] // Blue[200] for "Complete"
+                                                : item['pay'] == '6'
+                                                    ? Colors.red[
+                                                        400] //Red[400] for "Cancel"
+                                                    : Colors
+                                                        .grey, // Grey for "Unknown"
                       ),
-                    )
+                    ),
                   ],
                 ),
 
@@ -270,7 +276,16 @@ class _CusCancelState extends State<CusCancel> {
                             content: SizedBox(
                               width: 200.0,
                               height: 250.0,
-                              child: Image.asset("assets/images/slip.jpg"),
+                              child: item['img_qr_admin'] != null &&
+                                      item['img_qr_admin'].trim().isNotEmpty
+                                  ? Image.network(
+                                      imgMoneyslip,
+                                      fit: BoxFit
+                                          .cover, // ปรับให้รูปภาพเติมเต็มพื้นที่
+                                      width: 200, // กำหนดขนาดความกว้าง
+                                      height: 200, // กำหนดขนาดความสูง
+                                    )
+                                  : const Icon(Icons.person),
                             ),
                             actions: [
                               Row(

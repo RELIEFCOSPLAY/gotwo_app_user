@@ -118,7 +118,11 @@ class _CancelTabState extends State<CancelTab> {
             itemBuilder: (context, index) {
               final item = cancelData[index];
               if (userId == item['customer_id'].toString() &&
-                  item['status'].toString() == "5") {
+                  (item['status'].toString() == '5' || item['status'] == 5) &&
+                  (item['pay'].toString() == '4' ||
+                      item['pay'] == 4 ||
+                      item['pay'].toString() == '6' ||
+                      item['pay'] == 6)) {
                 return Padding(
                   padding: const EdgeInsets.only(
                       left: 8, right: 8, top: 4, bottom: 8),
@@ -144,6 +148,7 @@ class _CancelTabState extends State<CancelTab> {
                                 'comment_drop': item['comment_drop'],
                                 'review': item['review'],
                                 'comment': item['comment'],
+                                'img_qr_admin': item['img_qr_admin'],
                               },
                             ),
                           ),
@@ -192,44 +197,47 @@ class _CancelTabState extends State<CancelTab> {
                                         fontSize: 12, color: Color(0xff1a1c43)),
                                   ),
                                   Text(
-                                    item['pay'] == '1' || item['pay'] == 1
-                                        ? "Paid"
-                                        : item['pay'] == '0' || item['pay'] == 0
-                                            ? "Unpaid"
-                                            : item['pay'] == '2' ||
-                                                    item['pay'] == 2
-                                                ? "Refund"
-                                                : item['pay'] == '3' ||
-                                                        item['pay'] == 3
+                                    item['pay'] == '0'
+                                        ? "Unpaid"
+                                        : item['pay'] == '1'
+                                            ? "Paid"
+                                            : item['pay'] == '2'
+                                                ? "Verify"
+                                                : item['pay'] == '3'
                                                     ? "Pending"
-                                                    : item['pay'] == '4' ||
-                                                            item['pay'] == 4
-                                                        ? "Cencel"
-                                                        : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
+                                                    : item['pay'] == '4'
+                                                        ? "Refund"
+                                                        : item['pay'] == '5'
+                                                            ? "Complete"
+                                                            : item['pay'] == '6'
+                                                                ? "Cancel"
+                                                                : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: item['pay'] == '1' ||
-                                              item['pay'] == 1
-                                          ? Colors.green // Green for "Paid"
-                                          : item['pay'] == '0' ||
-                                                  item['pay'] == 0
-                                              ? Colors.grey // Red for "Unpaid"
-                                              : item['pay'] == '2' ||
-                                                      item['pay'] == 2
-                                                  ? Colors
-                                                      .orange // Orange for "Refund"
-                                                  : item['pay'] == '3' ||
-                                                          item['pay'] == 3
+                                      color: item['pay'] == '0'
+                                          ? Colors.red // Red for "Unpaid"
+                                          : item['pay'] == '1'
+                                              ? Colors.green // Green for "Paid"
+                                              : item['pay'] == '2'
+                                                  ? Colors.green[
+                                                      200] // Green[200] for "Verify"
+                                                  : item['pay'] == '3'
                                                       ? Colors
                                                           .blue // Blue for "Pending"
-                                                      : item['pay'] == '4' ||
-                                                              item['pay'] == 4
+                                                      : item['pay'] == '4'
                                                           ? Colors
-                                                              .red // Grey for "Completed"
-                                                          : Colors
-                                                              .black, // Black for "Unknown"
+                                                              .orange // orange for "Refund"
+                                                          : item['pay'] == '5'
+                                                              ? Colors.blue[
+                                                                  200] // Blue[200] for "Complete"
+                                                              : item['pay'] ==
+                                                                      '6'
+                                                                  ? Colors.red[
+                                                                      400] //Red[400] for "Cancel"
+                                                                  : Colors
+                                                                      .grey, // Grey for "Unknown"
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),

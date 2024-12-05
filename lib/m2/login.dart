@@ -140,9 +140,7 @@ class _LoginpageState extends State<Loginpage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 _icon(),
-                const SizedBox(
-                  height: 5,
-                ),
+
                 const Text(
                   "LOGIN",
                   style: TextStyle(
@@ -180,7 +178,7 @@ class _LoginpageState extends State<Loginpage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
 
                 // Password textformfield
                 Padding(
@@ -229,7 +227,7 @@ class _LoginpageState extends State<Loginpage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 10),
+                // const SizedBox(height: 10),
 
                 // Login button
                 Center(
@@ -264,6 +262,10 @@ class _LoginpageState extends State<Loginpage> {
   }
 
   Widget _icon() {
-    return Image.asset('assets/images/logo.jpg');
+    return Image.asset(
+      'assets/images/logo.jpg',
+      height: 175,
+      width: 175,
+    );
   }
 }

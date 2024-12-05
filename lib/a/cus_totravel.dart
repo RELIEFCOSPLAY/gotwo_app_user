@@ -305,6 +305,44 @@ class _CusTotravelState extends State<CusTotravel> {
                     ),
                   ],
                 ),
+                Text(
+                  item['pay'] == '0'
+                      ? "Unpaid"
+                      : item['pay'] == '1'
+                          ? "Paid"
+                          : item['pay'] == '2'
+                              ? "Verify"
+                              : item['pay'] == '3'
+                                  ? "Pending"
+                                  : item['pay'] == '4'
+                                      ? "Refund"
+                                      : item['pay'] == '5'
+                                          ? "Complete"
+                                          : item['pay'] == '6'
+                                              ? "Cancel"
+                                              : "Unknown", // กรณีที่ไม่ตรงกับเงื่อนไขใดๆ
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: item['pay'] == '0'
+                        ? Colors.red // Red for "Unpaid"
+                        : item['pay'] == '1'
+                            ? Colors.green // Green for "Paid"
+                            : item['pay'] == '2'
+                                ? Colors.green[200] // Green[200] for "Verify"
+                                : item['pay'] == '3'
+                                    ? Colors.blue // Blue for "Pending"
+                                    : item['pay'] == '4'
+                                        ? Colors.orange // orange for "Refund"
+                                        : item['pay'] == '5'
+                                            ? Colors.blue[
+                                                200] // Blue[200] for "Complete"
+                                            : item['pay'] == '6'
+                                                ? Colors.red[
+                                                    400] //Red[400] for "Cancel"
+                                                : Colors
+                                                    .grey, // Grey for "Unknown"
+                  ),
+                ),
                 // Car Detail Button
                 ElevatedButton(
                   onPressed: () {
@@ -530,8 +568,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                   content: Column(
                                     children: [
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 5),
+                                        padding: const EdgeInsets.only(top: 5),
                                         child: RatingBar.builder(
                                           initialRating: 1,
                                           minRating: 1,
@@ -562,13 +599,11 @@ class _CusTotravelState extends State<CusTotravel> {
                                           child: TextField(
                                             controller: commentController,
                                             decoration: InputDecoration(
-                                              enabledBorder:
-                                                  OutlineInputBorder(
+                                              enabledBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
-                                              focusedBorder:
-                                                  OutlineInputBorder(
+                                              focusedBorder: OutlineInputBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
@@ -586,7 +621,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                               await picker.pickImage(
                                             source: ImageSource.gallery,
                                           );
-                                
+
                                           if (pickedFile != null) {
                                             final timestamp = DateTime.now()
                                                 .millisecondsSinceEpoch
@@ -597,34 +632,32 @@ class _CusTotravelState extends State<CusTotravel> {
                                                 "GUSUCC_$timestamp${path.extension(pickedFile.path)}";
                                             final newFilePath = path.join(
                                                 directory.path, newFileName);
-                                
+
                                             final renamedFile =
                                                 await File(pickedFile.path)
                                                     .copy(newFilePath);
-                                
+
                                             setState(() {
                                               _image =
                                                   renamedFile; // ใช้ไฟล์ที่เปลี่ยนชื่อ
                                             });
-                                            var request =
-                                                http.MultipartRequest(
+                                            var request = http.MultipartRequest(
                                               'POST',
                                               Uri.parse(
                                                   'http://${Global.ip_8080}/gotwo/upload_p.php'),
                                             );
-                                            request.files.add(await http
-                                                    .MultipartFile
-                                                .fromPath(
-                                                    'image', _image!.path));
-                                
-                                            var response =
-                                                await request.send();
+                                            request.files.add(
+                                                await http.MultipartFile
+                                                    .fromPath(
+                                                        'image', _image!.path));
+
+                                            var response = await request.send();
                                             if (response.statusCode == 200) {
                                               final res = await http.Response
                                                   .fromStream(response);
                                               final data =
                                                   json.decode(res.body);
-                                
+
                                               if (data['file'] != null) {
                                                 setState(() {
                                                   _imageUrl = data[
@@ -632,8 +665,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                                 });
                                               }
                                             } else {
-                                              debugPrint(
-                                                  'File upload failed');
+                                              debugPrint('File upload failed');
                                             }
                                           }
                                         },
@@ -672,9 +704,9 @@ class _CusTotravelState extends State<CusTotravel> {
                                             String pay = '3';
                                             String status = '4';
                                             String review = reviewR;
-                                
+
                                             // Call the update_review function
-                                
+
                                             update_review(
                                                 status_post_id,
                                                 pay,
@@ -682,7 +714,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                                 comment,
                                                 status,
                                                 _imageUrl!);
-                                
+
                                             Navigator.pushReplacement(
                                               context,
                                               MaterialPageRoute(
@@ -714,8 +746,7 @@ class _CusTotravelState extends State<CusTotravel> {
                                           },
                                           child: const Text(
                                             'Close',
-                                            style:
-                                                TextStyle(color: Colors.red),
+                                            style: TextStyle(color: Colors.red),
                                           ),
                                         ),
                                       ],
@@ -781,13 +812,15 @@ class _CusTotravelState extends State<CusTotravel> {
                                   onPressed: () {
                                     String status = '5';
                                     String review = '0';
-                                    String pay = "0";
+                                    String pay = "0"; // กำหนดค่าเริ่มต้น
                                     if (item['pay'].toString() == "1" ||
-                                        item['pay'] == 1) {
-                                      pay = "2";
+                                        item['pay'] == 1 ||
+                                        item['pay'].toString() == "2" ||
+                                        item['pay'] == 2) {
+                                      pay = "4";
                                     } else if (item['pay'].toString() == "0" ||
                                         item['pay'] == 0) {
-                                      pay = "4";
+                                      pay = "6";
                                     }
                                     String comment = commentController.text;
                                     String status_post_id =
