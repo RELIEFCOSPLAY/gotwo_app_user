@@ -138,7 +138,7 @@ class _HomeState extends State<Home> {
                 height: 20,
               ),
               const Text(
-                "By gotwo ride sharing service",
+                "Gotwo Customer sharing service",
                 style: TextStyle(
                   fontSize: 10,
                   color: Colors.grey,
